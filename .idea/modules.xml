@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Frank-Lloyd-Wright-Trail-Android.iml" filepath="$PROJECT_DIR$/Frank-Lloyd-Wright-Trail-Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/FrankLloydWrightTrail.iml" filepath="$PROJECT_DIR$/FrankLloydWrightTrail.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
