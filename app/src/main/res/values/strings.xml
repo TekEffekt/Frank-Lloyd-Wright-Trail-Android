@@ -2,6 +2,7 @@
     <string name="app_name">Frank Lloyd Wright Trail</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_descripton">Descripton</string>
-
-
+    <color name="brown">#5E443A</color>
+    <color name="orange">#FF8C00</color>
+    <color name="white">#FFFFFF</color>
 </resources>
