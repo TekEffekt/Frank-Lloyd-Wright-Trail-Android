@@ -51,14 +51,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         mapFragment.getMapAsync(this);
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -97,6 +90,14 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         FLWVisitorCenter = mMap.addMarker(new MarkerOptions().position(new LatLng(43.14390059999999, -90.05952260000004)).title("FLW Visitor Center"));
         GermanWarehouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997)).title("German Warehouse"));
 
+        SCJohnson.showInfoWindow();
+        Wingspread.showInfoWindow();
+        MononaTerrace.showInfoWindow();
+        MeetingHouse.showInfoWindow();
+        FLWVisitorCenter.showInfoWindow();
+        GermanWarehouse.showInfoWindow();
+
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPlace, 7));
         mMap.setOnMarkerClickListener(this);
     }
@@ -106,7 +107,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         Intent intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
         intent.putExtra("Title", marker.getTitle());
         LocationSelectionActivity.this.startActivity(intent);
-        return false;
+        return true;
     }
 
     @Override
