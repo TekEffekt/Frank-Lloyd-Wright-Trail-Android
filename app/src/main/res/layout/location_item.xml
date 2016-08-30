@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="190dp"
+    android:layout_height="120dp"
+    android:paddingLeft="4dp"
+    android:paddingRight="1dp"
+    android:paddingTop="3dp">
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@mipmap/scjohnson"
+        android:id="@+id/picture"/>
+    <ImageView
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_gravity="right"
+        android:src="@drawable/marker_red"
+        android:id="@+id/marker"/>
+    <TextView
+        android:layout_width="145dp"
+        android:layout_height="35dp"
+        android:layout_gravity="bottom"
+        android:textAlignment="gravity"
+        android:text="SC Johnson Administration Building"
+        android:textColor="@color/white"
+        android:textSize="13dp"
+        android:paddingLeft="3dp"
+        android:id="@+id/name"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="19dp"
+        android:layout_gravity="right|bottom"
+        android:text="0.2mi"
+        android:textColor="@color/white"
+        android:textSize="13dp"
+        android:paddingRight="3dp"
+        android:id="@+id/distance"/>
+</FrameLayout>

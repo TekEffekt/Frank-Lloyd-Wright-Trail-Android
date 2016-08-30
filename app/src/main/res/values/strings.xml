@@ -5,4 +5,11 @@
     <color name="brown">#5E443A</color>
     <color name="orange">#FF8C00</color>
     <color name="white">#FFFFFF</color>
+
+    <string name="scjohnson">SC Johnson Administration Building</string>
+    <string name="wingspread">Wingspread</string>
+    <string name="monona_terrace">Monona Terrace</string>
+    <string name="meeting_house">Meeting House</string>
+    <string name="visitor_center">FLW Visitor Center</string>
+    <string name="german_warehouse">German Warehouse</string>
 </resources>

@@ -1,19 +1,15 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -22,11 +18,15 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+import butterknife.Bind;
+
+public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, RecyclerView.OnItemTouchListener {
     private GoogleMap mMap;
     private LatLng cameraPlace = new LatLng(43.0717445, -89.38040180000002);
     private Marker SCJohnson;
@@ -35,6 +35,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private Marker MeetingHouse;
     private Marker FLWVisitorCenter;
     private Marker GermanWarehouse;
+
+    @Nullable @Bind(R.id.recycler) RecyclerView recyclerView;
+    private LocationSelectionAdapter adapter;
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -50,7 +53,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        //adapter = new LocationSelectionAdapter((LocationModel.getLocations()));
+        //recyclerView.setAdapter(adapter);
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -81,14 +85,31 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     @Override
     public void onMapReady(GoogleMap map) {
-
         mMap = map;
-        SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969)).title("SC Johnson Administration Building and Research Tower"));
-        Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588)).title("Wingspread"));
-        MononaTerrace = mMap.addMarker(new MarkerOptions().position(cameraPlace).title("MononaTerrace"));
-        MeetingHouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.0757361, -89.43533680000002)).title("Meeting House"));
-        FLWVisitorCenter = mMap.addMarker(new MarkerOptions().position(new LatLng(43.14390059999999, -90.05952260000004)).title("FLW Visitor Center"));
-        GermanWarehouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997)).title("German Warehouse"));
+        SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969))
+                .title("SC Johnson Administration Building and Research Tower")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588))
+                .title("Wingspread")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        MononaTerrace = mMap.addMarker(new MarkerOptions().position(cameraPlace)
+                .title("MononaTerrace")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        MeetingHouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.0757361, -89.43533680000002))
+                .title("Meeting House")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        FLWVisitorCenter = mMap.addMarker(new MarkerOptions().position(new LatLng(43.14390059999999, -90.05952260000004))
+                .title("FLW Visitor Center")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        GermanWarehouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
+                .title("German Warehouse")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
+                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
 
         SCJohnson.showInfoWindow();
         Wingspread.showInfoWindow();
@@ -148,5 +169,20 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         );
         AppIndex.AppIndexApi.end(mClient, viewAction);
         mClient.disconnect();
+    }
+
+    @Override
+    public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        return false;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
     }
 }
