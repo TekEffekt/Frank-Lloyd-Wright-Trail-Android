@@ -9,70 +9,97 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class DescriptonActivity extends AppCompatActivity {
 protected View view;
-    private ViewPager images;
-    private LinearLayout pager_indicator;
-    private int dotsCount;
-    private ImageView[] dots;
+    private ViewPager _mViewPager;
+    private ImageViewPagerAdapter _adapter;
+    private ImageView _btn1, _btn2, _btn3;
+public static String value;
 
 
-    private int[] mImageResources;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
+        value = intent.getStringExtra("Title");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_descripton);
+
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        Intent intent = getIntent();
-        String value = intent.getStringExtra("Title");
-        ImageView picture = (ImageView) findViewById(R.id.picture);
+
+        setUpView();
+        setTab();
+        onCircleButtonClick();
         TextView name = (TextView) findViewById(R.id.name);
         TextView built = (TextView) findViewById(R.id.built);
         TextView description = (TextView) findViewById(R.id.description);
         description.setMovementMethod(new ScrollingMovementMethod());
         getSupportActionBar().setTitle("");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+/*
+        ImageView imageOne = (ImageView) imageOneView.findViewById(R.id.imageOne);
+        ImageView imageTwo = (ImageView) imageTwoView.findViewById(R.id.imageTwo);
+        ImageView imageThree = (ImageView) imageThreeView.findViewById(R.id.imageThree);
+*/
+
         switch(value)
         {
             case "SC Johnson Administration Building and Research Tower":
-                picture.setImageResource(R.mipmap.scjohnson);
+               // imageOne.setImageResource(R.mipmap.scjohnson);
+               // imageTwo.setImageResource(R.drawable.scj2);
+                //imageThree.setImageResource(R.drawable.scj3);
                 name.setText("SC Johnson Administration Building");
                 built.setText("The SC Johnson Administration Building, designed\nby Frank Lloyd Wright in 1936.");
                 description.setText("Far outside the corridors of high-tech industry and startup spaces, the SC Johnson company headquarters in Racine, Wisconsin, still provides a dashing vision of the modern American workplace, despite having recently celebrated its 75th anniversary. The SC Johnson Administration Building, designed by Frank Lloyd Wright in 1936, eschews business clichés: workers are greeted by a streamlined, muscular exterior made from ribbons of glass and brick, more campus than corporate, before entering a light-filled interior, with rows of organic, curved columns creating an abstract forest surrounding the secretary pool. The 15-story Research Tower, completed in 1950, was built on a \"taproot\" system. A core of elevators, heating, and ductwork formed a spine at the center on the tower, supported by a foundation sunk 54-feet-deep into the ground. Disc-shaped mezzanines branched off the core, alternating with full sized, 40-foot wide floors. Walls of horizontal Pyrex tubes, the same used in the Administration Building, let in sunlight but block the view. The effect is of a tree enclosed in glass.");
+
                 break;
             case "Wingspread":
-                picture.setImageResource(R.mipmap.wingspread);
+               // imageOne.setImageResource(R.mipmap.wingspread);
+               // imageTwo.setImageResource(R.drawable.wingspread2);
+               // imageThree.setImageResource(R.drawable.wingspread3);
                 name.setText("Wingspread");
                 built.setText("Wingspread designed for SC Johnson owner\nHerbert Fisk Johnson, Jr. in 1936");
                 description.setText("A private residence Wright designed for SC Johnson owner Herbert Fisk Johnson, Jr. in 1936, Wingspread lives up to its names, a low-slung streamlined brick home with four wings spreading across the property. The central living room, a dome-shaped room, features a 30-foot-tall vertical fireplace and original furniture designed by Wright. Considered the last of the Prairie Houses, it’s filled with unique touches, including a dramatic “Romeo and Juliet” balcony that cantilevers over the landscape and a crow’s nest lookout built above the home, a favorite play place for the Johnson children.");
                 break;
             case "MononaTerrace":
-                picture.setImageResource(R.mipmap.monona_terrace);
+                //imageOne.setImageResource(R.mipmap.monona_terrace);
+                //imageTwo.setImageResource(R.drawable.mt2);
+                //imageThree.setImageResource(R.drawable.mt2);
                 name.setText("Monona Terrace");
                 built.setText("Monona Terrace completed in 1997");
                 description.setText("A sprawling, curved convention center on the shores of Lake Monona in Madison, this building was a posthumous addition to the Wright canon, rejected by officials during the architect’s lifetime, but finally approved via a referendum put local voters in the early ‘90s. The curvilinear “dream civic center,” which recalls the shape of the Guggenheim, was first proposed by Wright in 1938, and was a project he constantly altered and updated throughout his life. His former apprentice Anthony Puttnam would finish the designs for the interior before it was finally completed in 1997.");
                 break;
             case "Meeting House":
-                picture.setImageResource(R.mipmap.meeting_house);
+                //imageOne.setImageResource(R.mipmap.meeting_house);
+                //imageTwo.setImageResource(R.drawable.meetinghouse2);
+               // imageThree.setImageResource(R.drawable.meetinghouse3);
                 name.setText("First Unitarian Society Meeting House");
                 built.setText("A landmark in church architecture from 1951");
                 description.setText("A landmark in church architecture from 1951, Wright’s ship-like design for the First Unitarian Society, with a sharp prow jutting out from the earth towards the sky, offers a sense of transcendence, one he would often enjoy as a member of the congregation. His extensive use of copper and glass throughout the building provide a timeless feel to the unorthodox house of worship.");
                 break;
             case "FLW Visitor Center":
-                picture.setImageResource(R.mipmap.visitor_center);
+              //  imageOne.setImageResource(R.mipmap.visitor_center);
+              //  imageTwo.setImageResource(R.drawable.vc2);
+               // imageThree.setImageResource(R.drawable.vc3);
                 name.setText("Taliesin and Frank Loyd Wright Visitor Center");
                 built.setText("Wright’s longtime home and studio.");
                 description.setText("Wright’s longtime home and studio, named after a Welsh term that means “Shining Brow,” is an icon of Prairie School design that saw numerous tragedies and rebirths over the decades as the architect continually renovated, rebuilt and expanded. Set on a 700-acre estate in the rolling hills of Spring Green where he grew up, it was the site where he created and designed many of his masterpieces beginning in 1911 and contains a collection of Wright-designed structures.");
                 break;
             case "German Warehouse":
-                picture.setImageResource(R.mipmap.german_warehouse);
+              //  imageOne.setImageResource(R.mipmap.german_warehouse);
+              //  imageTwo.setImageResource(R.drawable.gw2);
+              //  imageThree.setImageResource(R.drawable.gw3);
                 name.setText("A.D. German Warehouse");
                 built.setText("A.D. German Warehouse built in 1921.");
                 description.setText("A small brick structure used by a local commodity wholesaler, Albert Dell German, this warehouse, finished in 1921, features an elaborate Mayan Revival exterior. Built in the town of Richland Center, where Wright was born, this offers a rare example of a project the architect designed in the late 1910’s that’s still standing.");
@@ -82,13 +109,14 @@ protected View view;
                 getSupportActionBar().setTitle("Other");
 
         }
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.orange)));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.brown)));
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Thank you for visiting", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -107,5 +135,87 @@ protected View view;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+
+
+
+    private void onCircleButtonClick()
+    {
+        _btn1.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                _btn1.setImageResource(R.drawable.selecteditem_dot);
+                _mViewPager.setCurrentItem(0);
+            }
+        });
+        _btn2.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                _btn2.setImageResource(R.drawable.selecteditem_dot);
+                _mViewPager.setCurrentItem(1);
+            }
+        });
+        _btn3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v)
+            {
+                _btn3.setImageResource(R.drawable.selecteditem_dot);
+                _mViewPager.setCurrentItem(2);
+            }
+        });
+
+    }
+
+    private void setUpView()
+    {
+        _mViewPager = (ViewPager) findViewById(R.id.imageviewPager);
+        _adapter = new ImageViewPagerAdapter(getSupportFragmentManager());
+        _mViewPager.setAdapter(_adapter);
+        _mViewPager.setCurrentItem(0);
+        initButton();
+
+    }
+    private void setTab()
+    {
+        _mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener(){
+            @Override
+            public void onPageScrollStateChanged(int position){}
+            @Override
+            public void onPageScrolled(int arg0,float arg1, int arg2){}
+            @Override
+            public void onPageSelected(int position)
+            {
+                _btn1.setImageResource(R.drawable.nonselecteditem_dot);
+                _btn2.setImageResource(R.drawable.nonselecteditem_dot);
+                _btn3.setImageResource(R.drawable.nonselecteditem_dot);
+                btnAction(position);
+            }
+        });
+    }
+
+    private void btnAction(int action)
+    {
+        switch (action)
+        {
+            case 0: _btn1.setImageResource(R.drawable.selecteditem_dot);
+                break;
+            case 1: _btn2.setImageResource(R.drawable.selecteditem_dot);
+                break;
+            case 2: _btn3.setImageResource(R.drawable.selecteditem_dot);
+                break;
+        }
+    }
+
+    private void initButton()
+    {
+        _btn1 = (ImageView) findViewById(R.id.btn1);
+        _btn1.setImageResource(R.drawable.selecteditem_dot);
+        _btn2 = (ImageView) findViewById(R.id.btn2);
+        _btn3 = (ImageView) findViewById(R.id.btn3);
     }
 }

@@ -111,12 +111,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
 
-        SCJohnson.showInfoWindow();
-        Wingspread.showInfoWindow();
-        MononaTerrace.showInfoWindow();
-        MeetingHouse.showInfoWindow();
-        FLWVisitorCenter.showInfoWindow();
-        GermanWarehouse.showInfoWindow();
+
 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPlace, 7));
