@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 
 public class ImageThreeFragment extends Fragment {
-
+    public static ImageView imageThree;
 
     public ImageThreeFragment() {
         // Required empty public constructor
@@ -27,7 +27,7 @@ public class ImageThreeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_three, container, false);
-        ImageView imageThree = (ImageView) view.findViewById(R.id.imageThree);
+        imageThree = (ImageView) view.findViewById(R.id.imageThree);
 
         switch(DescriptonActivity.value)
         {

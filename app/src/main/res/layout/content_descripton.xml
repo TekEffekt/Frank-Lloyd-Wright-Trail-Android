@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,11 +9,20 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".DescriptonActivity"
     tools:showIn="@layout/activity_descripton">
+<ImageView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/fullscreen"
+    android:visibility="gone"/>
 
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:id="@+id/whole_layout">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_gravity="center"
             android:background="@color/red">
 
         <android.support.v4.view.ViewPager
@@ -51,6 +60,16 @@
                     android:layout_toRightOf="@id/btn2"/>
             </RelativeLayout>
         </RelativeLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="100dp"
+            >
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
@@ -77,11 +96,14 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:text="This is the description about the site."
             android:scrollbars="vertical"
             android:layout_below="@+id/built"
             android:id="@+id/description"
             android:paddingLeft="10dp"
             android:paddingTop="5dp"/>
-
+    </LinearLayout>
+        </ScrollView>
 </LinearLayout>
+</RelativeLayout>

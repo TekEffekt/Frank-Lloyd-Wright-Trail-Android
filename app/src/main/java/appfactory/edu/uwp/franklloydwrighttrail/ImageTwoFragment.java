@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 
 public class ImageTwoFragment extends Fragment {
+    public static ImageView imageTwo;
     public ImageTwoFragment() {
         // Required empty public constructor
     }
@@ -25,7 +26,7 @@ public class ImageTwoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_two, container, false);
-        ImageView imageTwo = (ImageView) view.findViewById(R.id.imageTwo);
+        imageTwo = (ImageView) view.findViewById(R.id.imageTwo);
 
         switch(DescriptonActivity.value)
         {

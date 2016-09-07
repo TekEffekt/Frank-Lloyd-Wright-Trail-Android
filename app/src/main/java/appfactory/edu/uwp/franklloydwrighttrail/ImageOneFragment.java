@@ -10,10 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import butterknife.Bind;
+
 
 public class ImageOneFragment extends Fragment {
-
-
+    public static ImageView imageOne;
     public ImageOneFragment() {
         // Required empty public constructor
     }
@@ -27,9 +28,9 @@ public class ImageOneFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image_one, container, false);
-        ImageView imageOne = (ImageView) view.findViewById(R.id.imageOne);
 
+        View view = inflater.inflate(R.layout.fragment_image_one, container, false);
+        imageOne = (ImageView) view.findViewById(R.id.imageOne);
         switch(DescriptonActivity.value)
         {
             case "SC Johnson Administration Building and Research Tower":
