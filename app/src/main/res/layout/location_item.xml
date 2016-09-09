@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
-    android:layout_width="190dp"
-    android:layout_height="120dp"
-    android:paddingLeft="4dp"
+    android:layout_width="170dp"
+    android:layout_height="110dp"
+    android:paddingLeft="1dp"
     android:paddingRight="1dp"
-    android:paddingTop="3dp">
+    android:paddingTop="4dp">
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/scjohnson"
+        android:background="@color/colorPrimaryDark"
         android:id="@+id/picture"/>
     <ImageView
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_gravity="right"
+        android:paddingRight="6dp"
+        android:paddingTop="6dp"
         android:src="@drawable/marker_red"
         android:id="@+id/marker"/>
     <TextView
         android:layout_width="145dp"
-        android:layout_height="35dp"
+        android:layout_height="30dp"
         android:layout_gravity="bottom"
         android:textAlignment="gravity"
-        android:text="SC Johnson Administration Building"
+        android:text="@string/wingspread"
         android:textColor="@color/white"
         android:textSize="13dp"
-        android:paddingLeft="3dp"
+        android:paddingLeft="4dp"
         android:id="@+id/name"/>
     <TextView
         android:layout_width="wrap_content"
@@ -34,6 +36,6 @@
         android:text="0.2mi"
         android:textColor="@color/white"
         android:textSize="13dp"
-        android:paddingRight="3dp"
+        android:paddingRight="10dp"
         android:id="@+id/distance"/>
 </FrameLayout>

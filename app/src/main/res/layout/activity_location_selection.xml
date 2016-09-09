@@ -23,6 +23,4 @@
 
     <include layout="@layout/content_location_selection" />
 
-
-
 </android.support.design.widget.CoordinatorLayout>
