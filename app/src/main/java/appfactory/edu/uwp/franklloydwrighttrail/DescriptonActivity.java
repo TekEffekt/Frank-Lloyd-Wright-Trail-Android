@@ -4,9 +4,13 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
@@ -18,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
@@ -28,8 +33,8 @@ protected View view;
     private ImageViewPagerAdapter _adapter;
     private ImageView _btn1, _btn2, _btn3;
     private ImageView fullScreen;
-    private LinearLayout wholeLayout;
-
+private RelativeLayout pictures;
+   private View bottomSheet;
 public static String value;
 
 
@@ -39,9 +44,8 @@ public static String value;
         value = intent.getStringExtra("Title");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_descripton);
+        pictures = (RelativeLayout) findViewById(R.id.piclayout);
 
-
-        wholeLayout = (LinearLayout) findViewById(R.id.whole_layout);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         fullScreen = (ImageView) findViewById(R.id.fullscreen);
@@ -103,16 +107,7 @@ public static String value;
 
         }
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.brown)));
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Thank you for visiting", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         _mViewPager.setOnTouchListener(new View.OnTouchListener() {
             private float pointX;
@@ -140,12 +135,49 @@ public static String value;
                                     break;
                                 case 2: fullScreen.setImageDrawable(ImageThreeFragment.imageThree.getDrawable());
                             }
-
+                            bottomSheet.setVisibility(View.GONE);
+                            pictures.setVisibility(View.GONE);
                             fullScreen.setVisibility(View.VISIBLE);
-                            wholeLayout.setVisibility(View.GONE);
+
                         }
                 }
                 return false;
+            }
+        });
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
+        bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
+        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
+        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.brown)));
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Thank you for visiting", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback(){
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState){
+                switch (newState){
+                    case BottomSheetBehavior.STATE_DRAGGING:
+                            fab.setVisibility(View.GONE);
+                        break;
+                    case BottomSheetBehavior.STATE_COLLAPSED:
+                            fab.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_EXPANDED:
+                            fab.setVisibility(View.VISIBLE);
+                        break;
+                    case BottomSheetBehavior.STATE_SETTLING:
+                            fab.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset)
+            {
+
             }
         });
     }
@@ -154,7 +186,8 @@ public static String value;
         if(fullScreen.getVisibility()== View.VISIBLE){
             fullScreen.setImageDrawable(null);
             fullScreen.setVisibility(View.GONE);
-            wholeLayout.setVisibility(View.VISIBLE);
+            pictures.setVisibility(View.VISIBLE);
+            bottomSheet.setVisibility(View.VISIBLE);
         }else{
             super.onBackPressed();
         }
@@ -166,9 +199,10 @@ public static String value;
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if(fullScreen.getVisibility()== View.VISIBLE){
-            fullScreen.setImageDrawable(null);
             fullScreen.setVisibility(View.GONE);
-            wholeLayout.setVisibility(View.VISIBLE);
+            fullScreen.setImageDrawable(null);
+            pictures.setVisibility(View.VISIBLE);
+            bottomSheet.setVisibility(View.VISIBLE);
             return true;
         }else{
             super.onBackPressed();
@@ -223,6 +257,7 @@ public static String value;
         _adapter = new ImageViewPagerAdapter(getSupportFragmentManager());
         _mViewPager.setAdapter(_adapter);
         _mViewPager.setCurrentItem(0);
+
         initButton();
 
 

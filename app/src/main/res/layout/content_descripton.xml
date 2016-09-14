@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,27 +8,26 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".DescriptonActivity"
-    tools:showIn="@layout/activity_descripton">
+    android:id="@+id/coordinator"
+    android:animateLayoutChanges="true">
 <ImageView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fullscreen"
     android:visibility="gone"/>
 
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:id="@+id/whole_layout">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:background="@color/red">
+            android:background="@color/red"
+            android:id="@+id/piclayout">
 
         <android.support.v4.view.ViewPager
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:id="@+id/imageviewPager">
+            android:id="@+id/imageviewPager"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         </android.support.v4.view.ViewPager>
             <RelativeLayout
@@ -60,9 +59,12 @@
                     android:layout_toRightOf="@id/btn2"/>
             </RelativeLayout>
         </RelativeLayout>
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior"
+        android:id="@+id/bottom_sheet"
+        app:behavior_peekHeight="350dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -104,6 +106,6 @@
             android:paddingLeft="10dp"
             android:paddingTop="5dp"/>
     </LinearLayout>
-        </ScrollView>
-</LinearLayout>
-</RelativeLayout>
+        </android.support.v4.widget.NestedScrollView>
+
+</android.support.design.widget.CoordinatorLayout>

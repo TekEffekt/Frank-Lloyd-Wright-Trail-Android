@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".DescriptonActivity">
+    tools:context=".DescriptonActivity"
+    >
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -33,5 +34,6 @@
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@android:color/transparent"
         android:tint="@color/white"/>
+
 
 </android.support.design.widget.CoordinatorLayout>
