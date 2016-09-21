@@ -10,8 +10,7 @@ xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:src="@mipmap/scjohnson"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
+        android:scaleType="centerCrop"
         />
 
 </RelativeLayout>

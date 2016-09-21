@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,21 +34,23 @@ protected View view;
     private ImageViewPagerAdapter _adapter;
     private ImageView _btn1, _btn2, _btn3;
     private ImageView fullScreen;
-private RelativeLayout pictures;
-   private View bottomSheet;
+private View textView;
+    private RelativeLayout selection;
 public static String value;
-
+    private FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         value = intent.getStringExtra("Title");
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_descripton);
-        pictures = (RelativeLayout) findViewById(R.id.piclayout);
-
+        setContentView(R.layout.content_descripton);
+        textView = findViewById(R.id.bottom_sheet);
+        selection = (RelativeLayout) findViewById(R.id.selection);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         fullScreen = (ImageView) findViewById(R.id.fullscreen);
         setUpView();
         setTab();
@@ -135,19 +138,20 @@ public static String value;
                                     break;
                                 case 2: fullScreen.setImageDrawable(ImageThreeFragment.imageThree.getDrawable());
                             }
-                            bottomSheet.setVisibility(View.GONE);
-                            pictures.setVisibility(View.GONE);
-                            fullScreen.setVisibility(View.VISIBLE);
 
+
+                            fullScreen.setVisibility(View.VISIBLE);
+                            selection.setVisibility(View.GONE);
+                            textView.setVisibility(View.GONE);
+                            _mViewPager.setVisibility(View.GONE);
+                            fab.setVisibility(View.GONE);
                         }
                 }
                 return false;
             }
         });
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.coordinator);
-        bottomSheet = coordinatorLayout.findViewById(R.id.bottom_sheet);
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomSheet);
-        final FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.brown)));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,38 +160,17 @@ public static String value;
                         .setAction("Action", null).show();
             }
         });
-        behavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback(){
-            @Override
-            public void onStateChanged(@NonNull View bottomSheet, int newState){
-                switch (newState){
-                    case BottomSheetBehavior.STATE_DRAGGING:
-                            fab.setVisibility(View.GONE);
-                        break;
-                    case BottomSheetBehavior.STATE_COLLAPSED:
-                            fab.setVisibility(View.VISIBLE);
-                        break;
-                    case BottomSheetBehavior.STATE_EXPANDED:
-                            fab.setVisibility(View.VISIBLE);
-                        break;
-                    case BottomSheetBehavior.STATE_SETTLING:
-                            fab.setVisibility(View.VISIBLE);
-                        break;
-                }
-            }
-            @Override
-            public void onSlide(@NonNull View bottomSheet, float slideOffset)
-            {
 
-            }
-        });
     }
     @Override
     public void onBackPressed(){
         if(fullScreen.getVisibility()== View.VISIBLE){
             fullScreen.setImageDrawable(null);
             fullScreen.setVisibility(View.GONE);
-            pictures.setVisibility(View.VISIBLE);
-            bottomSheet.setVisibility(View.VISIBLE);
+            selection.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
+            _mViewPager.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
         }else{
             super.onBackPressed();
         }
@@ -201,8 +184,10 @@ public static String value;
         if(fullScreen.getVisibility()== View.VISIBLE){
             fullScreen.setVisibility(View.GONE);
             fullScreen.setImageDrawable(null);
-            pictures.setVisibility(View.VISIBLE);
-            bottomSheet.setVisibility(View.VISIBLE);
+            selection.setVisibility(View.VISIBLE);
+            textView.setVisibility(View.VISIBLE);
+            _mViewPager.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
             return true;
         }else{
             super.onBackPressed();

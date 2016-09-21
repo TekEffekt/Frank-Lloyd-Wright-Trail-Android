@@ -8,7 +8,7 @@
         android:id="@+id/imageThree"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
+        android:scaleType="centerCrop"
         android:src="@drawable/scj3"
         />
 </RelativeLayout>

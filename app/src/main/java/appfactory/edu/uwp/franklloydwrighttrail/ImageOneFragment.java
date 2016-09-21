@@ -34,7 +34,7 @@ public class ImageOneFragment extends Fragment {
         switch(DescriptonActivity.value)
         {
             case "SC Johnson Administration Building and Research Tower":
-                imageOne.setImageResource(R.mipmap.scjohnson);
+                imageOne.setImageResource(R.drawable.scj1);
 
                 break;
             case "Wingspread":
