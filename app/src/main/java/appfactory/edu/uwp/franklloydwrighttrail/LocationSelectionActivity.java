@@ -3,13 +3,22 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GestureDetectorCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -18,15 +27,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import butterknife.Bind;
-
-public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, RecyclerView.OnItemTouchListener {
+public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, RecyclerView.OnItemTouchListener, NavigationView.OnNavigationItemSelectedListener {
     private GoogleMap mMap;
     private LatLng cameraPlace = new LatLng(43.0717445, -89.38040180000002);
     private Marker SCJohnson;
@@ -36,8 +42,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private Marker FLWVisitorCenter;
     private Marker GermanWarehouse;
 
-    @Nullable @Bind(R.id.recycler) RecyclerView recyclerView;
+    private RecyclerView recyclerView;
     private LocationSelectionAdapter adapter;
+    private GestureDetectorCompat gestureDetector;
+
+    private DrawerLayout drawer;
+
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
      * See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -47,18 +57,49 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_location_selection);
+        setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        //adapter = new LocationSelectionAdapter((LocationModel.getLocations()));
-        //recyclerView.setAdapter(adapter);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawer.setDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+        adapter = new LocationSelectionAdapter((LocationModel.getLocations()));
+        recyclerView.setAdapter(adapter);
+
+        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        layoutManager.generateDefaultLayoutParams();
+        layoutManager.setOrientation(GridLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        recyclerView.setLayoutManager(layoutManager);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.addOnItemTouchListener(this);
+        gestureDetector = new GestureDetectorCompat(this, new RecyclerViewGestureListener());
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override
@@ -70,17 +111,25 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        return false;
+    }
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.nav_locations:
+                break;
+            case R.id.nav_scrapbook:
+                break;
+            case R.id.nav_settings:
+                break;
+            case R.id.nav_about:
+                break;
         }
 
-        return super.onOptionsItemSelected(item);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 
     @Override
@@ -146,6 +195,44 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         AppIndex.AppIndexApi.start(mClient, viewAction);
     }
 
+    private void onClick(int position) {
+        Intent intent;
+        switch (position){
+            case 0:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case 1:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Monona Terrace");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case 2:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wingspread");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case 3:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Meeting House");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case 4:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "FLW Visitor Center");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case 5:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "German Warehouse");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            default:
+                break;
+        }
+    }
+
     @Override
     public void onStop() {
         super.onStop();
@@ -168,16 +255,25 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        gestureDetector.onTouchEvent(e);
         return false;
     }
 
     @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
-    }
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {}
 
     @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
 
+    /**
+     * A gesture listener for on top of the recycler view.
+     */
+    private class RecyclerViewGestureListener extends GestureDetector.SimpleOnGestureListener {
+        @Override
+        public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
+            View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+            onClick(recyclerView.getChildAdapterPosition(view));
+            return super.onSingleTapConfirmed(e);
+        }
     }
 }

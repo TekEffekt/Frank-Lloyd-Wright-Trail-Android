@@ -5,7 +5,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_gravity="bottom">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -15,7 +16,7 @@
             android:layout_width="200dp"
             android:layout_height="match_parent"
             android:textSize="15dp"
-            android:paddingTop="8dp"
+            android:paddingTop="5dp"
             android:paddingLeft="10dp"
             android:text="Viewing: Distance"
             android:textStyle="bold"
@@ -25,15 +26,15 @@
             android:layout_height="match_parent"
             android:layout_gravity="right"
             android:textSize="15dp"
-            android:paddingTop="8dp"
+            android:paddingTop="5dp"
             android:paddingRight="10dp"
             android:text="0.3 miles away"
             android:textStyle="bold"
             android:id="@+id/viewing_distance"/>
     </FrameLayout>
 
-    <GridLayout
-        android:orientation="vertical"
+    <LinearLayout
+        tools:context=".LocationSelectionActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
@@ -43,7 +44,7 @@
             android:visibility="visible"
             tools:listitem="@layout/location_item"
             app:layoutManager="android.support.v7.widget.GridLayoutManager"
-            app:spanCount="2"/>
-    </GridLayout>
+            app:spanCount="2" />
+    </LinearLayout>
 
 </LinearLayout>
