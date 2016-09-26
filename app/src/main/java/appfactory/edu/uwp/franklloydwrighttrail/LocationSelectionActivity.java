@@ -95,7 +95,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         MononaTerrace = mMap.addMarker(new MarkerOptions().position(cameraPlace)
-                .title("MononaTerrace")
+                .title("Monona Terrace")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                 //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         MeetingHouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.0757361, -89.43533680000002))
