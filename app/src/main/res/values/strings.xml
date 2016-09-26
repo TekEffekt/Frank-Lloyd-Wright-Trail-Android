@@ -13,6 +13,14 @@
     <string name="visitor_center">FLW Visitor Center</string>
     <string name="german_warehouse">German Warehouse</string>
 
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="locations">Locations</string>
+    <string name="scrapbook">Scrapbook</string>
+    <string name="settings">Settings</string>
+    <string name="about">About Us</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

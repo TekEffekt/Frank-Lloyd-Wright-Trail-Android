@@ -68,11 +68,9 @@ public static String value;
         switch(value)
         {
             case "SC Johnson Administration Building and Research Tower":
-
                 name.setText("SC Johnson Administration Building");
                 built.setText("The SC Johnson Administration Building, designed\nby Frank Lloyd Wright in 1936.");
                 description.setText("Far outside the corridors of high-tech industry and startup spaces, the SC Johnson company headquarters in Racine, Wisconsin, still provides a dashing vision of the modern American workplace, despite having recently celebrated its 75th anniversary. The SC Johnson Administration Building, designed by Frank Lloyd Wright in 1936, eschews business clichés: workers are greeted by a streamlined, muscular exterior made from ribbons of glass and brick, more campus than corporate, before entering a light-filled interior, with rows of organic, curved columns creating an abstract forest surrounding the secretary pool. The 15-story Research Tower, completed in 1950, was built on a \"taproot\" system. A core of elevators, heating, and ductwork formed a spine at the center on the tower, supported by a foundation sunk 54-feet-deep into the ground. Disc-shaped mezzanines branched off the core, alternating with full sized, 40-foot wide floors. Walls of horizontal Pyrex tubes, the same used in the Administration Building, let in sunlight but block the view. The effect is of a tree enclosed in glass.");
-
                 break;
             case "Wingspread":
 
@@ -94,7 +92,7 @@ public static String value;
                 break;
             case "FLW Visitor Center":
 
-                name.setText("Taliesin and Frank Loyd Wright Visitor Center");
+                name.setText("Taliesin and Frank Lloyd Wright Visitor Center");
                 built.setText("Wright’s longtime home and studio.");
                 description.setText("Wright’s longtime home and studio, named after a Welsh term that means “Shining Brow,” is an icon of Prairie School design that saw numerous tragedies and rebirths over the decades as the architect continually renovated, rebuilt and expanded. Set on a 700-acre estate in the rolling hills of Spring Green where he grew up, it was the site where he created and designed many of his masterpieces beginning in 1911 and contains a collection of Wright-designed structures.");
                 break;

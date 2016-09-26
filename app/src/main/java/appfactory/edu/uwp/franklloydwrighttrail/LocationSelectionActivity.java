@@ -186,8 +186,6 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "LocationSelection Page", // TODO: Define a title for the content shown.
                 // TODO: If you have web page content that matches this app activity's content,
-                // make sure this auto-generated web page URL is correct.
-                // Otherwise, set the URL to null.
                 Uri.parse("http://host/path"),
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://appfactory.edu.uwp.franklloydwrighttrail/http/host/path")
