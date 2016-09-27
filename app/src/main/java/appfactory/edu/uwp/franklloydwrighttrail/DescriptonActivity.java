@@ -160,6 +160,20 @@ public static String value;
         });
 
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        setUpView();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        _mViewPager = null;
+        _adapter = null;
+    }
+
     @Override
     public void onBackPressed(){
         if(fullScreen.getVisibility()== View.VISIBLE){
