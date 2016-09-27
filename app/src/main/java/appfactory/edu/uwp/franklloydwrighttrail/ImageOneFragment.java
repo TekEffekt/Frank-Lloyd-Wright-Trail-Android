@@ -41,7 +41,7 @@ public class ImageOneFragment extends Fragment {
                 imageOne.setImageResource(R.mipmap.wingspread);
 
                 break;
-            case "MononaTerrace":
+            case "Monona Terrace":
                 imageOne.setImageResource(R.mipmap.monona_terrace);
 
                 break;

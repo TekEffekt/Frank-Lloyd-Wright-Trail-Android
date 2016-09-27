@@ -7,17 +7,19 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="appfactory.edu.uwp.franklloydwrighttrail.LocationSelectionActivity"
     tools:showIn="@layout/activity_location_selection"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:weightSum="7">
 
     <fragment
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
         android:id="@+id/map"
+        android:layout_weight="4"
         class="com.google.android.gms.maps.SupportMapFragment"/>
 
     <include
         layout="@layout/activity_location_bar"
         android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_below="@id/map"/>
+        android:layout_height="0dp"
+        android:layout_weight="3"/>
 </LinearLayout>

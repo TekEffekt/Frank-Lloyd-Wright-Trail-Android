@@ -38,7 +38,7 @@ public class ImageTwoFragment extends Fragment {
                 imageTwo.setImageResource(R.drawable.wingspread2);
 
                 break;
-            case "MononaTerrace":
+            case "Monona Terrace":
                 imageTwo.setImageResource(R.drawable.mt2);
 
                 break;

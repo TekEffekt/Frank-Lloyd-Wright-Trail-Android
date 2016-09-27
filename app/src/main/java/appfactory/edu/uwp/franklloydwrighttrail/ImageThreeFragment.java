@@ -39,7 +39,7 @@ public class ImageThreeFragment extends Fragment {
                 imageThree.setImageResource(R.drawable.wingspread3);
 
                 break;
-            case "MononaTerrace":
+            case "Monona Terrace":
                 imageThree.setImageResource(R.drawable.mt3);
 
                 break;
