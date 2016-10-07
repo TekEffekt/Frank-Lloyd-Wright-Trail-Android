@@ -42,6 +42,12 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         holder.picture.setBackground(ContextCompat.getDrawable(context, location.getImage()));
         holder.textView.setText(location.getName());
         holder.marker.setImageResource(location.getMarkerColor());
+        float miles = LocationSelectionActivity.updateDistance(position);
+        holder.distance.setText(miles + "mi");
+    }
+
+    public void updateDistance(){
+
     }
 
     public FLWLocation getItem(int position) {
@@ -55,6 +61,7 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         @Nullable @Bind(R.id.name) TextView textView;
         @Nullable @Bind(R.id.picture) RelativeLayout picture;
         @Nullable @Bind(R.id.marker) ImageView marker;
+        @Nullable @Bind(R.id.distance) TextView distance;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

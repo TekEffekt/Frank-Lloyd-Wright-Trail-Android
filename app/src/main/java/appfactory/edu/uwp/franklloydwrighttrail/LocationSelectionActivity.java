@@ -1,10 +1,15 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -23,6 +28,7 @@ import android.view.View;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -33,6 +39,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, RecyclerView.OnItemTouchListener, NavigationView.OnNavigationItemSelectedListener {
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private GoogleMap mMap;
     private LatLng cameraPlace = new LatLng(43.0717445, -89.38040180000002);
     private Marker SCJohnson;
@@ -47,6 +54,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private GestureDetectorCompat gestureDetector;
 
     private DrawerLayout drawer;
+    private int currentLocation = 6;
+    private GridLayoutManager layoutManager;
+
+    private static Location myLocation;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -77,7 +88,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         adapter = new LocationSelectionAdapter((LocationModel.getLocations()));
         recyclerView.setAdapter(adapter);
 
-        GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, 2);
         layoutManager.generateDefaultLayoutParams();
         layoutManager.setOrientation(GridLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
@@ -135,33 +146,46 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     @Override
     public void onMapReady(GoogleMap map) {
         mMap = map;
+
         SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969))
                 .title("SC Johnson Administration Building and Research Tower")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588))
                 .title("Wingspread")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         MononaTerrace = mMap.addMarker(new MarkerOptions().position(cameraPlace)
                 .title("Monona Terrace")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         MeetingHouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.0757361, -89.43533680000002))
                 .title("Meeting House")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         FLWVisitorCenter = mMap.addMarker(new MarkerOptions().position(new LatLng(43.14390059999999, -90.05952260000004))
                 .title("FLW Visitor Center")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         GermanWarehouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
                 .title("German Warehouse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
-                //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
 
-
-
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+            } else {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+            }
+        } else {
+            mMap.setMyLocationEnabled(true);
+            myLocation = mMap.getMyLocation();
+        }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPlace, 7));
         mMap.setOnMarkerClickListener(this);
@@ -173,6 +197,21 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         intent.putExtra("Title", marker.getTitle());
         LocationSelectionActivity.this.startActivity(intent);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
+        switch(requestCode) {
+            case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                    mMap.setMyLocationEnabled(true);
+                    myLocation = mMap.getMyLocation();
+                } else {
+
+                }
+                return;
+            }
+        }
     }
 
     @Override
@@ -197,34 +236,82 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         Intent intent;
         switch (position){
             case 0:
+                if (currentLocation == position) {
                 intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                 intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
                 LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.7152375, -87.7906969));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
                 break;
             case 1:
-                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                intent.putExtra("Title", "Monona Terrace");
-                LocationSelectionActivity.this.startActivity(intent);
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "Monona Terrace");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
                 break;
             case 2:
-                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                intent.putExtra("Title", "Wingspread");
-                LocationSelectionActivity.this.startActivity(intent);
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "Wingspread");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0717445, -89.38040180000002));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
                 break;
             case 3:
-                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                intent.putExtra("Title", "Meeting House");
-                LocationSelectionActivity.this.startActivity(intent);
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "Meeting House");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
                 break;
             case 4:
-                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                intent.putExtra("Title", "FLW Visitor Center");
-                LocationSelectionActivity.this.startActivity(intent);
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "FLW Visitor Center");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.14390059999999, -90.05952260000004));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
                 break;
             case 5:
-                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                intent.putExtra("Title", "German Warehouse");
-                LocationSelectionActivity.this.startActivity(intent);
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "German Warehouse");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
                 break;
             default:
                 break;
@@ -272,6 +359,44 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
             onClick(recyclerView.getChildAdapterPosition(view));
             return super.onSingleTapConfirmed(e);
+        }
+    }
+
+    public static float updateDistance(int position){
+        Location place = new Location("temp");
+        switch (position){
+            case 0:
+                //sc-johnson
+                place.setLatitude(42.7152375);
+                place.setLongitude(-87.7906969);
+                return myLocation.distanceTo(place);
+            case 1:
+                //Wingspread1
+                place.setLatitude(42.784562);
+                place.setLongitude(-87.771588);
+                return myLocation.distanceTo(place);
+            case 2:
+                //Mono Terrace
+                place.setLatitude(43.0717445);
+                place.setLongitude(-89.38040180000002);
+                return myLocation.distanceTo(place);
+            case 3:
+                //Meeting house
+                place.setLatitude(43.0757361);
+                place.setLongitude(-89.43533680000002);
+                return myLocation.distanceTo(place);
+            case 4:
+                //FLW Visitor Center
+                place.setLatitude(43.14390059999999);
+                place.setLongitude(-90.05952260000004);
+                return myLocation.distanceTo(place);
+            case 5:
+                //German Warehouse
+                place.setLatitude(43.3334718);
+                place.setLongitude(-90.38436739999997);
+                return myLocation.distanceTo(place);
+            default:
+                return 0;
         }
     }
 }
