@@ -38,7 +38,8 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         context = parent.getContext();
-        return new ViewHolder(inflater.inflate(R.layout.location_item, parent, false));
+        views.add(new ViewHolder(inflater.inflate(R.layout.location_item, parent, false)));
+        return views.get(views.size() - 1);
     }
 
     @Override
@@ -47,11 +48,16 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         holder.picture.setBackground(ContextCompat.getDrawable(context, location.getImage()));
         holder.textView.setText(location.getName());
         holder.marker.setImageResource(location.getMarkerColor());
-        holder.distance.setVisibility(View.INVISIBLE);
-        views.add(position, holder);
+        if (LocationSelectionActivity.isReceivingLocation()) {
+            float miles = LocationSelectionActivity.updateDistance(position);
+            holder.distance.setText(miles + " mi");
+            holder.distance.setVisibility(View.VISIBLE);
+        } else {
+            holder.distance.setVisibility(View.INVISIBLE);
+        }
     }
 
-    public void updateDistance(){
+    public void updateDistance() {
         for (int i = 0; i < views.size(); i++) {
             ViewHolder holder = views.get(i);
             float miles = LocationSelectionActivity.updateDistance(i);
@@ -60,7 +66,7 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         }
     }
 
-    public void disableDistance(){
+    public void disableDistance() {
         for (int i = 0; i < views.size(); i++) {
             ViewHolder holder = views.get(i);
             holder.distance.setVisibility(View.INVISIBLE);
