@@ -3,6 +3,7 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,15 +20,22 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,7 +46,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener, OnMapReadyCallback, RecyclerView.OnItemTouchListener, NavigationView.OnNavigationItemSelectedListener {
+public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
+        OnMapReadyCallback, RecyclerView.OnItemTouchListener, NavigationView.OnNavigationItemSelectedListener,
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private GoogleMap mMap;
     private LatLng cameraPlace = new LatLng(43.0717445, -89.38040180000002);
@@ -57,6 +68,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private int currentLocation = 6;
     private GridLayoutManager layoutManager;
 
+    private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
+    private LocationRequest mLocationRequest;
     private static Location myLocation;
 
     /**
@@ -68,12 +81,29 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+        } else {
+
+            // Initialize mGoogleApiClient
+            if (checkPlayServices()) {
+                buildGoogleApiClient();
+            }
+
+            // prepare connection request
+            createLocationRequest();
+        }
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
@@ -99,9 +129,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         recyclerView.addOnItemTouchListener(this);
         gestureDetector = new GestureDetectorCompat(this, new RecyclerViewGestureListener());
 
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mClient = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
     }
 
     @Override
@@ -172,19 +202,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-            }
-        } else {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
-            myLocation = mMap.getMyLocation();
         }
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPlace, 7));
@@ -200,16 +220,27 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults){
-        switch(requestCode) {
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    mMap.setMyLocationEnabled(true);
-                    myLocation = mMap.getMyLocation();
-                } else {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    try {
+                        mMap.setMyLocationEnabled(true);
 
+                        // Initialize mGoogleApiClient
+                        if (checkPlayServices()) {
+                            buildGoogleApiClient();
+                        }
+
+                        // prepare connection request
+                        createLocationRequest();
+
+                    } catch (SecurityException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    adapter.disableDistance();
                 }
-                return;
             }
         }
     }
@@ -220,7 +251,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
-        mClient.connect();
+        if (mClient != null) {
+            mClient.connect();
+        }
         Action viewAction = Action.newAction(
                 Action.TYPE_VIEW, // TODO: choose an action type.
                 "LocationSelection Page", // TODO: Define a title for the content shown.
@@ -234,12 +267,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     private void onClick(int position) {
         Intent intent;
-        switch (position){
+        switch (position) {
             case 0:
                 if (currentLocation == position) {
-                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
-                LocationSelectionActivity.this.startActivity(intent);
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                    LocationSelectionActivity.this.startActivity(intent);
                 } else {
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.7152375, -87.7906969));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
@@ -335,7 +368,11 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 Uri.parse("android-app://appfactory.edu.uwp.franklloydwrighttrail/http/host/path")
         );
         AppIndex.AppIndexApi.end(mClient, viewAction);
-        mClient.disconnect();
+
+        // disconnect from google api
+        if (mClient != null) {
+            mClient.disconnect();
+        }
     }
 
     @Override
@@ -345,10 +382,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     }
 
     @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {}
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+    }
 
     @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {}
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+    }
 
     /**
      * A gesture listener for on top of the recycler view.
@@ -362,9 +401,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         }
     }
 
-    public static float updateDistance(int position){
+    public static float updateDistance(int position) {
         Location place = new Location("temp");
-        switch (position){
+        switch (position) {
             case 0:
                 //sc-johnson
                 place.setLatitude(42.7152375);
@@ -399,4 +438,135 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 return 0;
         }
     }
+
+    // location methods
+
+    //checks google play service on device and returns boolean
+    private boolean checkPlayServices() {
+        GoogleApiAvailability googleAPI = GoogleApiAvailability.getInstance();
+        int result = googleAPI.isGooglePlayServicesAvailable(this);
+        if (result != ConnectionResult.SUCCESS) {
+            if (googleAPI.isUserResolvableError(result)) {
+                googleAPI.getErrorDialog(this, result,
+                        PLAY_SERVICES_REQUEST_CODE).show();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    // handles error code from checkGooglePlayServices method
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == PLAY_SERVICES_REQUEST_CODE) {
+
+            if (resultCode == RESULT_OK) {
+                // Make sure the app is not already connected or attempting to connect
+                if (!mClient.isConnecting() && !mClient.isConnected()) {
+                    mClient.connect();
+                }
+            } else if (resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Google Play Services must be installed.",
+                        Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .addApi(AppIndex.API)
+                .build();
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        // get location from google api
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // no location permission stop trying to connect
+            adapter.disableDistance();
+            return;
+        }
+        myLocation = LocationServices.FusedLocationApi.getLastLocation(mClient);
+
+        // has location services
+        if (myLocation != null) {
+            adapter.updateDistance();
+        }
+
+        // start location updates
+        startLocationUpdates();
+    }
+
+    // sets location update intervals and accuracy
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+
+    // start location updates
+    protected void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            adapter.disableDistance();
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(
+                mClient, mLocationRequest, this);
+    }
+
+    // stop location updates
+    protected void stopLocationUpdates() {
+        if (mClient != null && !mClient.isConnecting()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mClient, this);
+
+        }
+    }
+
+    // handles location changes
+    @Override
+    public void onLocationChanged(Location location) {
+
+        // get new location
+        myLocation = location;
+
+        // location services is on display new location
+        if (myLocation != null) {
+            adapter.updateDistance();
+        }
+
+        // location services is off prompt user to enable
+        else {
+            adapter.disableDistance();
+        }
+    }
+
+    // activity paused
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        // stop location updates
+        stopLocationUpdates();
+
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+    }
 }
+

@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,9 +25,13 @@ import butterknife.ButterKnife;
 
 public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelectionAdapter.ViewHolder> {
     private ArrayList<FLWLocation> locations;
+    private ArrayList<ViewHolder> views;
     private Context context;
 
-    public LocationSelectionAdapter (ArrayList<FLWLocation> locations) {this.locations = locations; }
+    public LocationSelectionAdapter (ArrayList<FLWLocation> locations) {
+        this.locations = locations;
+        this.views = new ArrayList<>();
+    }
 
     @NonNull
     @Override
@@ -42,12 +47,24 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         holder.picture.setBackground(ContextCompat.getDrawable(context, location.getImage()));
         holder.textView.setText(location.getName());
         holder.marker.setImageResource(location.getMarkerColor());
-        float miles = LocationSelectionActivity.updateDistance(position);
-        holder.distance.setText(miles + "mi");
+        holder.distance.setVisibility(View.INVISIBLE);
+        views.add(position, holder);
     }
 
     public void updateDistance(){
+        for (int i = 0; i < views.size(); i++) {
+            ViewHolder holder = views.get(i);
+            float miles = LocationSelectionActivity.updateDistance(i);
+            holder.distance.setText(miles + " mi");
+            holder.distance.setVisibility(View.VISIBLE);
+        }
+    }
 
+    public void disableDistance(){
+        for (int i = 0; i < views.size(); i++) {
+            ViewHolder holder = views.get(i);
+            holder.distance.setVisibility(View.INVISIBLE);
+        }
     }
 
     public FLWLocation getItem(int position) {
