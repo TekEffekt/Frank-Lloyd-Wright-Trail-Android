@@ -236,7 +236,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                             buildGoogleApiClient();
                         }
 
-                        mClient.connect();
+                        if (mClient != null) {
+                            mClient.connect();
+                        }
 
                         // prepare connection request
                         createLocationRequest();
