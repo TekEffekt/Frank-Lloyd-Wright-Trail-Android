@@ -84,6 +84,11 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Initialize mGoogleApiClient
+        if (checkPlayServices()) {
+            buildGoogleApiClient();
+        }
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -93,11 +98,6 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
 
         } else {
-
-            // Initialize mGoogleApiClient
-            if (checkPlayServices()) {
-                buildGoogleApiClient();
-            }
 
             // prepare connection request
             createLocationRequest();
@@ -228,10 +228,15 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     try {
                         mMap.setMyLocationEnabled(true);
 
+                        if (mClient.isConnected())
+                            mClient.disconnect();
+
                         // Initialize mGoogleApiClient
                         if (checkPlayServices()) {
                             buildGoogleApiClient();
                         }
+
+                        mClient.connect();
 
                         // prepare connection request
                         createLocationRequest();
