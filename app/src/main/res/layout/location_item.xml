@@ -7,7 +7,7 @@
     android:paddingRight="1dp"
     android:paddingTop="1dp"
     android:paddingBottom="1dp"
-             android:background="@color/white">
+    android:background="@color/white">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -42,7 +42,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:text="0.2mi"
+        android:text="mi"
         android:textColor="@color/white"
         android:textSize="12dp"
         android:paddingRight="5dp"

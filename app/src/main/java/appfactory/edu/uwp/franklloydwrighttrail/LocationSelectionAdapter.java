@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +25,21 @@ import butterknife.ButterKnife;
 
 public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelectionAdapter.ViewHolder> {
     private ArrayList<FLWLocation> locations;
+    private ArrayList<ViewHolder> views;
     private Context context;
 
-    public LocationSelectionAdapter (ArrayList<FLWLocation> locations) {this.locations = locations; }
+    public LocationSelectionAdapter (ArrayList<FLWLocation> locations) {
+        this.locations = locations;
+        this.views = new ArrayList<>();
+    }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         context = parent.getContext();
-        return new ViewHolder(inflater.inflate(R.layout.location_item, parent, false));
+        views.add(new ViewHolder(inflater.inflate(R.layout.location_item, parent, false)));
+        return views.get(views.size() - 1);
     }
 
     @Override
@@ -42,6 +48,29 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         holder.picture.setBackground(ContextCompat.getDrawable(context, location.getImage()));
         holder.textView.setText(location.getName());
         holder.marker.setImageResource(location.getMarkerColor());
+        if (LocationSelectionActivity.isReceivingLocation()) {
+            float miles = LocationSelectionActivity.updateDistance(position)/(float) 1609.344;
+            holder.distance.setText(String.format("%.1f", miles) + " mi");
+            holder.distance.setVisibility(View.VISIBLE);
+        } else {
+            holder.distance.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    public void updateDistance() {
+        for (int i = 0; i < views.size(); i++) {
+            ViewHolder holder = views.get(i);
+            float miles = LocationSelectionActivity.updateDistance(i)/(float) 1609.344;
+            holder.distance.setText(String.format("%.1f", miles) + " mi");
+            holder.distance.setVisibility(View.VISIBLE);
+        }
+    }
+
+    public void disableDistance() {
+        for (int i = 0; i < views.size(); i++) {
+            ViewHolder holder = views.get(i);
+            holder.distance.setVisibility(View.INVISIBLE);
+        }
     }
 
     public FLWLocation getItem(int position) {
@@ -55,6 +84,7 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         @Nullable @Bind(R.id.name) TextView textView;
         @Nullable @Bind(R.id.picture) RelativeLayout picture;
         @Nullable @Bind(R.id.marker) ImageView marker;
+        @Nullable @Bind(R.id.distance) TextView distance;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -29,14 +29,14 @@ import android.widget.TextView;
 
 
 public class DescriptonActivity extends AppCompatActivity {
-protected View view;
+    protected View view;
     private ViewPager _mViewPager;
     private ImageViewPagerAdapter _adapter;
     private ImageView _btn1, _btn2, _btn3;
     private ImageView fullScreen;
-private View textView;
+    private View textView;
     private RelativeLayout selection;
-public static String value;
+    public static String value;
     private FloatingActionButton fab;
 
     @Override
