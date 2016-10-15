@@ -49,8 +49,8 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
         holder.textView.setText(location.getName());
         holder.marker.setImageResource(location.getMarkerColor());
         if (LocationSelectionActivity.isReceivingLocation()) {
-            float miles = LocationSelectionActivity.updateDistance(position);
-            holder.distance.setText(miles + " mi");
+            float miles = LocationSelectionActivity.updateDistance(position)/(float) 1609.344;
+            holder.distance.setText(String.format("%.1f", miles) + " mi");
             holder.distance.setVisibility(View.VISIBLE);
         } else {
             holder.distance.setVisibility(View.INVISIBLE);
@@ -60,8 +60,8 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
     public void updateDistance() {
         for (int i = 0; i < views.size(); i++) {
             ViewHolder holder = views.get(i);
-            float miles = LocationSelectionActivity.updateDistance(i);
-            holder.distance.setText(miles + " mi");
+            float miles = LocationSelectionActivity.updateDistance(i)/(float) 1609.344;
+            holder.distance.setText(String.format("%.1f", miles) + " mi");
             holder.distance.setVisibility(View.VISIBLE);
         }
     }
