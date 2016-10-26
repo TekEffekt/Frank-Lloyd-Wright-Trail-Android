@@ -3,30 +3,31 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class DescriptonActivity extends AppCompatActivity {
@@ -35,6 +36,9 @@ protected View view;
     private ImageViewPagerAdapter _adapter;
     private ImageView _btn1, _btn2, _btn3;
     private ImageView fullScreen;
+    List<Example> mDistanceMatrixModels;
+    Duration duration = new Duration();
+    int time = 0;
 private View textView;
     private RelativeLayout selection;
 public static String value;
@@ -65,6 +69,40 @@ public static String value;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        String[] latlong = new String[2];
+        latlong[0] = "42.7152375,-87.7906969";
+        latlong[1] = "42.784562,-87.771588";
+        String olatlong = latlong[0] + "|" + latlong[1];
+        String[] latlong2 = new String[2];
+        latlong2[0] = "42.7152375,-87.7906969";
+        latlong2[1] = "42.784562,-87.771588";
+        String dlatlong = latlong2[0] + "|" + latlong2[1];
+
+        DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
+        Call<Example> call = distanceMatrixApi.timeDuration("imperial",olatlong,dlatlong);
+        call.enqueue(new Callback<Example>() {
+            @Override
+            public void onResponse(Call<Example> call, Response<Example> response) {
+                if(response.isSuccessful()) {
+
+
+                    Log.d("debug", "onResponseGood: " +4);
+                    Log.d("debug", "onResponse: " +response.body().getRows().get(0).getElements().get(1).getDuration().getValue());
+
+                    time = response.body().getRows().get(0).getElements().get(1).getDuration().getValue();
+
+                }
+                else
+                {
+                    Log.d("debug", "onResponse: " + 3);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Example> call, Throwable t) {
+                Log.d("debug", "onFailure: "+2);
+            }
+        });
 
         switch(value)
         {
@@ -155,7 +193,8 @@ public static String value;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Thank you for visiting", Snackbar.LENGTH_LONG)
+                
+                Snackbar.make(view, "", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
