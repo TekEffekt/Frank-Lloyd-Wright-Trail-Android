@@ -21,6 +21,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +38,7 @@ protected View view;
     private ImageViewPagerAdapter _adapter;
     private ImageView _btn1, _btn2, _btn3;
     private ImageView fullScreen;
-    List<Example> mDistanceMatrixModels;
+    ArrayList<TripOrder> mTripOrder = new ArrayList<>();
     Duration duration = new Duration();
     int time = 0;
 private View textView;
@@ -69,7 +71,11 @@ public static String value;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
-        String[] latlong = new String[2];
+
+
+
+/*
+String[] latlong = new String[2];
         latlong[0] = "42.7152375,-87.7906969";
         latlong[1] = "42.784562,-87.771588";
         String olatlong = latlong[0] + "|" + latlong[1];
@@ -77,7 +83,6 @@ public static String value;
         latlong2[0] = "42.7152375,-87.7906969";
         latlong2[1] = "42.784562,-87.771588";
         String dlatlong = latlong2[0] + "|" + latlong2[1];
-
         DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
         Call<Example> call = distanceMatrixApi.timeDuration("imperial",olatlong,dlatlong);
         call.enqueue(new Callback<Example>() {
@@ -85,13 +90,140 @@ public static String value;
             public void onResponse(Call<Example> call, Response<Example> response) {
                 if(response.isSuccessful()) {
 
+                    for (int i=0;i<response.body().getRows().size();i++)
+                    {
+                        if(response.body().getOriginAddresses().get(i)== "1525 Howe St, Racine, WI 53403, USA" || response.body().getOriginAddresses().get(i)== "300 S Church St, Richland Center, WI 53581, USA") {
+                            if (endPoint1 == false) {
+                                endPoint1 = true;
+                                startLatLong = response.body().getOriginAddresses().get(i);
+                            }
+                            else {
+                                endPoint2 = true;
+                                endLatLong = response.body().getOriginAddresses().get(i);
+                            }
+                        }
+                    }
+                    if(endPoint1 && endPoint2)
+                    {
+                        startLatLong = "42.7152375,-87.7906969";
+                        endLatLong = "43.33472,-90.384367";
+                    }
+                    else if(endPoint1 || endPoint2)
+                    {
+                        if(startLatLong == "1525 Howe St, Racine, WI 53403, USA")
+                        {
+                            for(int i=0;i<response.body().getRows().get)
+                        }
+                        else if(startLatLong == "300 S Church St, Richland Center, WI 53581, USA")
+                        {
 
-                    Log.d("debug", "onResponseGood: " +4);
-                    Log.d("debug", "onResponse: " +response.body().getRows().get(0).getElements().get(1).getDuration().getValue());
+                        }
+                    }
+                    else
+                    {
 
+                    }
                     time = response.body().getRows().get(0).getElements().get(1).getDuration().getValue();
+                    */
 
+        String startLatLong;
+        String endLatLong;
+        int index;
+        int startLoc;
+        int endLoc;
+        String midLatLong = "optimize:true|";
+
+        ArrayList<FLWLocation> locations = LocationModel.getLocations();
+        String [] middleLatLong = new String[locations.size()-2];
+
+        index = findLocation(R.string.scjohnson,locations);
+        if(index == -1)
+        {
+            index = findLocation(R.string.wingspread,locations);
+            if(index == -1)
+            {
+                index = findLocation(R.string.meeting_house,locations);
+                if(index == -1)
+                {
+                    index = findLocation(R.string.monona_terrace,locations);
+                    if(index == -1)
+                    {
+                        index = findLocation(R.string.visitor_center,locations);
+                    }
                 }
+            }
+        }
+        startLatLong = locations.get(index).getLatlong();
+        startLoc = index;
+
+        index = findLocation(R.string.german_warehouse,locations);
+        if(index == -1)
+        {
+            index = findLocation(R.string.visitor_center,locations);
+            if(index == -1)
+            {
+                index = findLocation(R.string.meeting_house,locations);
+                if(index == -1)
+                {
+                    index = findLocation(R.string.monona_terrace,locations);
+                    if(index == -1)
+                    {
+                        index = findLocation(R.string.wingspread,locations);
+                    }
+                }
+            }
+        }
+        endLatLong = locations.get(index).getLatlong();
+        endLoc = index;
+        int j=0;
+        for(int i=0;i<locations.size();i++)
+        {
+            if(startLoc != i && endLoc != i)
+            {
+                middleLatLong[j] = locations.get(i).getLatlong();
+                j++;
+            }
+        }
+        for(int i=0;i<middleLatLong.length;i++)
+        {
+            if(i!= middleLatLong.length-1) {
+                midLatLong += middleLatLong[i] + "|";
+            }
+            else
+            {
+                midLatLong += middleLatLong[i];
+            }
+
+
+        }
+
+
+                    DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+                    Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
+        Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
+                    call2.enqueue(new Callback<DirectionsModel>() {
+                        @Override
+                        public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                            if(response.isSuccessful()) {
+                                for(int i=0;i<response.body().getRoutes().get(0).getLegs().size();i++)
+                                {
+                                    TripOrder trip = new TripOrder(response.body().getRoutes().get(0).getLegs().get(i).getStartAddress(),response.body().getRoutes().get(0).getLegs().get(i).getEndAddress(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                                    Log.d("debug", "onResponse: "+response.body().getRoutes().get(0).getLegs().get(i).getStartAddress()+ "  "+response.body().getRoutes().get(0).getLegs().get(i).getEndAddress()+ "  "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText()+ "  "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                                    mTripOrder.add(trip);
+                                }
+                                createTripPlan(mTripOrder);
+                            }
+                            else
+                            {
+                                Log.d("debug", "onResponse: " + 3);
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<DirectionsModel> call, Throwable t) {
+                            Log.d("debug", "onFailure: "+2);
+                        }
+                    });
+                /*}
                 else
                 {
                     Log.d("debug", "onResponse: " + 3);
@@ -103,6 +235,10 @@ public static String value;
                 Log.d("debug", "onFailure: "+2);
             }
         });
+*/
+
+
+
 
         switch(value)
         {
@@ -193,7 +329,7 @@ public static String value;
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+
                 Snackbar.make(view, "", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
@@ -359,5 +495,71 @@ public static String value;
         _btn1.setImageResource(R.drawable.selecteditem_dot);
         _btn2 = (ImageView) findViewById(R.id.btn2);
         _btn3 = (ImageView) findViewById(R.id.btn3);
+    }
+    public int findLocation(int location,ArrayList<FLWLocation> locations)
+    {
+        for(int i=0;i<locations.size();i++){
+            if(locations.get(i).getName() == location) {
+                return i;
+            }
+
+        }
+        return -1;
+    }
+    public void createTripPlan(ArrayList<TripOrder> tripOrder)
+    {
+        long breakfast = 3600;
+        breakfast = breakfast/60;
+        Log.d("debug", "breakfast: "+breakfast);
+        long lunch = 3600;
+        lunch = lunch/60;
+        Log.d("debug", "lunch: "+lunch);
+        long dinner = 3600;
+        dinner = dinner/60;
+        Log.d("debug", "dinner: "+dinner);
+        int startHour = 9;
+        int startMin = 30;
+        int endHour = 7;
+        int endMin= 30;
+        long totalTime = 36000;
+        totalTime = totalTime/60;
+        int time = 0;
+        long mealtime = breakfast+lunch+dinner;
+        Log.d("debug", "mealtime: "+ mealtime);
+        for(int i=0;i<tripOrder.size();i++)
+        {
+            time += tripOrder.get(i).getTimeValue()/60+60;
+        }
+        Log.d("debug", "time: "+time);
+        if(mealtime > totalTime)
+        {
+            Log.d("debug", "meals take too much time.");
+        }
+        else if(mealtime+time > totalTime)
+        {
+            Log.d("debug", "total trip too long ");
+            time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
+            if(mealtime+time> totalTime)
+            {
+                Log.d("debug", "total trip still too long ");
+                time = time - tripOrder.get(tripOrder.size()-2).getTimeValue()-60;
+                if(mealtime+time>totalTime){
+                    Log.d("debug", "total trip is still too long ");
+                }
+                else
+                {
+                    Log.d("debug", "enough time with 2 sites taken off ");
+                }
+            }
+            else
+            {
+                Log.d("debug", "enough time with 1 site taken off ");
+            }
+        }
+        else
+        {
+            Log.d("debug", "enough time ");
+        }
+
     }
 }
