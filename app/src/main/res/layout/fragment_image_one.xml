@@ -8,9 +8,8 @@ xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/imageOne"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:src="@mipmap/scjohnson"
         android:scaleType="centerCrop"
+        android:src="@mipmap/scjohnson"
         />
 
 </RelativeLayout>

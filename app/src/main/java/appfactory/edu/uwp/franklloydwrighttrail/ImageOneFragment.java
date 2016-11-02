@@ -38,11 +38,11 @@ public class ImageOneFragment extends Fragment {
 
                 break;
             case "Wingspread":
-                imageOne.setImageResource(R.mipmap.wingspread);
+                imageOne.setImageResource(R.drawable.wingspread1);
 
                 break;
             case "Monona Terrace":
-                imageOne.setImageResource(R.mipmap.monona_terrace);
+                imageOne.setImageResource(R.drawable.mononaterrace);
 
                 break;
             case "Meeting House":
@@ -50,11 +50,11 @@ public class ImageOneFragment extends Fragment {
 
                 break;
             case "FLW Visitor Center":
-                imageOne.setImageResource(R.mipmap.visitor_center);
+                imageOne.setImageResource(R.drawable.visitorcenter1);
 
                 break;
             case "German Warehouse":
-                imageOne.setImageResource(R.mipmap.german_warehouse);
+                imageOne.setImageResource(R.drawable.adgermanwarehouse1);
 
                 break;
 
