@@ -163,8 +163,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case R.id.nav_locations:
                 break;
             case R.id.nav_trip_planner:
-                Intent intent = TripPlannerActivity.newIntent(this);
-                startActivity(intent);
+                //Intent intent = TripPlannerActivity.newIntent(this);
+                //startActivity(intent);
                 break;
             case R.id.nav_scrapbook:
                 break;
