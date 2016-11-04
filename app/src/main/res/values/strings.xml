@@ -24,6 +24,7 @@
 
     <string name="choose_destinations">Choose Destinations</string>
     <string name="choose_times">Choose Times</string>
+    <string name="trip_options">Trip Options</string>
     <string name="cont">Continue</string>
     <string name="starts">Starts</string>
     <string name="ends">Ends</string>

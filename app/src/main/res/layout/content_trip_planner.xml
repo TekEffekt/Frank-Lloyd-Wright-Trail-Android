@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="appfactory.edu.uwp.franklloydwrighttrail.TripPlannerSelection"
+    tools:showIn="@layout/activity_trip_planner_toolbar"
+    android:orientation="vertical">
     <LinearLayout
-        tools:context=".LocationSelectionActivity"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="500dp"
         android:id="@+id/recycler_container">
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
@@ -24,14 +25,14 @@
 
     <Button
         android:id="@+id/cont"
-        android:layout_width="280dp"
-        android:layout_height="40dp"
-        android:layout_below="@id/recycler_container"
-        android:layout_centerHorizontal="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
         android:layout_marginTop="18dp"
         android:textAllCaps="false"
         android:text="@string/cont"
         android:textSize="22dp"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"/>
-</RelativeLayout>
+</LinearLayout>

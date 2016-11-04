@@ -15,10 +15,10 @@ import android.view.View;
 import android.widget.Button;
 
 /**
- * Created by sterl on 10/28/2016.
+ * Created by sterl on 11/3/2016.
  */
 
-public class TripPlannerOptions extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Button cont;
 
@@ -30,10 +30,9 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_options);
+        setContentView(R.layout.content_trip_timeline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.trip_options);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

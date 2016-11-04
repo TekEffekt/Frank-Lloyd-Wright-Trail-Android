@@ -22,12 +22,18 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
     private DrawerLayout drawer;
     private Button cont;
 
+    public static Intent newIntent(Context packageContext) {
+        Intent intent = new Intent(packageContext, TripPlannerOptions.class);
+        return intent;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_times);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.choose_times);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -42,7 +48,8 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(TripPlannerTimes.this, TripPlannerOptions.class);
+                TripPlannerTimes.this.startActivity(intent);
             }
         });
     }

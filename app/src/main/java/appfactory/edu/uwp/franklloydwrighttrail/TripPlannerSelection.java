@@ -27,7 +27,7 @@ import java.util.ArrayList;
  * Created by sterl on 10/28/2016.
  */
 
-public class TripPlannerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerView.OnItemTouchListener{
+public class TripPlannerSelection extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerView.OnItemTouchListener{
     private DrawerLayout drawer;
     private TripObject trip;
     private ArrayList<FLWLocation> locations;
@@ -39,7 +39,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private GestureDetectorCompat gestureDetector;
 
     public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, TripPlannerActivity.class);
+        Intent intent = new Intent(packageContext, TripPlannerSelection.class);
         return intent;
     }
 
@@ -49,6 +49,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_trip_planner);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle(R.string.choose_destinations);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -72,15 +73,15 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addOnItemTouchListener(this);
-        gestureDetector = new GestureDetectorCompat(this, new TripPlannerActivity.RecyclerViewGestureListener());
+        gestureDetector = new GestureDetectorCompat(this, new TripPlannerSelection.RecyclerViewGestureListener());
 
         cont = (Button) findViewById(R.id.cont);
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TripPlannerActivity.this, TripPlannerTimes.class);
+                Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimes.class);
                 intent.putExtra("Trip", trip.getTrips());
-                TripPlannerActivity.this.startActivity(intent);
+                TripPlannerSelection.this.startActivity(intent);
             }
         });
 
