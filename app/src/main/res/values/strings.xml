@@ -17,6 +17,7 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="locations">Locations</string>
+    <string name="trip_planner">Trip Planner</string>
     <string name="scrapbook">Scrapbook</string>
     <string name="settings">Settings</string>
     <string name="about">About Us</string>

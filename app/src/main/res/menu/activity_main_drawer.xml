@@ -11,7 +11,7 @@
                 <item
                     android:id="@+id/nav_scrapbook"
                     android:icon="@drawable/ic_scrapbook"
-                    android:title="@string/scrapbook" />
+                    android:title="@string/trip_planner" />
             </group>
         </menu>
     </item>
