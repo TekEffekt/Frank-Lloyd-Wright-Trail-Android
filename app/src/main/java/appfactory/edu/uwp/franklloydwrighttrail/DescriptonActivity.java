@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -60,7 +61,7 @@ public class DescriptonActivity extends AppCompatActivity {
         TextView built = (TextView) findViewById(R.id.built);
         TextView description = (TextView) findViewById(R.id.description);
         description.setMovementMethod(new ScrollingMovementMethod());
-        getSupportActionBar().setTitle("");
+        getSupportActionBar().setTitle(" ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
@@ -159,6 +160,28 @@ public class DescriptonActivity extends AppCompatActivity {
             }
         });
 
+        final CollapsingToolbarLayout collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        AppBarLayout appBarLayout = (AppBarLayout) findViewById(R.id.appbar);
+        appBarLayout.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener(){
+            boolean isShow = false;
+            int scrollRange = -1;
+
+            @Override
+            public void onOffsetChanged(AppBarLayout appBarLayout1, int verticalOffset){
+                if(scrollRange == -1){
+                    scrollRange = appBarLayout1.getTotalScrollRange();
+                }
+                if(scrollRange + verticalOffset ==0){
+                    collapsingToolbarLayout.setTitle("Frank Loyd Wright Trail");
+                    isShow = true;
+                }
+                else if(isShow)
+                {
+                    collapsingToolbarLayout.setTitle(" ");
+                    isShow = false;
+                }
+            }
+        });
     }
 
     @Override

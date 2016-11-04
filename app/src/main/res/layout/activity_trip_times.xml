@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp"
+        android:layout_marginTop="40dp">
+        <TextView
+            android:id="@+id/starts"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/starts"
+            android:textSize="20dp"
+            android:paddingLeft="10dp"/>
+        <TextView
+            android:id="@+id/start_time"
+            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:paddingRight="10dp"
+            android:text="@string/time_entry"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:textAlignment="viewEnd"
+            android:layout_gravity="end"
+            android:layout_toRightOf="@id/starts"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/ends"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ends"
+            android:textSize="20dp"
+            android:paddingLeft="10dp"/>
+        <TextView
+            android:id="@+id/end_time"
+            android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:paddingRight="10dp"
+            android:text="@string/time_entry"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20dp"
+            android:textAlignment="viewEnd"
+            android:layout_gravity="end"
+            android:layout_toRightOf="@id/ends"/>
+    </RelativeLayout>
+
+    <Button
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:layout_margin="340dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="17dp"
+        android:textAllCaps="false"
+        android:text="@string/cont"
+        android:textSize="23dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white" />
+</LinearLayout>

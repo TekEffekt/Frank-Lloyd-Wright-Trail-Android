@@ -162,6 +162,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         switch (item.getItemId()) {
             case R.id.nav_locations:
                 break;
+            case R.id.nav_trip_planner:
+                Intent intent = TripPlannerActivity.newIntent(this);
+                startActivity(intent);
+                break;
             case R.id.nav_scrapbook:
                 break;
             case R.id.nav_settings:
