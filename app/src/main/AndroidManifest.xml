@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="appfactory.edu.uwp.franklloydwrighttrail">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
@@ -19,6 +21,18 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TripPlannerTimeline"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".TripPlannerSelection"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".TripPlannerTimes"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".TripPlannerOptions"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
             android:value=".LocationSelectionActivity"/>
@@ -36,9 +50,6 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".LocationSelectionActivity">
         </activity>
-
-
-
     </application>
 
 </manifest>
