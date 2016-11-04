@@ -299,7 +299,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     intent.putExtra("Title", "Monona Terrace");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0717445, -89.38040180000002));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -312,7 +312,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     intent.putExtra("Title", "Wingspread");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0717445, -89.38040180000002));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -423,13 +423,13 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 return myLocation.distanceTo(place);
             case 1:
                 //Wingspread1
-                place.setLatitude(42.784562);
-                place.setLongitude(-87.771588);
+                place.setLatitude(43.0717445);
+                place.setLongitude(-89.38040180000002);
                 return myLocation.distanceTo(place);
             case 2:
                 //Mono Terrace
-                place.setLatitude(43.0717445);
-                place.setLongitude(-89.38040180000002);
+                place.setLatitude(42.784562);
+                place.setLongitude(-87.771588);
                 return myLocation.distanceTo(place);
             case 3:
                 //Meeting house
