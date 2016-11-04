@@ -30,7 +30,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.content_trip_timeline);
+        setContentView(R.layout.activity_trip_timeline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

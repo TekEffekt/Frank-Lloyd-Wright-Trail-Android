@@ -22,6 +22,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".TripPlannerTimeline"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
             android:name=".TripPlannerSelection"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
