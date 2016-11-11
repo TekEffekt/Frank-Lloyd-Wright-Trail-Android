@@ -60,6 +60,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private Marker MeetingHouse;
     private Marker FLWVisitorCenter;
     private Marker GermanWarehouse;
+    private Marker ValleySchool;
+    private Marker Taliesin;
 
     private RecyclerView recyclerView;
     private LocationSelectionAdapter adapter;
@@ -206,6 +208,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .title("German Warehouse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        /*ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
+                .title("Wyoming Valley School")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+        Taliesin = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
+                .title("Taliesin")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));*/
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -358,6 +366,32 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     currentLocation = position;
                 }
                 break;
+            case 6:
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "Wyoming Valley School");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    //CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
+                    //CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    //mMap.moveCamera(center);
+                    //mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
+                break;
+            case 7:
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "Taliesin");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    //CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
+                    //CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    //mMap.moveCamera(center);
+                    //mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
+                break;
             default:
                 break;
         }
@@ -446,6 +480,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 place.setLatitude(43.3334718);
                 place.setLongitude(-90.38436739999997);
                 return myLocation.distanceTo(place);
+            case 6:
+                //Wyoming Valley School
+                return 0;
+            case 7:
+                //Taliesin
+                return 0;
             default:
                 return 0;
         }

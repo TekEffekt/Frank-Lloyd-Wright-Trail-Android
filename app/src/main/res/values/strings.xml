@@ -12,6 +12,8 @@
     <string name="meeting_house">Meeting House</string>
     <string name="visitor_center">FLW Visitor Center</string>
     <string name="german_warehouse">German Warehouse</string>
+    <string name="valley_school">Wyoming Valley School</string>
+    <string name="taliesin">Taliesin</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>

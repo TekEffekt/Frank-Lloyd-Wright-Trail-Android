@@ -103,6 +103,16 @@ public class DescriptonActivity extends AppCompatActivity {
                 built.setText("A.D. German Warehouse built in 1921.");
                 description.setText("A small brick structure used by a local commodity wholesaler, Albert Dell German, this warehouse, finished in 1921, features an elaborate Mayan Revival exterior. Built in the town of Richland Center, where Wright was born, this offers a rare example of a project the architect designed in the late 1910’s that’s still standing.");
                 break;
+            case "Wyoming Valley School":
+                name.setText("Wyoming Valley School");
+                built.setText("");
+                description.setText("");
+                break;
+            case "Taliesin":
+                name.setText("Taliesin");
+                built.setText("");
+                description.setText("");
+                break;
             default:
                 description.setText("Other Place");
                 getSupportActionBar().setTitle("Other");
@@ -172,7 +182,7 @@ public class DescriptonActivity extends AppCompatActivity {
                     scrollRange = appBarLayout1.getTotalScrollRange();
                 }
                 if(scrollRange + verticalOffset ==0){
-                    collapsingToolbarLayout.setTitle("Frank Loyd Wright Trail");
+                    collapsingToolbarLayout.setTitle("Frank Lloyd Wright Trail");
                     isShow = true;
                 }
                 else if(isShow)
