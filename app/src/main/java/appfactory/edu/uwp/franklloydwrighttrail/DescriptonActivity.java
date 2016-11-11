@@ -68,20 +68,20 @@ public class DescriptonActivity extends AppCompatActivity {
 
         switch(value)
         {
-            case "SC Johnson Administration Building and Research Tower":
-                name.setText("SC Johnson Administration Building");
+            case "SC Johnson Headquarters":
+                name.setText(R.string.scjohnson);
                 built.setText("The SC Johnson Administration Building, designed\nby Frank Lloyd Wright in 1936.");
                 description.setText("Far outside the corridors of high-tech industry and startup spaces, the SC Johnson company headquarters in Racine, Wisconsin, still provides a dashing vision of the modern American workplace, despite having recently celebrated its 75th anniversary. The SC Johnson Administration Building, designed by Frank Lloyd Wright in 1936, eschews business clichés: workers are greeted by a streamlined, muscular exterior made from ribbons of glass and brick, more campus than corporate, before entering a light-filled interior, with rows of organic, curved columns creating an abstract forest surrounding the secretary pool. The 15-story Research Tower, completed in 1950, was built on a \"taproot\" system. A core of elevators, heating, and ductwork formed a spine at the center on the tower, supported by a foundation sunk 54-feet-deep into the ground. Disc-shaped mezzanines branched off the core, alternating with full sized, 40-foot wide floors. Walls of horizontal Pyrex tubes, the same used in the Administration Building, let in sunlight but block the view. The effect is of a tree enclosed in glass.");
                 break;
             case "Wingspread":
 
-                name.setText("Wingspread");
+                name.setText(R.string.wingspread);
                 built.setText("Wingspread designed for SC Johnson owner\nHerbert Fisk Johnson, Jr. in 1936");
                 description.setText("A private residence Wright designed for SC Johnson owner Herbert Fisk Johnson, Jr. in 1936, Wingspread lives up to its names, a low-slung streamlined brick home with four wings spreading across the property. The central living room, a dome-shaped room, features a 30-foot-tall vertical fireplace and original furniture designed by Wright. Considered the last of the Prairie Houses, it’s filled with unique touches, including a dramatic “Romeo and Juliet” balcony that cantilevers over the landscape and a crow’s nest lookout built above the home, a favorite play place for the Johnson children.");
                 break;
             case "Monona Terrace":
 
-                name.setText("Monona Terrace");
+                name.setText(R.string.monona_terrace);
                 built.setText("Monona Terrace completed in 1997");
                 description.setText("A sprawling, curved convention center on the shores of Lake Monona in Madison, this building was a posthumous addition to the Wright canon, rejected by officials during the architect’s lifetime, but finally approved via a referendum put local voters in the early ‘90s. The curvilinear “dream civic center,” which recalls the shape of the Guggenheim, was first proposed by Wright in 1938, and was a project he constantly altered and updated throughout his life. His former apprentice Anthony Puttnam would finish the designs for the interior before it was finally completed in 1997.");
                 break;
@@ -108,10 +108,10 @@ public class DescriptonActivity extends AppCompatActivity {
                 built.setText(R.string.valley_school_built);
                 description.setText(R.string.valley_school_desc);
                 break;
-            case "Taliesin":
-                name.setText(R.string.taliesin);
-                built.setText(R.string.taliesin_built);
-                description.setText(R.string.taliesin_desc);
+            case "American System-Built Homes":
+                name.setText(R.string.built_homes);
+                built.setText(R.string.built_homes_built);
+                description.setText(R.string.built_homes_desc);
                 break;
             default:
                 description.setText("Other Place");

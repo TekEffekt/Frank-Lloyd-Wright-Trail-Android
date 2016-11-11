@@ -6,14 +6,14 @@
     <color name="brown">#613314</color>
     <color name="white">#FFFFFF</color>
 
-    <string name="scjohnson">SC Johnson Administration Building</string>
+    <string name="scjohnson">SC Johnson Headquarters</string>
     <string name="wingspread">Wingspread</string>
     <string name="monona_terrace">Monona Terrace</string>
     <string name="meeting_house">Meeting House</string>
     <string name="visitor_center">FLW Visitor Center</string>
     <string name="german_warehouse">German Warehouse</string>
     <string name="valley_school">Wyoming Valley School</string>
-    <string name="taliesin">Taliesin</string>
+    <string name="built_homes">American System-Built Homes</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
@@ -35,8 +35,8 @@
     <string name="dinner">Dinner</string>
     <string name="time_picker_title">Enter Time</string>
 
-    <string name="taliesin_built">Built in 1911</string>
-    <string name="taliesin_desc">Taliesin is Wright’s home as well as the 800-acre architectural campus that includes buildings from nearly every decade of his career. Taliesin was Wright’s primary residence for 48 years from 1911 to 1959. It was his laboratory for architectural designs and innovation, and continues to serve the Taliesin community. Taliesin Preservation owns and operates the Frank Lloyd Wright Visitor Center, offers public access to and education about Taliesin, conducts the preservation program designed to maintain and restore Taliesin’s built environment and landscape, and oversees the on-site organization and care of the building collections and furniture.</string>
+    <string name="built_homes_built">Variously built between 1915 and 1917</string>
+    <string name="built_homes_desc">In a 1901 speech entitled, "The Art and Craft of the Machine," Wright outlined his vision of affordable housing. He asserted that the home would have to go to the factory, instead of the skilled labor coming to the building site. Between 1915 and 1917 Wright designed a series of standardized "system-built" homes, known today as the American System-Built Homes. By system-built, he did not mean pre-fabrication off-site, but rather a system that involved cutting the lumber and other materials in a mill or factory, then bringing them to the site for assembly. This system would save material waste and a substantial fraction of the wages paid to skilled tradesmen. Wright produced more than 900 working drawings and sketches of various designs for the system. Six examples were constructed, still standing, on West Burnham Street and Layton Boulevard in Milwaukee, Wisconsin. Other examples were constructed on scattered sites throughout the Midwest with a few yet to be discovered.</string>
     <string name="valley_school_built">Built in 1957 for the children of Wyoming Valley</string>
     <string name="valley_school_desc">Wyoming Valley School Cultural Arts Center is a nonprofit organization that promotes the arts and culture of the surrounding region by opening the dynamic architecture of Wyoming Valley School to provide incomparable spaces for workshops, performances, lectures, and exhibits for all ages. It also offers space for private functions such as weddings, banquets, business meetings, or other events. Its mission is to maintain and preserve this architectural gem for the continued benefit of and use by the community.
 </string>

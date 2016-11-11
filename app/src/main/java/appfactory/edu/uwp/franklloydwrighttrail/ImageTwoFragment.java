@@ -1,7 +1,5 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -53,6 +51,14 @@ public class ImageTwoFragment extends Fragment {
             case "German Warehouse":
                 imageTwo.setImageResource(R.drawable.gw2);
 
+                break;
+            case "American System-Built Homes":
+
+                imageTwo.setImageResource(R.drawable.bh2);
+                break;
+            case "Wyoming Valley School":
+
+                imageTwo.setImageResource(R.drawable.wvs2);
                 break;
 
 

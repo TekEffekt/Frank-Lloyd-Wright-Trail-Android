@@ -61,7 +61,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private Marker FLWVisitorCenter;
     private Marker GermanWarehouse;
     private Marker ValleySchool;
-    private Marker Taliesin;
+    private Marker BuiltHomes;
 
     private RecyclerView recyclerView;
     private LocationSelectionAdapter adapter;
@@ -211,8 +211,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.119255, -90.114908))
                 .title("Wyoming Valley School")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-        Taliesin = mMap.addMarker(new MarkerOptions().position(new LatLng(43.141039, -90.070456))
-                .title("Taliesin")
+        BuiltHomes = mMap.addMarker(new MarkerOptions().position(new LatLng(43.010584, -87.948539))
+                .title("American System-Built Homes")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -291,7 +291,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 0:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                    intent.putExtra("Title", "SC Johnson Headquarters");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.7152375, -87.7906969));
@@ -382,10 +382,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 7:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "Taliesin");
+                    intent.putExtra("Title", "American System-Built Homes");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.141039, -90.070456));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.010584, -87.948539));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -486,9 +486,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 place.setLongitude(-90.114908);
                 return myLocation.distanceTo(place);
             case 7:
-                //Taliesin
-                place.setLatitude(43.141039);
-                place.setLongitude(-90.070456);
+                //American System-Built Homes
+                place.setLatitude(43.010584);
+                place.setLongitude(-87.948539);
                 return myLocation.distanceTo(place);
             default:
                 return 0;

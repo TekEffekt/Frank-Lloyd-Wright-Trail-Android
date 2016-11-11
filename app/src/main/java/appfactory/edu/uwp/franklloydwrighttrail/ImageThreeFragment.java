@@ -55,6 +55,14 @@ public class ImageThreeFragment extends Fragment {
                 imageThree.setImageResource(R.drawable.gw3);
 
                 break;
+            case "American System-Built Homes":
+
+                imageThree.setImageResource(R.drawable.bh3);
+                break;
+            case "Wyoming Valley School":
+
+                imageThree.setImageResource(R.drawable.wvs3);
+                break;
 
 
 
