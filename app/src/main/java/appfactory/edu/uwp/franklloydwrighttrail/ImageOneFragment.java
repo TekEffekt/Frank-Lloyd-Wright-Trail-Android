@@ -58,6 +58,14 @@ public class ImageOneFragment extends Fragment {
 
                 break;
 
+            case "Taliesin":
+
+                imageOne.setImageResource(R.drawable.taliesin);
+                break;
+            case "Wyoming Valley School":
+
+                imageOne.setImageResource(R.drawable.valley_school);
+                break;
 
 
         }

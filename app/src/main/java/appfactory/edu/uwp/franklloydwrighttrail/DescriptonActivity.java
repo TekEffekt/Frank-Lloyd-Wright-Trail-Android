@@ -104,14 +104,14 @@ public class DescriptonActivity extends AppCompatActivity {
                 description.setText("A small brick structure used by a local commodity wholesaler, Albert Dell German, this warehouse, finished in 1921, features an elaborate Mayan Revival exterior. Built in the town of Richland Center, where Wright was born, this offers a rare example of a project the architect designed in the late 1910’s that’s still standing.");
                 break;
             case "Wyoming Valley School":
-                name.setText("Wyoming Valley School");
-                built.setText("");
-                description.setText("");
+                name.setText(R.string.valley_school);
+                built.setText(R.string.valley_school_built);
+                description.setText(R.string.valley_school_desc);
                 break;
             case "Taliesin":
-                name.setText("Taliesin");
-                built.setText("");
-                description.setText("");
+                name.setText(R.string.taliesin);
+                built.setText(R.string.taliesin_built);
+                description.setText(R.string.taliesin_desc);
                 break;
             default:
                 description.setText("Other Place");

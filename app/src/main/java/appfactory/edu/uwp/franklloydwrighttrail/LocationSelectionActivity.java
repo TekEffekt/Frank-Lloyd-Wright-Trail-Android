@@ -68,7 +68,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private GestureDetectorCompat gestureDetector;
 
     private DrawerLayout drawer;
-    private int currentLocation = 6;
+    private int currentLocation = -1;
     private GridLayoutManager layoutManager;
 
     private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
@@ -208,12 +208,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .title("German Warehouse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
-        /*ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
+        ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.119255, -90.114908))
                 .title("Wyoming Valley School")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
-        Taliesin = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
+        Taliesin = mMap.addMarker(new MarkerOptions().position(new LatLng(43.141039, -90.070456))
                 .title("Taliesin")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));*/
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -372,10 +372,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     intent.putExtra("Title", "Wyoming Valley School");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    //CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
-                    //CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    //mMap.moveCamera(center);
-                    //mMap.animateCamera(zoom);
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.119255, -90.114908));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
                     currentLocation = position;
                 }
                 break;
@@ -385,10 +385,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     intent.putExtra("Title", "Taliesin");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    //CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
-                    //CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    //mMap.moveCamera(center);
-                    //mMap.animateCamera(zoom);
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.141039, -90.070456));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
                     currentLocation = position;
                 }
                 break;
@@ -482,10 +482,14 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 return myLocation.distanceTo(place);
             case 6:
                 //Wyoming Valley School
-                return 0;
+                place.setLatitude(43.119255);
+                place.setLongitude(-90.114908);
+                return myLocation.distanceTo(place);
             case 7:
                 //Taliesin
-                return 0;
+                place.setLatitude(43.141039);
+                place.setLongitude(-90.070456);
+                return myLocation.distanceTo(place);
             default:
                 return 0;
         }
