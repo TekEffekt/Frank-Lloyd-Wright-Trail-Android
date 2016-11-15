@@ -3,9 +3,11 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +21,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +33,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -56,13 +60,15 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private Marker MeetingHouse;
     private Marker FLWVisitorCenter;
     private Marker GermanWarehouse;
+    private Marker ValleySchool;
+    private Marker BuiltHomes;
 
     private RecyclerView recyclerView;
     private LocationSelectionAdapter adapter;
     private GestureDetectorCompat gestureDetector;
 
     private DrawerLayout drawer;
-    private int currentLocation = 6;
+    private int currentLocation = -1;
     private GridLayoutManager layoutManager;
 
     private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
@@ -159,7 +165,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case R.id.nav_locations:
                 break;
             case R.id.nav_trip_planner:
-                Intent intent = TripPlannerSelection.newIntent(this);
+                Intent intent = TripPlannerActivity.newIntent(this);
                 startActivity(intent);
                 break;
             case R.id.nav_scrapbook:
@@ -202,6 +208,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .title("German Warehouse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
+        ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.119255, -90.114908))
+                .title("Wyoming Valley School")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)));
+        BuiltHomes = mMap.addMarker(new MarkerOptions().position(new LatLng(43.010584, -87.948539))
+                .title("American System-Built Homes")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -279,7 +291,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 0:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                    intent.putExtra("Title", "SC Johnson Headquarters");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.7152375, -87.7906969));
@@ -295,7 +307,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     intent.putExtra("Title", "Monona Terrace");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0717445, -89.38040180000002));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -308,7 +320,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     intent.putExtra("Title", "Wingspread");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0717445, -89.38040180000002));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -348,6 +360,32 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
+                break;
+            case 6:
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "Wyoming Valley School");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.119255, -90.114908));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
+                break;
+            case 7:
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "American System-Built Homes");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.010584, -87.948539));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -419,13 +457,13 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 return myLocation.distanceTo(place);
             case 1:
                 //Wingspread1
-                place.setLatitude(42.784562);
-                place.setLongitude(-87.771588);
+                place.setLatitude(43.0717445);
+                place.setLongitude(-89.38040180000002);
                 return myLocation.distanceTo(place);
             case 2:
                 //Mono Terrace
-                place.setLatitude(43.0717445);
-                place.setLongitude(-89.38040180000002);
+                place.setLatitude(42.784562);
+                place.setLongitude(-87.771588);
                 return myLocation.distanceTo(place);
             case 3:
                 //Meeting house
@@ -441,6 +479,16 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 //German Warehouse
                 place.setLatitude(43.3334718);
                 place.setLongitude(-90.38436739999997);
+                return myLocation.distanceTo(place);
+            case 6:
+                //Wyoming Valley School
+                place.setLatitude(43.119255);
+                place.setLongitude(-90.114908);
+                return myLocation.distanceTo(place);
+            case 7:
+                //American System-Built Homes
+                place.setLatitude(43.010584);
+                place.setLongitude(-87.948539);
                 return myLocation.distanceTo(place);
             default:
                 return 0;

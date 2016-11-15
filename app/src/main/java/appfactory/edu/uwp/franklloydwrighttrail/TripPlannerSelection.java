@@ -257,6 +257,38 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
                     trip.getTrips().add(locations.get(5));
                 }
                 break;
+            case 6:
+                //Wyoming Valley School
+                if (trip.getTrips().size() == 0) {
+                    for (int i = 0; i < trip.getTrips().size(); i++) {
+                        if (trip.getTrips().get(i) == locations.get(6)) {
+                            trip.getTrips().remove(i);
+                            exists = true;
+                        }
+                    }
+                    if (!exists) {
+                        trip.getTrips().add(locations.get(6));
+                    }
+                } else {
+                    trip.getTrips().add(locations.get(6));
+                }
+                break;
+            case 7:
+                //Taliesin
+                if (trip.getTrips().size() == 0) {
+                    for (int i = 0; i < trip.getTrips().size(); i++) {
+                        if (trip.getTrips().get(i) == locations.get(7)) {
+                            trip.getTrips().remove(i);
+                            exists = true;
+                        }
+                    }
+                    if (!exists) {
+                        trip.getTrips().add(locations.get(7));
+                    }
+                } else {
+                    trip.getTrips().add(locations.get(7));
+                }
+                break;
         }
     }
 }
