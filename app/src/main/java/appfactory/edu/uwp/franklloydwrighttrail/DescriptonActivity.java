@@ -2,6 +2,7 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -79,65 +80,15 @@ public static String value;
 
 
 
-
-
-/*
-String[] latlong = new String[2];
-        latlong[0] = "42.7152375,-87.7906969";
-        latlong[1] = "42.784562,-87.771588";
-        String olatlong = latlong[0] + "|" + latlong[1];
-        String[] latlong2 = new String[2];
-        latlong2[0] = "42.7152375,-87.7906969";
-        latlong2[1] = "42.784562,-87.771588";
-        String dlatlong = latlong2[0] + "|" + latlong2[1];
-        DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
-        Call<Example> call = distanceMatrixApi.timeDuration("imperial",olatlong,dlatlong);
-        call.enqueue(new Callback<Example>() {
-            @Override
-            public void onResponse(Call<Example> call, Response<Example> response) {
-                if(response.isSuccessful()) {
-
-                    for (int i=0;i<response.body().getRows().size();i++)
-                    {
-                        if(response.body().getOriginAddresses().get(i)== "1525 Howe St, Racine, WI 53403, USA" || response.body().getOriginAddresses().get(i)== "300 S Church St, Richland Center, WI 53581, USA") {
-                            if (endPoint1 == false) {
-                                endPoint1 = true;
-                                startLatLong = response.body().getOriginAddresses().get(i);
-                            }
-                            else {
-                                endPoint2 = true;
-                                endLatLong = response.body().getOriginAddresses().get(i);
-                            }
-                        }
-                    }
-                    if(endPoint1 && endPoint2)
-                    {
-                        startLatLong = "42.7152375,-87.7906969";
-                        endLatLong = "43.33472,-90.384367";
-                    }
-                    else if(endPoint1 || endPoint2)
-                    {
-                        if(startLatLong == "1525 Howe St, Racine, WI 53403, USA")
-                        {
-                            for(int i=0;i<response.body().getRows().get)
-                        }
-                        else if(startLatLong == "300 S Church St, Richland Center, WI 53581, USA")
-                        {
-
-                        }
-                    }
-                    else
-                    {
-
-                    }
-                    time = response.body().getRows().get(0).getElements().get(1).getDuration().getValue();
-                    */
-
+        FLWLocation aLatLong;
+        FLWLocation bLatLong;
         String startLatLong;
         String endLatLong;
-        int index;
         int startLoc;
         int endLoc;
+        int index;
+        int aLoc;
+        int bLoc;
         String midLatLong = "optimize:true|";
 
         ArrayList<FLWLocation> locations = LocationModel.getLocations();
@@ -149,39 +100,72 @@ String[] latlong = new String[2];
             index = findLocation(R.string.wingspread,locations);
             if(index == -1)
             {
-                index = findLocation(R.string.meeting_house,locations);
+                index = findLocation(R.string.built_homes,locations);
                 if(index == -1)
                 {
-                    index = findLocation(R.string.monona_terrace,locations);
-                    if(index == -1)
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1)
                     {
-                        index = findLocation(R.string.visitor_center,locations);
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1)
+                        {
+                            index = findLocation(R.string.visitor_center, locations);
+                            if(index == -1)
+                                index = findLocation(R.string.valley_school,locations);
+                        }
                     }
                 }
             }
         }
-        startLatLong = locations.get(index).getLatlong();
-        startLoc = index;
+        aLatLong = locations.get(index);
+        aLoc = index;
 
         index = findLocation(R.string.german_warehouse,locations);
         if(index == -1)
         {
-            index = findLocation(R.string.visitor_center,locations);
-            if(index == -1)
-            {
-                index = findLocation(R.string.meeting_house,locations);
-                if(index == -1)
-                {
-                    index = findLocation(R.string.monona_terrace,locations);
-                    if(index == -1)
-                    {
-                        index = findLocation(R.string.wingspread,locations);
+            index = findLocation(R.string.valley_school,locations);
+            if(index == -1) {
+                index = findLocation(R.string.visitor_center, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.built_homes,locations);
+                            if(index == -1) {
+                                index = findLocation(R.string.wingspread, locations);
+                            }
+                        }
                     }
                 }
             }
         }
-        endLatLong = locations.get(index).getLatlong();
-        endLoc = index;
+        bLatLong = locations.get(index);
+        bLoc = index;
+
+        Location myLocation = new Location ("my location");
+        myLocation.setLatitude(LocationSelectionActivity.myLocation.getLatitude());
+        myLocation.setLongitude(LocationSelectionActivity.myLocation.getLongitude());
+        Location locationA = new Location("point A");
+        locationA.setLatitude(aLatLong.getLatitude());
+        locationA.setLongitude(aLatLong.getLongitude());
+        Location locationB = new Location("point B");
+        locationB.setLatitude(bLatLong.getLatitude());
+        locationB.setLongitude(bLatLong.getLongitude());
+        if(myLocation.distanceTo(locationA)<myLocation.distanceTo(locationB))
+        {
+            startLatLong = aLatLong.getLatlong();
+            startLoc = aLoc;
+            endLatLong = bLatLong.getLatlong();
+            endLoc = bLoc;
+        }
+        else
+        {
+            startLatLong = bLatLong.getLatlong();
+            startLoc = bLoc;
+            endLatLong = aLatLong.getLatlong();
+            endLoc = aLoc;
+        }
         int j=0;
         for(int i=0;i<locations.size();i++)
         {
@@ -230,22 +214,6 @@ String[] latlong = new String[2];
                             Log.d("debug", "onFailure: "+2);
                         }
                     });
-                /*}
-                else
-                {
-                    Log.d("debug", "onResponse: " + 3);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Example> call, Throwable t) {
-                Log.d("debug", "onFailure: "+2);
-            }
-        });
-*/
-
-
-
 
         switch(value)
         {
@@ -579,4 +547,5 @@ String[] latlong = new String[2];
         }
 
     }
+
 }

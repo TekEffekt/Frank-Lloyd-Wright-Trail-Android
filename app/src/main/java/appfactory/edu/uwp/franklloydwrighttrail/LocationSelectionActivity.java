@@ -73,7 +73,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
     private LocationRequest mLocationRequest;
-    private static Location myLocation;
+    public static Location myLocation;
 
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -185,6 +185,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         mMap = map;
 
         SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969))
+                .title("SC Johnson Headquarters")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588))

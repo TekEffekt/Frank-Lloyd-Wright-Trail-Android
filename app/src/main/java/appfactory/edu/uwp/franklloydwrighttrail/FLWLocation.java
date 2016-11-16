@@ -9,11 +9,18 @@ public class FLWLocation {
     @DrawableRes private int markerColor;
     private String latlong;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor) {
+
+
+    private double latitude;
+    private double longitude;
+
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude) {
         this.name = name;
         this.image = image;
         this.markerColor = markerColor;
         this.latlong = latlong;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public int getImage() { return image; }
@@ -31,4 +38,20 @@ public class FLWLocation {
     public String getLatlong() { return latlong; }
 
     public void setLatlong(String latlong) { this.latlong = latlong; }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 }
