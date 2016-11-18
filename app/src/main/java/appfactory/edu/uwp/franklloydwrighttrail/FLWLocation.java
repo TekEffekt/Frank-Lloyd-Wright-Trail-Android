@@ -9,7 +9,7 @@ public class FLWLocation {
     @DrawableRes private int markerColor;
     private String latlong;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong) {
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor) {
         this.name = name;
         this.image = image;
         this.markerColor = markerColor;

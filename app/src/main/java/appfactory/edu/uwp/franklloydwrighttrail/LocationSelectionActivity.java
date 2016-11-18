@@ -118,7 +118,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
-        adapter = new LocationSelectionAdapter((LocationModel.getLocations()));
+        adapter = new LocationSelectionAdapter(LocationModel.getLocations());
         recyclerView.setAdapter(adapter);
 
         layoutManager = new GridLayoutManager(this, 2);
@@ -165,7 +165,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case R.id.nav_locations:
                 break;
             case R.id.nav_trip_planner:
-                Intent intent = TripPlannerActivity.newIntent(this);
+                Intent intent = TripPlannerTimeline.newIntent(this);
                 startActivity(intent);
                 break;
             case R.id.nav_scrapbook:
@@ -185,7 +185,6 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         mMap = map;
 
         SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969))
-                .title("SC Johnson Administration Building and Research Tower")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588))

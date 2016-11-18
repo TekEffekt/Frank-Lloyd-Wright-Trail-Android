@@ -1,16 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.vipul.hp_hp.timelineview.TimelineView
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/trip_timeline"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
-        app:marker_size="25dp"
-        app:line_size="2dp"
-        app:line="@color/colorPrimary" />
+        tools:listitem="@layout/timeline_item"/>
 
-</LinearLayout>
+    <Button
+        android:id="@+id/create"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/new_trip"
+        android:layout_centerInParent="true"
+        android:paddingLeft="100dp"
+        android:paddingRight="100dp"
+        android:textSize="22dp"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/white"
+        android:textAllCaps="false"
+        android:visibility="gone"/>
+
+</RelativeLayout>

@@ -8,11 +8,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+
+import com.vipul.hp_hp.timelineview.TimelineView;
 
 /**
  * Created by sterl on 11/3/2016.
@@ -20,10 +25,14 @@ import android.widget.Button;
 
 public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
-    private Button cont;
+    private Button create;
+    private TripObject trip;
+    private RecyclerView timelineView;
+    private TimelineAdapter adapter;
+    private LinearLayoutManager layoutManager;
 
     public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, TripPlannerOptions.class);
+        Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
         return intent;
     }
 
@@ -43,13 +52,31 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        cont = (Button) findViewById(R.id.cont);
-        cont.setOnClickListener(new View.OnClickListener() {
+        timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
+        adapter = new TimelineAdapter(TimelineModel.getTrip());
+        timelineView.setAdapter(adapter);
+
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.generateDefaultLayoutParams();
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        timelineView.setLayoutManager(layoutManager);
+
+        create = (Button) findViewById(R.id.create);
+        create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
+                TripPlannerTimeline.this.startActivity(intent);
             }
         });
+
+        /*
+        if (trip === null) {
+            create.setVisibility(View.VISIBLE);
+            timelineView.setVisibility(View.GONE);
+        } */
+
     }
 
     @Override
