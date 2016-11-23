@@ -1,5 +1,7 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
+import android.app.FragmentTransaction;
+import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +15,11 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
+import android.widget.TimePicker;
+
+import java.sql.Time;
+import java.util.Calendar;
 
 /**
  * Created by sterl on 10/28/2016.
@@ -21,6 +28,23 @@ import android.widget.Button;
 public class TripPlannerTimes extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawer;
     private Button cont;
+
+    private static final String DIALOG_START = "DialogStart";
+    private static final String DIALOG_END = "DialogEnd";
+
+    private static final int REQUEST_START = 0;
+    private static final int REQUEST_END = 1;
+
+    private RelativeLayout startTimeLayout;
+    private RelativeLayout endTimeLayout;
+
+    private TimePickerDialog timePicker;
+    private Calendar currentTime;
+    private int hour;
+    private int minute;
+
+
+    private TripObject trip;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerOptions.class);
@@ -52,6 +76,44 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                 TripPlannerTimes.this.startActivity(intent);
             }
         });
+
+        startTimeLayout = (RelativeLayout) findViewById(R.id.start_time_container);
+        endTimeLayout = (RelativeLayout) findViewById(R.id.end_time_container);
+
+        currentTime = Calendar.getInstance();
+        hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        minute = currentTime.get(Calendar.MINUTE);
+
+        startTimeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePicker = new TimePickerDialog(TripPlannerTimes.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Time time = new Time(hourOfDay,minute,0);
+                        trip.setStartTime(time.getTime());
+                    }
+                }, hour, minute, false);
+                timePicker.setTitle("Choose Start Time");
+                timePicker.show();
+            }
+        });
+
+        endTimeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePicker = new TimePickerDialog(TripPlannerTimes.this, new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        Time time = new Time(hourOfDay,minute,0);
+                        trip.setEndTime(time.getTime());
+                    }
+                }, hour, minute, false);
+                timePicker.setTitle("Choose Start Time");
+                timePicker.show();
+            }
+        });
+
     }
 
     @Override

@@ -12,12 +12,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
-
-import com.vipul.hp_hp.timelineview.TimelineView;
 
 /**
  * Created by sterl on 11/3/2016.
@@ -62,6 +60,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         layoutManager.scrollToPosition(0);
         timelineView.setLayoutManager(layoutManager);
 
+        /*
         create = (Button) findViewById(R.id.create);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -70,6 +69,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 TripPlannerTimeline.this.startActivity(intent);
             }
         });
+        */
 
         /*
         if (trip === null) {
@@ -91,7 +91,17 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_location_selection, menu);
+        getMenuInflater().inflate(R.menu.trip_planner_timeline, menu);
+
+        final MenuItem newTrip = menu.findItem(R.id.menu_item_new_trip);
+        newTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
+                TripPlannerTimeline.this.startActivity(intent);
+                return true;
+            }
+        });
         return true;
     }
 
