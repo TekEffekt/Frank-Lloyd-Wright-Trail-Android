@@ -22,11 +22,11 @@ import butterknife.ButterKnife;
  */
 
 public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.TimelineViewHolder> {
-    private ArrayList<FLWLocation> trips;
+    private ArrayList<TripOrder> trips;
     private ArrayList<TimelineAdapter.TimelineViewHolder> views;
     private Context context;
 
-    public TimelineAdapter (ArrayList<FLWLocation> trips) {
+    public TimelineAdapter (ArrayList<TripOrder> trips) {
         this.trips = trips;
         this.views = new ArrayList<>();
     }
@@ -41,9 +41,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     @Override
     public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
-        FLWLocation trip = trips.get(position);
-        holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getImage()));
-        holder.name.setText(trip.getName());
+        TripOrder trip = trips.get(position);
+        holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
+        holder.name.setText(trip.getLocation().getName());
         //TEMP
         holder.time.setText((position + 1) + ":00PM");
     }

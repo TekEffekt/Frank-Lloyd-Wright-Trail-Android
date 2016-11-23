@@ -18,7 +18,7 @@ public class TripObject {
     private long breakfastTime;
 
     public TripObject (){
-        trips = new ArrayList<FLWLocation>();
+        trips = new ArrayList<>();
         startTime = 0;
         endTime = 0;
         dinnerTime = 0;

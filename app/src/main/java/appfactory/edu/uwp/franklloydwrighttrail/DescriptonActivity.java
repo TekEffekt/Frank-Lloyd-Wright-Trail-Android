@@ -46,13 +46,11 @@ protected View view;
     private ImageViewPagerAdapter _adapter;
     private ImageView _btn1, _btn2, _btn3;
     private ImageView fullScreen;
-    ArrayList<TripOrder> mTripOrder = new ArrayList<>();
-    Duration duration = new Duration();
-    int time = 0;
-private View textView;
+    private View textView;
     private RelativeLayout selection;
-public static String value;
+    public static String value;
     private FloatingActionButton fab;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,140 +78,6 @@ public static String value;
 
 
 
-        FLWLocation aLatLong;
-        FLWLocation bLatLong;
-        String startLatLong;
-        String endLatLong;
-        int startLoc;
-        int endLoc;
-        int index;
-        int aLoc;
-        int bLoc;
-        String midLatLong = "optimize:true|";
-
-        ArrayList<FLWLocation> locations = LocationModel.getLocations();
-        String [] middleLatLong = new String[locations.size()-2];
-
-        index = findLocation(R.string.scjohnson,locations);
-        if(index == -1)
-        {
-            index = findLocation(R.string.wingspread,locations);
-            if(index == -1)
-            {
-                index = findLocation(R.string.built_homes,locations);
-                if(index == -1)
-                {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1)
-                    {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1)
-                        {
-                            index = findLocation(R.string.visitor_center, locations);
-                            if(index == -1)
-                                index = findLocation(R.string.valley_school,locations);
-                        }
-                    }
-                }
-            }
-        }
-        aLatLong = locations.get(index);
-        aLoc = index;
-
-        index = findLocation(R.string.german_warehouse,locations);
-        if(index == -1)
-        {
-            index = findLocation(R.string.valley_school,locations);
-            if(index == -1) {
-                index = findLocation(R.string.visitor_center, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.built_homes,locations);
-                            if(index == -1) {
-                                index = findLocation(R.string.wingspread, locations);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        bLatLong = locations.get(index);
-        bLoc = index;
-
-        Location myLocation = new Location ("my location");
-        myLocation.setLatitude(LocationSelectionActivity.myLocation.getLatitude());
-        myLocation.setLongitude(LocationSelectionActivity.myLocation.getLongitude());
-        Location locationA = new Location("point A");
-        locationA.setLatitude(aLatLong.getLatitude());
-        locationA.setLongitude(aLatLong.getLongitude());
-        Location locationB = new Location("point B");
-        locationB.setLatitude(bLatLong.getLatitude());
-        locationB.setLongitude(bLatLong.getLongitude());
-        if(myLocation.distanceTo(locationA)<myLocation.distanceTo(locationB))
-        {
-            startLatLong = aLatLong.getLatlong();
-            startLoc = aLoc;
-            endLatLong = bLatLong.getLatlong();
-            endLoc = bLoc;
-        }
-        else
-        {
-            startLatLong = bLatLong.getLatlong();
-            startLoc = bLoc;
-            endLatLong = aLatLong.getLatlong();
-            endLoc = aLoc;
-        }
-        int j=0;
-        for(int i=0;i<locations.size();i++)
-        {
-            if(startLoc != i && endLoc != i)
-            {
-                middleLatLong[j] = locations.get(i).getLatlong();
-                j++;
-            }
-        }
-        for(int i=0;i<middleLatLong.length;i++)
-        {
-            if(i!= middleLatLong.length-1) {
-                midLatLong += middleLatLong[i] + "|";
-            }
-            else
-            {
-                midLatLong += middleLatLong[i];
-            }
-
-
-        }
-
-
-                    DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-                    Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
-        Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
-                    call2.enqueue(new Callback<DirectionsModel>() {
-                        @Override
-                        public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                            if(response.isSuccessful()) {
-                                for(int i=0;i<response.body().getRoutes().get(0).getLegs().size();i++)
-                                {
-                                    TripOrder trip = new TripOrder(response.body().getRoutes().get(0).getLegs().get(i).getStartAddress(),response.body().getRoutes().get(0).getLegs().get(i).getEndAddress(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                                    Log.d("debug", "onResponse: "+response.body().getRoutes().get(0).getLegs().get(i).getStartAddress()+ "  "+response.body().getRoutes().get(0).getLegs().get(i).getEndAddress()+ "  "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText()+ "  "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                                    mTripOrder.add(trip);
-                                }
-                                createTripPlan(mTripOrder);
-                            }
-                            else
-                            {
-                                Log.d("debug", "onResponse: " + 3);
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<DirectionsModel> call, Throwable t) {
-                            Log.d("debug", "onFailure: "+2);
-                        }
-                    });
 
         switch(value)
         {
@@ -481,71 +345,6 @@ public static String value;
         _btn2 = (ImageView) findViewById(R.id.btn2);
         _btn3 = (ImageView) findViewById(R.id.btn3);
     }
-    public int findLocation(int location,ArrayList<FLWLocation> locations)
-    {
-        for(int i=0;i<locations.size();i++){
-            if(locations.get(i).getName() == location) {
-                return i;
-            }
 
-        }
-        return -1;
-    }
-    public void createTripPlan(ArrayList<TripOrder> tripOrder)
-    {
-        long breakfast = 3600;
-        breakfast = breakfast/60;
-        Log.d("debug", "breakfast: "+breakfast);
-        long lunch = 3600;
-        lunch = lunch/60;
-        Log.d("debug", "lunch: "+lunch);
-        long dinner = 3600;
-        dinner = dinner/60;
-        Log.d("debug", "dinner: "+dinner);
-        int startHour = 9;
-        int startMin = 30;
-        int endHour = 7;
-        int endMin= 30;
-        long totalTime = 36000;
-        totalTime = totalTime/60;
-        int time = 0;
-        long mealtime = breakfast+lunch+dinner;
-        Log.d("debug", "mealtime: "+ mealtime);
-        for(int i=0;i<tripOrder.size();i++)
-        {
-            time += tripOrder.get(i).getTimeValue()/60+60;
-        }
-        Log.d("debug", "time: "+time);
-        if(mealtime > totalTime)
-        {
-            Log.d("debug", "meals take too much time.");
-        }
-        else if(mealtime+time > totalTime)
-        {
-            Log.d("debug", "total trip too long ");
-            time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
-            if(mealtime+time> totalTime)
-            {
-                Log.d("debug", "total trip still too long ");
-                time = time - tripOrder.get(tripOrder.size()-2).getTimeValue()-60;
-                if(mealtime+time>totalTime){
-                    Log.d("debug", "total trip is still too long ");
-                }
-                else
-                {
-                    Log.d("debug", "enough time with 2 sites taken off ");
-                }
-            }
-            else
-            {
-                Log.d("debug", "enough time with 1 site taken off ");
-            }
-        }
-        else
-        {
-            Log.d("debug", "enough time ");
-        }
-
-    }
 
 }

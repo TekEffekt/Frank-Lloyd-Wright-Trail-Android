@@ -6,34 +6,20 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 
 public class TripOrder {
 
-    private String startAddress;
-    private String endAddress;
+
     private String timeText;
     private int timeValue;
+    private FLWLocation location;
 
-    public TripOrder(String startAddress,String endAddress,String timeText,int timeValue)
+    public TripOrder(FLWLocation location ,String timeText,int timeValue)
     {
-        this.startAddress = startAddress;
-        this.endAddress = endAddress;
+
         this.timeText = timeText;
         this.timeValue = timeValue;
+        this.location = location;
     }
 
-    public String getStartAddress() {
-        return startAddress;
-    }
 
-    public void setStartAddress(String startAddress) {
-        this.startAddress = startAddress;
-    }
-
-    public String getEndAddress() {
-        return endAddress;
-    }
-
-    public void setEndAddress(String endAddress) {
-        this.endAddress = endAddress;
-    }
 
     public String getTimeText() {
         return timeText;
@@ -50,4 +36,8 @@ public class TripOrder {
     public void setTimeValue(int timeValue) {
         this.timeValue = timeValue;
     }
+
+    public FLWLocation getLocation(){return location;}
+
+    public void setLocation(FLWLocation location) {this.location = location;}
 }

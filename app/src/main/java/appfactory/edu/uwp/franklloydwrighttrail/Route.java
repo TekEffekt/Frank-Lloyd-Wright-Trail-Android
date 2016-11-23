@@ -4,6 +4,8 @@ package appfactory.edu.uwp.franklloydwrighttrail;
  * Created by zstue_000 on 10/31/2016.
  */
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +19,7 @@ public class Route {
     private OverviewPolyline overviewPolyline;
     private String summary;
     private List<Object> warnings = new ArrayList<Object>();
+    @SerializedName("waypoint_order")
     private List<Integer> waypointOrder = new ArrayList<Integer>();
 
 

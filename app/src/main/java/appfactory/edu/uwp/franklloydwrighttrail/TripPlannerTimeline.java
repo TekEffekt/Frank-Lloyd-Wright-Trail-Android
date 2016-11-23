@@ -2,6 +2,7 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,13 +12,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.vipul.hp_hp.timelineview.TimelineView;
+
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by sterl on 11/3/2016.
@@ -30,6 +39,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     private RecyclerView timelineView;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
+    public ArrayList<FLWLocation> locations = LocationModel.getLocations();
+    ArrayList<TripOrder> mTripOrder = new ArrayList<>();
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -39,6 +50,161 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
+        FLWLocation aLatLong;
+        FLWLocation bLatLong;
+        final FLWLocation startLocation;
+        final FLWLocation endLocation;
+        String startLatLong;
+        String endLatLong;
+        int startLoc;
+        int endLoc;
+        int index;
+        int aLoc;
+        int bLoc;
+        String midLatLong = "optimize:true|";
+        String [] middleLatLong = new String[locations.size()-2];
+        index = findLocation(R.string.scjohnson,locations);
+        if(index == -1)
+        {
+            index = findLocation(R.string.wingspread,locations);
+            if(index == -1)
+            {
+                index = findLocation(R.string.built_homes,locations);
+                if(index == -1)
+                {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1)
+                    {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1)
+                        {
+                            index = findLocation(R.string.visitor_center, locations);
+                            if(index == -1)
+                                index = findLocation(R.string.valley_school,locations);
+                        }
+                    }
+                }
+            }
+        }
+        aLatLong = locations.get(index);
+        aLoc = index;
+        index = findLocation(R.string.german_warehouse,locations);
+        if(index == -1)
+        {
+            index = findLocation(R.string.valley_school,locations);
+            if(index == -1) {
+                index = findLocation(R.string.visitor_center, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.built_homes,locations);
+                            if(index == -1) {
+                                index = findLocation(R.string.wingspread, locations);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        bLatLong = locations.get(index);
+        bLoc = index;
+        Location myLocation = new Location ("my location");
+        myLocation.setLatitude(LocationSelectionActivity.myLocation.getLatitude());
+        myLocation.setLongitude(LocationSelectionActivity.myLocation.getLongitude());
+        Location locationA = new Location("point A");
+        locationA.setLatitude(aLatLong.getLatitude());
+        locationA.setLongitude(aLatLong.getLongitude());
+        Location locationB = new Location("point B");
+        locationB.setLatitude(bLatLong.getLatitude());
+        locationB.setLongitude(bLatLong.getLongitude());
+        if(myLocation.distanceTo(locationA)<myLocation.distanceTo(locationB))
+        {
+            startLocation = aLatLong;
+            startLatLong = aLatLong.getLatlong();
+            startLoc = aLoc;
+            endLocation = bLatLong;
+            endLatLong = bLatLong.getLatlong();
+            endLoc = bLoc;
+        }
+        else
+        {
+            startLocation = bLatLong;
+            startLatLong = bLatLong.getLatlong();
+            startLoc = bLoc;
+            endLocation = aLatLong;
+            endLatLong = aLatLong.getLatlong();
+            endLoc = aLoc;
+        }
+        int j=0;
+        for(int i=0;i<locations.size();i++)
+        {
+            if(startLoc != i && endLoc != i)
+            {
+                middleLatLong[j] = locations.get(i).getLatlong();
+                j++;
+            }
+        }
+        for(int i=0;i<middleLatLong.length;i++)
+        {
+            if(i!= middleLatLong.length-1) {
+                midLatLong += middleLatLong[i] + "|";
+            }
+            else
+            {
+                midLatLong += middleLatLong[i];
+            }
+        }
+        DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+        Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
+        Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
+        call2.enqueue(new Callback<DirectionsModel>() {
+            @Override
+            public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                if(response.isSuccessful()) {
+                    int j=0;
+                    ArrayList<Integer> waypointOrder = new ArrayList<>();
+                    Log.d("debug", "waypointOrder: "+ response.body().getRoutes().get(0).getWaypointOrder().toString());
+                    for(int k=0;k<response.body().getRoutes().get(0).getWaypointOrder().size();k++)
+                    {
+                        waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k)+1);
+
+                    }
+                    for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++)
+                    {
+                        if(i==0)
+                        {
+                            TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            mTripOrder.add(trip);
+                        }
+                        else if(i==response.body().getRoutes().get(0).getLegs().size())
+                        {
+                            TripOrder trip = new TripOrder(endLocation,"",0);
+                            mTripOrder.add(trip);
+                        }
+                        else
+                        {
+                            TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            mTripOrder.add(trip);
+                            j++;
+                        }
+                    }
+                    createTripPlan(mTripOrder);
+                    adapter.notifyDataSetChanged();
+                }
+                else
+                {
+
+                }
+            }
+            @Override
+            public void onFailure(Call<DirectionsModel> call, Throwable t) {
+
+            }
+        });
         setContentView(R.layout.activity_trip_timeline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -51,9 +217,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
         timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
-        adapter = new TimelineAdapter(TimelineModel.getTrip());
+        adapter = new TimelineAdapter(mTripOrder);
         timelineView.setAdapter(adapter);
 
         layoutManager = new LinearLayoutManager(this);
@@ -118,5 +283,91 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    public int findLocation(int location,ArrayList<FLWLocation> locations)
+    {
+        for(int i=0;i<locations.size();i++){
+            if(locations.get(i).getName() == location) {
+                return i;
+            }
+
+        }
+        return -1;
+    }
+    public void createTripPlan(ArrayList<TripOrder> tripOrder)
+    {
+        long breakfast = 3600;
+        breakfast = breakfast/60;
+        Log.d("debug", "breakfast: "+breakfast);
+        long lunch = 3600;
+        lunch = lunch/60;
+        Log.d("debug", "lunch: "+lunch);
+        long dinner = 3600;
+        dinner = dinner/60;
+        Log.d("debug", "dinner: "+dinner);
+        int startHour = 9;
+        int startMin = 30;
+        int endHour = 7;
+        int endMin= 30;
+        long totalTime = 36000;
+        totalTime = totalTime/60;
+        int time = 0;
+        Toast toast;
+        long mealtime = breakfast+lunch+dinner;
+        Log.d("debug", "mealtime: "+ mealtime);
+        for(int i=0;i<tripOrder.size();i++)
+        {
+            time += tripOrder.get(i).getTimeValue()/60+60;
+        }
+        Log.d("debug", "time: "+time);
+        if(mealtime > totalTime)
+        {
+            Log.d("debug", "meals take too much time.");
+            toast = Toast.makeText(getApplicationContext(),"Meals take too much time.",Toast.LENGTH_SHORT);
+            toast.show();
+        }
+        else if(mealtime+time > totalTime)
+        {
+            Log.d("debug", "total trip too long ");
+
+            time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
+            tripOrder.remove(tripOrder.size()-1);
+            if(mealtime+time> totalTime)
+            {
+                Log.d("debug", "total trip still too long ");
+                time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
+                tripOrder.remove(tripOrder.size()-1);
+                if(mealtime+time>totalTime){
+                    Log.d("debug", "total trip is still too long ");
+                    time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
+                    tripOrder.remove(tripOrder.size()-1);
+                    if(mealtime+time>totalTime){
+                        tripOrder.remove(tripOrder.size()-1);
+                    }
+                    else
+                    {
+                        toast = Toast.makeText(getApplicationContext(),"Total trip too long 3 sites taken off.",Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+                else
+                {
+                    Log.d("debug", "enough time with 2 sites taken off ");
+                    toast = Toast.makeText(getApplicationContext(),"Total trip too long 2 sites taken off.",Toast.LENGTH_SHORT);
+                    toast.show();
+                }
+            }
+            else
+            {
+                Log.d("debug", "enough time with 1 site taken off ");
+                toast = Toast.makeText(getApplicationContext(),"Total trip too long 1 site taken off.",Toast.LENGTH_SHORT);
+                toast.show();
+            }
+        }
+        else
+        {
+            Log.d("debug", "enough time ");
+        }
+
     }
 }
