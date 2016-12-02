@@ -2,6 +2,8 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -10,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -20,6 +23,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -37,6 +41,8 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
     private TripSelectionAdapter adapter;
     private GridLayoutManager layoutManager;
     private GestureDetectorCompat gestureDetector;
+
+    private CardView destinationCard;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerSelection.class);
@@ -153,6 +159,7 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         @Override
         public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
             View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+            destinationCard = (CardView) view.findViewById(R.id.destination_card);
             onClick(recyclerView.getChildAdapterPosition(view));
             return super.onSingleTapConfirmed(e);
         }
@@ -160,135 +167,34 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
 
     private void onClick(int position) {
         boolean exists = false;
-        switch (position) {
-            case 0:
-                //SC Johnson
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(0)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(0));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(0));
+        checkSelection(position);
+    }
+
+    private void checkSelection(int selection) {
+        boolean existed = false;
+        if (trip.getTrips().size() != 0) {
+            for (int i = 0; i < trip.getTrips().size(); i++) {
+                if (trip.getTrips().get(i) == locations.get(selection)) {
+                    trip.getTrips().remove(i);
+                    existed = true;
+                    showSelection(selection,existed);
                 }
-                break;
-            case 1:
-                //Wingspread
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(1)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(1));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(1));
-                }
-                break;
-            case 2:
-                //Monona Terrace
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(2)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(2));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(2));
-                }
-                break;
-            case 3:
-                //Meeting House
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(3)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(3));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(3));
-                }
-                break;
-            case 4:
-                //FLW Visitor Center
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(4)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(4));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(4));
-                }
-                break;
-            case 5:
-                //German Warehouse
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(5)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(5));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(5));
-                }
-                break;
-            case 6:
-                //Wyoming Valley School
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(6)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(6));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(6));
-                }
-                break;
-            case 7:
-                //Taliesin
-                if (trip.getTrips().size() == 0) {
-                    for (int i = 0; i < trip.getTrips().size(); i++) {
-                        if (trip.getTrips().get(i) == locations.get(7)) {
-                            trip.getTrips().remove(i);
-                            exists = true;
-                        }
-                    }
-                    if (!exists) {
-                        trip.getTrips().add(locations.get(7));
-                    }
-                } else {
-                    trip.getTrips().add(locations.get(7));
-                }
-                break;
+            }
+            if (!existed) {
+                trip.getTrips().add(locations.get(selection));
+                showSelection(selection,existed);
+            }
+        } else {
+            trip.getTrips().add(locations.get(selection));
+            showSelection(selection,existed);
+        }
+    }
+
+    private void showSelection(int selection, boolean isSelected) {
+        if (isSelected) {
+            destinationCard.setCardBackgroundColor(Color.WHITE);
+        } else {
+            destinationCard.setCardBackgroundColor(Color.LTGRAY);
         }
     }
 }

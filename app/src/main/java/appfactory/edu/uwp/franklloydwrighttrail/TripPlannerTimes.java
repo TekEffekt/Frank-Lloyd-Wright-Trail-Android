@@ -16,7 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
+
+import org.w3c.dom.Text;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -38,11 +41,13 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
     private RelativeLayout startTimeLayout;
     private RelativeLayout endTimeLayout;
 
+    private TextView startTimeLabel;
+    private TextView endTimeLabel;
+
     private TimePickerDialog timePicker;
     private Calendar currentTime;
     private int hour;
     private int minute;
-
 
     private TripObject trip;
 
@@ -79,6 +84,8 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
 
         startTimeLayout = (RelativeLayout) findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) findViewById(R.id.end_time_container);
+        startTimeLabel = (TextView) findViewById(R.id.start_time);
+        endTimeLabel = (TextView) findViewById(R.id.end_time);
 
         currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -91,7 +98,8 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
-                        trip.setStartTime(time.getTime());
+                        //trip.setStartTime(time.getTime());
+                        startTimeLabel.setText(time.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -106,7 +114,8 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
-                        trip.setEndTime(time.getTime());
+                        //trip.setEndTime(time.getTime());
+                        endTimeLabel.setText(time.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
