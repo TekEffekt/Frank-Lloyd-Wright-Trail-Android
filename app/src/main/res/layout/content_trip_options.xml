@@ -8,73 +8,41 @@
     tools:context="appfactory.edu.uwp.franklloydwrighttrail.TripPlannerOptions"
     tools:showIn="@layout/activity_trip_options_toolbar">
     <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <ScrollView
         android:id="@+id/options_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="500dp">
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_marginTop="10dp"
-        android:orientation="vertical">
-        <RelativeLayout
-            android:id="@+id/breakfast"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="10dp">
-            <TextView
-                android:id="@+id/breakfast_text"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="@string/breakfast"
-                android:textSize="20dp"
-                android:paddingLeft="10dp"/>
-            <Switch
-                android:id="@+id/breakfast_switch"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewEnd"
-                android:layout_gravity="end"
-                android:layout_toRightOf="@id/breakfast_text"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
-
         <LinearLayout
-            android:id="@+id/breakfast_time_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
+            android:layout_height="500dp"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical">
             <RelativeLayout
-                android:id="@+id/start_breakfast"
+                android:id="@+id/breakfast"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:padding="10dp"
-                android:layout_marginTop="5dp">
+                android:padding="10dp">
                 <TextView
-                    android:id="@+id/starts_breakfast"
+                    android:id="@+id/breakfast_text"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/starts"
+                    android:text="@string/breakfast"
                     android:textSize="20dp"
                     android:paddingLeft="10dp"/>
-                <TextView
-                    android:id="@+id/start_time_breakfast"
+                <Switch
+                    android:id="@+id/breakfast_switch"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:layout_width="250dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp"
                     android:textAlignment="viewEnd"
                     android:layout_gravity="end"
-                    android:layout_toRightOf="@id/starts_breakfast"/>
+                    android:layout_toRightOf="@id/breakfast_text"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -83,190 +51,94 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"/>
 
+            <LinearLayout
+                android:id="@+id/breakfast_time_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:id="@+id/start_breakfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/starts_breakfast"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/starts"
+                        android:textSize="20dp"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/start_time_breakfast"
+                        android:layout_height="wrap_content"
+                        android:layout_width="250dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/time_entry"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_gravity="end"
+                        android:layout_toRightOf="@id/starts_breakfast"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
+
+                <RelativeLayout
+                    android:id="@+id/end_breakfast"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/ends_breakfast"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ends"
+                        android:textSize="20dp"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/end_time_breakfast"
+                        android:layout_height="wrap_content"
+                        android:layout_width="250dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/time_entry"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_gravity="end"
+                        android:layout_toRightOf="@id/ends_breakfast"/>
+                </RelativeLayout>
+            </LinearLayout>
+
             <RelativeLayout
-                android:id="@+id/end_breakfast"
+                android:id="@+id/lunch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:padding="10dp"
                 android:layout_marginTop="5dp">
                 <TextView
-                    android:id="@+id/ends_breakfast"
+                    android:id="@+id/lunch_text"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/ends"
+                    android:text="@string/lunch"
                     android:textSize="20dp"
                     android:paddingLeft="10dp"/>
-                <TextView
-                    android:id="@+id/end_time_breakfast"
+                <Switch
+                    android:id="@+id/lunch_switch"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:layout_width="250dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp"
                     android:textAlignment="viewEnd"
                     android:layout_gravity="end"
-                    android:layout_toRightOf="@id/ends_breakfast"/>
-            </RelativeLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/lunch"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="10dp"
-            android:layout_marginTop="5dp">
-            <TextView
-                android:id="@+id/lunch_text"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="@string/lunch"
-                android:textSize="20dp"
-                android:paddingLeft="10dp"/>
-            <Switch
-                android:id="@+id/lunch_switch"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewEnd"
-                android:layout_gravity="end"
-                android:layout_toRightOf="@id/lunch_text"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
-
-        <LinearLayout
-            android:id="@+id/lunch_time_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-            <RelativeLayout
-                android:id="@+id/start_lunch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="10dp"
-                android:layout_marginTop="5dp">
-                <TextView
-                    android:id="@+id/starts_lunch"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/starts"
-                    android:textSize="20dp"
-                    android:paddingLeft="10dp"/>
-                <TextView
-                    android:id="@+id/start_time_lunch"
-                    android:layout_height="wrap_content"
-                    android:layout_width="250dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp"
-                    android:textAlignment="viewEnd"
-                    android:layout_gravity="end"
-                    android:layout_toRightOf="@id/starts_lunch"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"/>
-
-            <RelativeLayout
-                android:id="@+id/end_lunch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="10dp"
-                android:layout_marginTop="5dp">
-                <TextView
-                    android:id="@+id/ends_lunch"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/ends"
-                    android:textSize="20dp"
-                    android:paddingLeft="10dp"/>
-                <TextView
-                    android:id="@+id/end_time_lunch"
-                    android:layout_height="wrap_content"
-                    android:layout_width="250dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp"
-                    android:textAlignment="viewEnd"
-                    android:layout_gravity="end"
-                    android:layout_toRightOf="@id/ends_lunch"/>
-            </RelativeLayout>
-        </LinearLayout>
-
-        <RelativeLayout
-            android:id="@+id/dinner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="10dp"
-            android:layout_marginTop="5dp">
-            <TextView
-                android:id="@+id/dinner_text"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:text="@string/dinner"
-                android:textSize="20dp"
-                android:paddingLeft="10dp"/>
-            <Switch
-                android:id="@+id/dinner_switch"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:textAlignment="viewEnd"
-                android:layout_gravity="end"
-                android:layout_toRightOf="@id/dinner_text"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"/>
-
-        <LinearLayout
-            android:id="@+id/dinner_time_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone">
-            <RelativeLayout
-                android:id="@+id/start_dinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="10dp"
-                android:layout_marginTop="5dp">
-                <TextView
-                    android:id="@+id/starts_dinner"
-                    android:layout_width="120dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/starts"
-                    android:textSize="20dp"
-                    android:paddingLeft="10dp"/>
-                <TextView
-                    android:id="@+id/start_time_dinner"
-                    android:layout_height="wrap_content"
-                    android:layout_width="250dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp"
-                    android:textAlignment="viewEnd"
-                    android:layout_gravity="end"
-                    android:layout_toRightOf="@id/starts_dinner"/>
+                    android:layout_toRightOf="@id/lunch_text"/>
             </RelativeLayout>
 
             <RelativeLayout
@@ -275,35 +147,170 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="10dp"/>
 
+            <LinearLayout
+                android:id="@+id/lunch_time_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:id="@+id/start_lunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/starts_lunch"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/starts"
+                        android:textSize="20dp"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/start_time_lunch"
+                        android:layout_height="wrap_content"
+                        android:layout_width="250dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/time_entry"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_gravity="end"
+                        android:layout_toRightOf="@id/starts_lunch"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
+
+                <RelativeLayout
+                    android:id="@+id/end_lunch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/ends_lunch"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ends"
+                        android:textSize="20dp"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/end_time_lunch"
+                        android:layout_height="wrap_content"
+                        android:layout_width="250dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/time_entry"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_gravity="end"
+                        android:layout_toRightOf="@id/ends_lunch"/>
+                </RelativeLayout>
+            </LinearLayout>
+
             <RelativeLayout
-                android:id="@+id/end_dinner"
+                android:id="@+id/dinner"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
                 android:padding="10dp"
                 android:layout_marginTop="5dp">
                 <TextView
-                    android:id="@+id/ends_dinner"
+                    android:id="@+id/dinner_text"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
-                    android:text="@string/ends"
+                    android:text="@string/dinner"
                     android:textSize="20dp"
                     android:paddingLeft="10dp"/>
-                <TextView
-                    android:id="@+id/end_time_dinner"
+                <Switch
+                    android:id="@+id/dinner_switch"
+                    android:layout_width="230dp"
                     android:layout_height="wrap_content"
-                    android:layout_width="250dp"
-                    android:paddingRight="10dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/colorPrimaryDark"
-                    android:textSize="20dp"
                     android:textAlignment="viewEnd"
                     android:layout_gravity="end"
-                    android:layout_toRightOf="@id/ends_dinner"/>
+                    android:layout_toRightOf="@id/dinner_text"/>
             </RelativeLayout>
-        </LinearLayout>
 
-    </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+
+            <LinearLayout
+                android:id="@+id/dinner_time_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:id="@+id/start_dinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/starts_dinner"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/starts"
+                        android:textSize="20dp"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/start_time_dinner"
+                        android:layout_height="wrap_content"
+                        android:layout_width="250dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/time_entry"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_gravity="end"
+                        android:layout_toRightOf="@id/starts_dinner"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"/>
+
+                <RelativeLayout
+                    android:id="@+id/end_dinner"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="10dp"
+                    android:layout_marginTop="5dp">
+                    <TextView
+                        android:id="@+id/ends_dinner"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/ends"
+                        android:textSize="20dp"
+                        android:paddingLeft="10dp"/>
+                    <TextView
+                        android:id="@+id/end_time_dinner"
+                        android:layout_height="wrap_content"
+                        android:layout_width="250dp"
+                        android:paddingRight="10dp"
+                        android:text="@string/time_entry"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="20dp"
+                        android:textAlignment="viewEnd"
+                        android:layout_gravity="end"
+                        android:layout_toRightOf="@id/ends_dinner"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+        </LinearLayout>
     </ScrollView>
     <Button
         android:id="@+id/cont"
@@ -318,4 +325,6 @@
         android:textSize="22dp"
         android:background="@color/colorPrimary"
         android:textColor="@color/white"/>
+    </LinearLayout>
+    </ScrollView>
 </RelativeLayout>
