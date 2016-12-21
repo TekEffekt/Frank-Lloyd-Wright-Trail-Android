@@ -43,7 +43,7 @@ public class TripSelectionAdapter extends RecyclerView.Adapter<TripSelectionAdap
     public void onBindViewHolder(@NonNull TripSelectionAdapter.ViewHolder holder, int position) {
         FLWLocation location = locations.get(position);
         holder.picture.setBackground(ContextCompat.getDrawable(context, location.getImage()));
-        holder.textView.setText(location.getName());
+        holder.name.setText(location.getName());
     }
 
     public FLWLocation getItem(int position) {
@@ -56,9 +56,12 @@ public class TripSelectionAdapter extends RecyclerView.Adapter<TripSelectionAdap
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Nullable
         @Bind(R.id.name)
-        TextView textView;
+        TextView name;
         @Nullable @Bind(R.id.picture)
         RelativeLayout picture;
+        @Nullable
+        @Bind(R.id.trip_length_time)
+        TextView tripLengthTime;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

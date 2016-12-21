@@ -33,7 +33,7 @@ import java.util.ArrayList;
 
 public class TripPlannerSelection extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerView.OnItemTouchListener{
     private DrawerLayout drawer;
-    private TripObject trip;
+    public TripObject trip;
     private ArrayList<FLWLocation> locations;
     private Button cont;
 
@@ -81,18 +81,18 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         recyclerView.addOnItemTouchListener(this);
         gestureDetector = new GestureDetectorCompat(this, new TripPlannerSelection.RecyclerViewGestureListener());
 
+        trip = new TripObject();
+        locations = new LocationModel().getLocations();
+
         cont = (Button) findViewById(R.id.cont);
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimes.class);
-                intent.putExtra("Trip", trip.getTrips());
+                //intent.putExtra("Trip", trip.getTrips());
                 TripPlannerSelection.this.startActivity(intent);
             }
         });
-
-        trip = new TripObject();
-        locations = new LocationModel().getLocations();
     }
 
     @Override

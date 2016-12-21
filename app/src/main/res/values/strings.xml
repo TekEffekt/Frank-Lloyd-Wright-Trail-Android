@@ -37,6 +37,7 @@
     <string name="time_picker_title">Enter Time</string>
     <string name="create_new_trip">Create New Trip</string>
     <string name="new_trip">New Trip</string>
+    <string name="trip_length">Time to Location:</string>
 
     <string name="built_homes_built">Variously built between 1915 and 1917</string>
     <string name="built_homes_desc">In a 1901 speech entitled, "The Art and Craft of the Machine," Wright outlined his vision of affordable housing. He asserted that the home would have to go to the factory, instead of the skilled labor coming to the building site. Between 1915 and 1917 Wright designed a series of standardized "system-built" homes, known today as the American System-Built Homes. By system-built, he did not mean pre-fabrication off-site, but rather a system that involved cutting the lumber and other materials in a mill or factory, then bringing them to the site for assembly. This system would save material waste and a substantial fraction of the wages paid to skilled tradesmen. Wright produced more than 900 working drawings and sketches of various designs for the system. Six examples were constructed, still standing, on West Burnham Street and Layton Boulevard in Milwaukee, Wisconsin. Other examples were constructed on scattered sites throughout the Midwest with a few yet to be discovered.</string>
