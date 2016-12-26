@@ -47,9 +47,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback, RecyclerView.OnItemTouchListener, NavigationView.OnNavigationItemSelectedListener,
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+
+    // This is the Main Activity
 
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private GoogleMap mMap;
@@ -62,6 +67,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private Marker GermanWarehouse;
     private Marker ValleySchool;
     private Marker BuiltHomes;
+
+    private Realm realm;
 
     private RecyclerView recyclerView;
     private LocationSelectionAdapter adapter;
@@ -86,24 +93,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initialize mGoogleApiClient
-        if (checkPlayServices()) {
-            buildGoogleApiClient();
-        }
+        initializeRealm();
+        initializeGoogleApiClient();
 
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
-
-        } else {
-
-            // prepare connection request
-            createLocationRequest();
-        }
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -135,6 +127,37 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+    }
+
+    private void initializeGoogleApiClient() {
+        if (checkPlayServices()) {
+            buildGoogleApiClient();
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+
+        } else {
+
+            // prepare connection request
+            createLocationRequest();
+        }
+    }
+
+    private void initializeRealm() {
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
+                .name(Realm.DEFAULT_REALM_NAME)
+                .schemaVersion(0)
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+
+        this.realm = RealmController.with(this).getRealm();
     }
 
     @Override

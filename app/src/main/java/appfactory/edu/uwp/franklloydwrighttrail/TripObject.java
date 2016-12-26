@@ -3,12 +3,15 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
 /**
  * Created by sterl on 10/31/2016.
  */
 
-public class TripObject {
-    private ArrayList<FLWLocation> trips;
+public class TripObject extends RealmObject{
+    private RealmList<TripOrder> trips;
 
     private long startTime;
     private long endTime;
@@ -18,7 +21,7 @@ public class TripObject {
     private long breakfastTime;
 
     public TripObject (){
-        trips = new ArrayList<>();
+        trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
         dinnerTime = 0;
@@ -49,11 +52,11 @@ public class TripObject {
         this.breakfastTime = breakfastTime;
     }
 
-    public ArrayList<FLWLocation> getTrips() {
+    public RealmList<TripOrder> getTrips() {
         return trips;
     }
 
-    public void setTrips(ArrayList<FLWLocation> trips) {
+    public void setTrips(RealmList<TripOrder> trips) {
         this.trips = trips;
     }
 

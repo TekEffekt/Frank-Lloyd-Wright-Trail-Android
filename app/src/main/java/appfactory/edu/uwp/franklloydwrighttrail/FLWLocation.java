@@ -3,7 +3,9 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-public class FLWLocation {
+import io.realm.RealmObject;
+
+public class FLWLocation extends RealmObject {
     @StringRes private int name;
     @DrawableRes private int image;
     @DrawableRes private int markerColor;
@@ -20,6 +22,16 @@ public class FLWLocation {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+    }
+
+    public FLWLocation(){
+        this.name = -1;
+        this.image = -1;
+        this.markerColor = -1;
+        this.latlong = null;
+        this.latitude = -1;
+        this.longitude = -1;
+        this.address = null;
     }
 
     public int getImage() { return image; }

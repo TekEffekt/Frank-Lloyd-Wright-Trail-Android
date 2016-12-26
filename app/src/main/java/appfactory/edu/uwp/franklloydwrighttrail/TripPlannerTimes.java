@@ -24,6 +24,8 @@ import org.w3c.dom.Text;
 import java.sql.Time;
 import java.util.Calendar;
 
+import io.realm.Realm;
+
 /**
  * Created by sterl on 10/28/2016.
  */
@@ -50,6 +52,10 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
     private int minute;
 
     private TripObject trip;
+    private Realm realm;
+
+    private boolean startTimeChosen = false;
+    private boolean endTimeChosen = false;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerOptions.class);
@@ -77,10 +83,18 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TripPlannerTimes.this, TripPlannerOptions.class);
-                TripPlannerTimes.this.startActivity(intent);
+                if (startTimeChosen && endTimeChosen){
+                    Intent intent = new Intent(TripPlannerTimes.this, TripPlannerOptions.class);
+                    TripPlannerTimes.this.startActivity(intent);
+                } else {
+                    //Make toast yelling at user
+                }
             }
         });
+
+        //Grab Trip Object
+        realm = RealmController.getInstance().getRealm();
+        trip = RealmController.getInstance().getTrip();
 
         startTimeLayout = (RelativeLayout) findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) findViewById(R.id.end_time_container);
@@ -98,7 +112,11 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTripResults().get(0).setStartTime(time.getTime());
+                        startTimeChosen = true;
                         //trip.setStartTime(time.getTime());
+                        realm.commitTransaction();
                         startTimeLabel.setText(time.toString());
                     }
                 }, hour, minute, false);
@@ -114,7 +132,11 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTripResults().get(0).setEndTime(time.getTime());
+                        endTimeChosen = true;
                         //trip.setEndTime(time.getTime());
+                        realm.commitTransaction();
                         endTimeLabel.setText(time.toString());
                     }
                 }, hour, minute, false);

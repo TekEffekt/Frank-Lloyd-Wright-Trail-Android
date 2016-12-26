@@ -25,6 +25,8 @@ import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,6 +44,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     private LinearLayoutManager layoutManager;
     public ArrayList<FLWLocation> locations = LocationModel.getLocations();
     ArrayList<TripOrder> mTripOrder = new ArrayList<>();
+    private Realm realm;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -52,160 +55,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
-        FLWLocation aLatLong;
-        FLWLocation bLatLong;
-        final FLWLocation startLocation;
-        final FLWLocation endLocation;
-        String startLatLong;
-        String endLatLong;
-        int startLoc;
-        int endLoc;
-        int index;
-        int aLoc;
-        int bLoc;
-        String midLatLong = "optimize:true|";
-        String [] middleLatLong = new String[locations.size()-2];
-        index = findLocation(R.string.scjohnson,locations);
-        if(index == -1)
-        {
-            index = findLocation(R.string.wingspread,locations);
-            if(index == -1)
-            {
-                index = findLocation(R.string.built_homes,locations);
-                if(index == -1)
-                {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1)
-                    {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1)
-                        {
-                            index = findLocation(R.string.visitor_center, locations);
-                            if(index == -1)
-                                index = findLocation(R.string.valley_school,locations);
-                        }
-                    }
-                }
-            }
-        }
-        aLatLong = locations.get(index);
-        aLoc = index;
-        index = findLocation(R.string.german_warehouse,locations);
-        if(index == -1)
-        {
-            index = findLocation(R.string.valley_school,locations);
-            if(index == -1) {
-                index = findLocation(R.string.visitor_center, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.built_homes,locations);
-                            if(index == -1) {
-                                index = findLocation(R.string.wingspread, locations);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        bLatLong = locations.get(index);
-        bLoc = index;
-        Location myLocation = new Location ("my location");
-        myLocation.setLatitude(LocationSelectionActivity.myLocation.getLatitude());
-        myLocation.setLongitude(LocationSelectionActivity.myLocation.getLongitude());
-        Location locationA = new Location("point A");
-        locationA.setLatitude(aLatLong.getLatitude());
-        locationA.setLongitude(aLatLong.getLongitude());
-        Location locationB = new Location("point B");
-        locationB.setLatitude(bLatLong.getLatitude());
-        locationB.setLongitude(bLatLong.getLongitude());
-        if(myLocation.distanceTo(locationA)<myLocation.distanceTo(locationB))
-        {
-            startLocation = aLatLong;
-            startLatLong = aLatLong.getLatlong();
-            startLoc = aLoc;
-            endLocation = bLatLong;
-            endLatLong = bLatLong.getLatlong();
-            endLoc = bLoc;
-        }
-        else
-        {
-            startLocation = bLatLong;
-            startLatLong = bLatLong.getLatlong();
-            startLoc = bLoc;
-            endLocation = aLatLong;
-            endLatLong = aLatLong.getLatlong();
-            endLoc = aLoc;
-        }
-        int j=0;
-        for(int i=0;i<locations.size();i++)
-        {
-            if(startLoc != i && endLoc != i)
-            {
-                middleLatLong[j] = locations.get(i).getLatlong();
-                j++;
-            }
-        }
-        for(int i=0;i<middleLatLong.length;i++)
-        {
-            if(i!= middleLatLong.length-1) {
-                midLatLong += middleLatLong[i] + "|";
-            }
-            else
-            {
-                midLatLong += middleLatLong[i];
-            }
-        }
-        DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-        Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
-        Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
-        call2.enqueue(new Callback<DirectionsModel>() {
-            @Override
-            public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                if(response.isSuccessful()) {
-                    int j=0;
-                    ArrayList<Integer> waypointOrder = new ArrayList<>();
-                    Log.d("debug", "waypointOrder: "+ response.body().getRoutes().get(0).getWaypointOrder().toString());
-                    for(int k=0;k<response.body().getRoutes().get(0).getWaypointOrder().size();k++)
-                    {
-                        waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k)+1);
-
-                    }
-                    for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++)
-                    {
-                        if(i==0)
-                        {
-                            TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                            mTripOrder.add(trip);
-                        }
-                        else if(i==response.body().getRoutes().get(0).getLegs().size())
-                        {
-                            TripOrder trip = new TripOrder(endLocation,"",0);
-                            mTripOrder.add(trip);
-                        }
-                        else
-                        {
-                            TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                            mTripOrder.add(trip);
-                            j++;
-                        }
-                    }
-                    createTripPlan(mTripOrder);
-                    adapter.notifyDataSetChanged();
-                }
-                else
-                {
-
-                }
-            }
-            @Override
-            public void onFailure(Call<DirectionsModel> call, Throwable t) {
-
-            }
-        });
         setContentView(R.layout.activity_trip_timeline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -218,15 +67,36 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
-        adapter = new TimelineAdapter(mTripOrder);
-        timelineView.setAdapter(adapter);
+        this.realm = RealmController.with(this).getRealm();
 
-        layoutManager = new LinearLayoutManager(this);
-        layoutManager.generateDefaultLayoutParams();
-        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        layoutManager.scrollToPosition(0);
-        timelineView.setLayoutManager(layoutManager);
+        // Creates Timeline if there is a trip
+        timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
+        setupTimeline();
+        create = (Button) findViewById(R.id.create);
+        if (RealmController.getInstance().hasTrip()){
+            if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()){
+                create.setVisibility(View.GONE);
+                timelineView.setVisibility(View.VISIBLE);
+                setRealmAdapter(RealmController.with(this).getTripResults());
+                //initiateDataCalculation();
+            } else {
+                timelineView.setVisibility(View.GONE);
+                create.setVisibility(View.VISIBLE);
+            }
+        } else {
+            timelineView.setVisibility(View.GONE);
+            create.setVisibility(View.VISIBLE);
+        }
+
+        //Grab Trip Object
+        if (RealmController.getInstance().hasTrip()) {
+            trip = RealmController.getInstance().getTrip();
+        } else {
+            realm.beginTransaction();
+            trip = new TripObject();
+            realm.copyToRealm(trip);
+            realm.commitTransaction();
+        }
 
         create = (Button) findViewById(R.id.create);
         create.setOnClickListener(new View.OnClickListener() {
@@ -252,6 +122,23 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void setRealmAdapter(RealmResults<TripObject> trip){
+        TimelineRealmModelAdapter realmAdapter = new TimelineRealmModelAdapter(this.getApplicationContext(), trip, true);
+        adapter.setRealmAdapter(realmAdapter);
+        adapter.notifyDataSetChanged();
+    }
+
+    private void setupTimeline(){
+        layoutManager = new LinearLayoutManager(this);
+        layoutManager.generateDefaultLayoutParams();
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        layoutManager.scrollToPosition(0);
+        timelineView.setLayoutManager(layoutManager);
+
+        adapter = new TimelineAdapter(this);
+        timelineView.setAdapter(adapter);
     }
 
     @Override
@@ -305,6 +192,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         }
         return -1;
     }
+
     public void createTripPlan(ArrayList<TripOrder> tripOrder)
     {
         long breakfast = 3600;
@@ -380,5 +268,151 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             Log.d("debug", "enough time ");
         }
 
+    }
+
+    //Z's Code
+    private void initiateDataCalculation(){
+
+        FLWLocation aLatLong;
+        FLWLocation bLatLong;
+        final FLWLocation startLocation;
+        final FLWLocation endLocation;
+        String startLatLong;
+        String endLatLong;
+        int startLoc;
+        int endLoc;
+        int index;
+        int aLoc;
+        int bLoc;
+        String midLatLong = "optimize:true|";
+        String [] middleLatLong = new String[locations.size()-2];
+        index = findLocation(R.string.scjohnson,locations);
+
+        if(index == -1)
+        {
+            index = findLocation(R.string.wingspread,locations);
+            if(index == -1)
+            {
+                index = findLocation(R.string.built_homes,locations);
+                if(index == -1)
+                {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1)
+                    {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1)
+                        {
+                            index = findLocation(R.string.visitor_center, locations);
+                            if(index == -1)
+                                index = findLocation(R.string.valley_school,locations);
+                        }
+                    }
+                }
+            }
+        }
+
+        aLatLong = locations.get(index);
+        aLoc = index;
+        index = findLocation(R.string.german_warehouse, locations);
+
+        if(index == -1) {
+            index = findLocation(R.string.valley_school,locations);
+            if(index == -1) {
+                index = findLocation(R.string.visitor_center, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.built_homes,locations);
+                            if(index == -1) {
+                                index = findLocation(R.string.wingspread, locations);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        bLatLong = locations.get(index);
+        bLoc = index;
+        Location myLocation = new Location ("my location");
+        myLocation.setLatitude(LocationSelectionActivity.myLocation.getLatitude());
+        myLocation.setLongitude(LocationSelectionActivity.myLocation.getLongitude());
+        Location locationA = new Location("point A");
+        locationA.setLatitude(aLatLong.getLatitude());
+        locationA.setLongitude(aLatLong.getLongitude());
+        Location locationB = new Location("point B");
+        locationB.setLatitude(bLatLong.getLatitude());
+        locationB.setLongitude(bLatLong.getLongitude());
+
+        if(myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
+            startLocation = aLatLong;
+            startLatLong = aLatLong.getLatlong();
+            startLoc = aLoc;
+            endLocation = bLatLong;
+            endLatLong = bLatLong.getLatlong();
+            endLoc = bLoc;
+        } else {
+            startLocation = bLatLong;
+            startLatLong = bLatLong.getLatlong();
+            startLoc = bLoc;
+            endLocation = aLatLong;
+            endLatLong = aLatLong.getLatlong();
+            endLoc = aLoc;
+        }
+        int j=0;
+        for(int i=0;i<locations.size();i++) {
+            if(startLoc != i && endLoc != i) {
+                middleLatLong[j] = locations.get(i).getLatlong();
+                j++;
+            }
+        }
+        for(int i=0;i<middleLatLong.length;i++) {
+            if(i!= middleLatLong.length-1) {
+                midLatLong += middleLatLong[i] + "|";
+            } else {
+                midLatLong += middleLatLong[i];
+            }
+        }
+        DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+        Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
+        Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
+        call2.enqueue(new Callback<DirectionsModel>() {
+            @Override
+            public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                if(response.isSuccessful()) {
+                    int j=0;
+                    ArrayList<Integer> waypointOrder = new ArrayList<>();
+                    Log.d("debug", "waypointOrder: "+ response.body().getRoutes().get(0).getWaypointOrder().toString());
+                    for(int k=0;k<response.body().getRoutes().get(0).getWaypointOrder().size();k++) {
+                        waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k)+1);
+
+                    }
+                    for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++) {
+                        if(i==0) {
+                            TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            mTripOrder.add(trip);
+                        }
+                        else if(i==response.body().getRoutes().get(0).getLegs().size()) {
+                            TripOrder trip = new TripOrder(endLocation,"",0);
+                            mTripOrder.add(trip);
+                        } else {
+                            TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            mTripOrder.add(trip);
+                            j++;
+                        }
+                    }
+                    createTripPlan(mTripOrder);
+                    adapter.notifyDataSetChanged();
+                } else {
+
+                }
+            }
+            @Override
+            public void onFailure(Call<DirectionsModel> call, Throwable t) {
+
+            }
+        });
     }
 }

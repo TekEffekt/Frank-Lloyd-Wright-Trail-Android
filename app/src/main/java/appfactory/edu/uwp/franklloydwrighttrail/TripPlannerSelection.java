@@ -27,6 +27,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 /**
  * Created by sterl on 10/28/2016.
  */
@@ -41,6 +44,8 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
     private TripSelectionAdapter adapter;
     private GridLayoutManager layoutManager;
     private GestureDetectorCompat gestureDetector;
+
+    private Realm realm;
 
     private CardView destinationCard;
 
@@ -81,6 +86,8 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         recyclerView.addOnItemTouchListener(this);
         gestureDetector = new GestureDetectorCompat(this, new TripPlannerSelection.RecyclerViewGestureListener());
 
+        realm = RealmController.getInstance().getRealm();
+        //resetTrip();
         trip = new TripObject();
         locations = new LocationModel().getLocations();
 
@@ -88,9 +95,17 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimes.class);
-                //intent.putExtra("Trip", trip.getTrips());
-                TripPlannerSelection.this.startActivity(intent);
+                if (RealmController.getInstance().getTrip().getTrips().size() != 0) {
+                    realm.beginTransaction();
+                    RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
+                    results.clear();
+                    realm.copyToRealm(trip);
+                    realm.commitTransaction();
+                    Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimes.class);
+                    TripPlannerSelection.this.startActivity(intent);
+                } else {
+                    //make toast yelling at user
+                }
             }
         });
     }
@@ -166,7 +181,6 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
     }
 
     private void onClick(int position) {
-        boolean exists = false;
         checkSelection(position);
     }
 
@@ -174,18 +188,18 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         boolean existed = false;
         if (trip.getTrips().size() != 0) {
             for (int i = 0; i < trip.getTrips().size(); i++) {
-                if (trip.getTrips().get(i) == locations.get(selection)) {
+                if (trip.getTrips().get(i).getLocation() == locations.get(selection)) {
                     trip.getTrips().remove(i);
                     existed = true;
                     showSelection(selection,existed);
                 }
             }
             if (!existed) {
-                trip.getTrips().add(locations.get(selection));
+                trip.getTrips().add(new TripOrder(locations.get(selection)));
                 showSelection(selection,existed);
             }
         } else {
-            trip.getTrips().add(locations.get(selection));
+            trip.getTrips().add(new TripOrder(locations.get(selection)));
             showSelection(selection,existed);
         }
     }
@@ -196,5 +210,15 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         } else {
             destinationCard.setCardBackgroundColor(Color.LTGRAY);
         }
+    }
+
+    private void resetTrip(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
+                results.clear();
+            }
+        });
     }
 }
