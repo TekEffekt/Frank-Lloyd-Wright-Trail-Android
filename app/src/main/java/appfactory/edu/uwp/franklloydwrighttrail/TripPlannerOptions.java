@@ -26,6 +26,8 @@ import org.w3c.dom.Text;
 import java.sql.Time;
 import java.util.Calendar;
 
+import io.realm.Realm;
+
 /**
  * Created by sterl on 10/28/2016.
  */
@@ -65,6 +67,8 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
     private int hour;
     private int minute;
 
+    private Realm realm;
+
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerOptions.class);
         return intent;
@@ -93,6 +97,8 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
         currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
+
+        realm = RealmController.getInstance().getRealm();
 
         initializeSwitches();
         initializeContainers();
@@ -216,6 +222,9 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
                         //Set time here
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTrip().setBreakfastTime(time.getTime());
+                        realm.commitTransaction();
                         startTimeBreakfast.setText(time.toString());
                     }
                 }, hour, minute, false);

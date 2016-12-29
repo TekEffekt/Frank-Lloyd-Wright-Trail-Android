@@ -95,7 +95,7 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (RealmController.getInstance().getTrip().getTrips().size() != 0) {
+                if (trip.getTrips().size() != 0) {
                     realm.beginTransaction();
                     RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
                     results.clear();
