@@ -86,6 +86,7 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                 if (startTimeChosen && endTimeChosen){
                     Intent intent = new Intent(TripPlannerTimes.this, TripPlannerOptions.class);
                     TripPlannerTimes.this.startActivity(intent);
+                    finish();
                 } else {
                     //Make toast yelling at user
                 }
@@ -152,7 +153,11 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            if (startTimeChosen && endTimeChosen){
+                super.onBackPressed();
+            } else {
+                //Trip Cannot Complete, freezes at this stage
+            }
         }
     }
 

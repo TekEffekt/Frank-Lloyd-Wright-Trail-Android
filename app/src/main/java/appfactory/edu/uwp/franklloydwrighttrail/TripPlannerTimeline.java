@@ -78,7 +78,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 create.setVisibility(View.GONE);
                 timelineView.setVisibility(View.VISIBLE);
                 setRealmAdapter(RealmController.with(this).getTripResults());
-                //initiateDataCalculation();
+                initiateDataCalculation();
             } else {
                 timelineView.setVisibility(View.GONE);
                 create.setVisibility(View.VISIBLE);
@@ -104,6 +104,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             public void onClick(View v) {
                 Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
                 TripPlannerTimeline.this.startActivity(intent);
+                finish();
             }
         });
 
@@ -152,6 +153,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             public boolean onMenuItemClick(MenuItem item) {
                 Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
                 TripPlannerTimeline.this.startActivity(intent);
+                finish();
                 return true;
             }
         });

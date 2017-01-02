@@ -48,6 +48,8 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
     private boolean yesLunch = false;
     private boolean yesDinner = false;
 
+    private boolean complete = true;
+
     private RelativeLayout breakfastStartTimeContainer;
     private RelativeLayout breakfastEndTimeContainer;
     private RelativeLayout lunchStartTimeContainer;
@@ -106,9 +108,36 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mealCheck();
+                if (complete) {
+                    Intent intent = new Intent(TripPlannerOptions.this, TripPlannerTimeline.class);
+                    startActivity(intent);
+                    finish();
+                }
 
             }
         });
+    }
+
+    private void mealCheck(){
+        if (yesBreakfast) {
+            if (RealmController.getInstance().getTrip().getBreakfastStartTime() == 0 ||
+                    RealmController.getInstance().getTrip().getBreakfastEndTime() == 0) {
+                complete = false;
+            }
+        }
+        if (yesDinner) {
+            if (RealmController.getInstance().getTrip().getDinnerStartTime() == 0 ||
+                    RealmController.getInstance().getTrip().getDinnerEndTime() == 0) {
+                complete = false;
+            }
+        }
+        if (yesLunch) {
+            if (RealmController.getInstance().getTrip().getLunchStartTime() == 0 ||
+                    RealmController.getInstance().getTrip().getLunchEndTime() == 0) {
+                complete = false;
+            }
+        }
     }
 
     @Override
@@ -116,7 +145,12 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            mealCheck();
+            if (complete){
+                super.onBackPressed();
+            } else {
+                //Trip Cannot Complete, freezes at this stage
+            }
         }
     }
 
@@ -195,6 +229,7 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 yesBreakfast = mealToggle(breakfastContainer,yesBreakfast);
+                complete = true;
             }
         });
 
@@ -202,6 +237,7 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 yesLunch = mealToggle(lunchContainer,yesLunch);
+                complete = true;
             }
         });
 
@@ -209,6 +245,7 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 yesDinner = mealToggle(dinnerContainer,yesDinner);
+                complete = true;
             }
         });
     }
@@ -221,10 +258,13 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setBreakfastTime(time.getTime());
+                        RealmController.getInstance().getTrip().setBreakfastStartTime(time.getTime());
                         realm.commitTransaction();
+                        complete = true;
+
                         startTimeBreakfast.setText(time.toString());
                     }
                 }, hour, minute, false);
@@ -240,7 +280,13 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+
                         //Set time here
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTrip().setBreakfastEndTime(time.getTime());
+                        realm.commitTransaction();
+                        complete = true;
+
                         endTimeBreakfast.setText(time.toString());
                     }
                 }, hour, minute, false);
@@ -256,7 +302,13 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+
                         //Set time here
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTrip().setLunchStartTime(time.getTime());
+                        realm.commitTransaction();
+                        complete = true;
+
                         startTimeLunch.setText(time.toString());
                     }
                 }, hour, minute, false);
@@ -272,7 +324,13 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+
                         //Set time here
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTrip().setLunchEndTime(time.getTime());
+                        realm.commitTransaction();
+                        complete = true;
+
                         endTimeLunch.setText(time.toString());
                     }
                 }, hour, minute, false);
@@ -288,7 +346,13 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+
                         //Set time here
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTrip().setDinnerStartTime(time.getTime());
+                        realm.commitTransaction();
+                        complete = true;
+
                         startTimeDinner.setText(time.toString());
                     }
                 }, hour, minute, false);
@@ -304,7 +368,13 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time time = new Time(hourOfDay,minute,0);
+
                         //Set time here
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTrip().setDinnerEndTime(time.getTime());
+                        realm.commitTransaction();
+                        complete = true;
+
                         endTimeDinner.setText(time.toString());
                     }
                 }, hour, minute, false);

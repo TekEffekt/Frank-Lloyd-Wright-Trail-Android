@@ -45,12 +45,15 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
     private GridLayoutManager layoutManager;
     private GestureDetectorCompat gestureDetector;
 
+    private static final int SELECTION_ACTIVITY = 1;
+
     private Realm realm;
 
     private CardView destinationCard;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerSelection.class);
+        intent.putExtra("SELECTION", SELECTION_ACTIVITY);
         return intent;
     }
 
@@ -103,6 +106,7 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
                     realm.commitTransaction();
                     Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimes.class);
                     TripPlannerSelection.this.startActivity(intent);
+                    finish();
                 } else {
                     //make toast yelling at user
                 }
@@ -174,8 +178,10 @@ public class TripPlannerSelection extends AppCompatActivity implements Navigatio
         @Override
         public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
             View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-            destinationCard = (CardView) view.findViewById(R.id.destination_card);
-            onClick(recyclerView.getChildAdapterPosition(view));
+            if (view != null) {
+                destinationCard = (CardView) view.findViewById(R.id.destination_card);
+                onClick(recyclerView.getChildAdapterPosition(view));
+            }
             return super.onSingleTapConfirmed(e);
         }
     }

@@ -58,6 +58,7 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             holder.name.setText(trip.getLocation().getName());
             holder.time.setText(trip.getTimeText());
             holder.tripLength.setText(trip.getTimeValue());
+
         } else {
             holder.name.setText(trip.getLocation().getName());
             holder.time.setText("ERROR");
