@@ -173,8 +173,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 break;
             case R.id.nav_trip_planner:
                 break;
-            case R.id.nav_scrapbook:
-                break;
+            //case R.id.nav_scrapbook:
+            //    break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_about:

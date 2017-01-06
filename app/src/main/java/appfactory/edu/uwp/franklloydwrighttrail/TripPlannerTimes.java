@@ -153,11 +153,7 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            if (startTimeChosen && endTimeChosen){
                 super.onBackPressed();
-            } else {
-                //Trip Cannot Complete, freezes at this stage
-            }
         }
     }
 
@@ -181,8 +177,8 @@ public class TripPlannerTimes extends AppCompatActivity implements NavigationVie
                 break;
             case R.id.nav_trip_planner:
                 break;
-            case R.id.nav_scrapbook:
-                break;
+            //case R.id.nav_scrapbook:
+            //    break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_about:

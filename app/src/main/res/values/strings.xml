@@ -28,9 +28,11 @@
     <string name="choose_times">Choose Times</string>
     <string name="trip_options">Trip Options</string>
     <string name="cont">Continue</string>
-    <string name="starts">Starts</string>
-    <string name="ends">Ends</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="length">Length</string>
     <string name="time_entry">Enter Time</string>
+    <string name="minute_entry">Enter Time in Minutes</string>
     <string name="breakfast">Breakfast</string>
     <string name="lunch">Lunch</string>
     <string name="dinner">Dinner</string>
