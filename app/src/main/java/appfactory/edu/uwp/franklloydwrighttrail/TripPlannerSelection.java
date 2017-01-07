@@ -28,6 +28,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -37,7 +38,7 @@ import io.realm.RealmResults;
 public class TripPlannerSelection extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RecyclerView.OnItemTouchListener{
     private DrawerLayout drawer;
     public TripObject trip;
-    private ArrayList<FLWLocation> locations;
+    private RealmList<FLWLocation> locations;
     private Button cont;
 
     private RecyclerView recyclerView;

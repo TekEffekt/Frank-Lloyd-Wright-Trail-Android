@@ -15,17 +15,18 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Created by sterl on 10/29/2016.
  */
 
 public class TripSelectionAdapter extends RecyclerView.Adapter<TripSelectionAdapter.ViewHolder> {
-    private ArrayList<FLWLocation> locations;
+    private RealmList<FLWLocation> locations;
     private ArrayList<TripSelectionAdapter.ViewHolder> views;
     private Context context;
 
-    public TripSelectionAdapter (ArrayList<FLWLocation> locations) {
+    public TripSelectionAdapter (RealmList<FLWLocation> locations) {
         this.locations = locations;
         this.views = new ArrayList<>();
     }

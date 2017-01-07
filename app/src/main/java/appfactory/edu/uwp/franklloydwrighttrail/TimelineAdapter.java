@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
     private ArrayList<TimelineAdapter.TimelineViewHolder> views;
     private Context context;
     private TripObject trips;
+    int tLine = 0;
+    int temp =0;
+    int counter =0;
 
     public TimelineAdapter (Context context){
         this.context = context;
@@ -60,9 +64,85 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             holder.tripLength.setText(trip.getTimeValue());
 
         } else {
+            int hour =0;
+            int min =0;
+
+
+            if(position == 0)
+            {
+                if(counter == 1)
+                {
+                    counter = 0;
+                    tLine = 0;
+                }
+                hour = trips.getStartTime()/60;
+                min = trips.getStartTime()%60;
+                temp = trip.getTimeValue();
+                counter++;
+            }
+            else if(position == 1)
+            {
+                tLine = trips.getStartTime()+60+temp+tLine;
+                hour = tLine/60;
+                min = tLine%60;
+                temp = trip.getTimeValue();
+
+            }
+            else if(position == 2)
+            {
+                tLine = 60+temp+tLine;
+                hour = tLine/60;
+                min = tLine%60;
+                temp = trip.getTimeValue();
+
+            }
+            else if(position == 3)
+            {
+                tLine = 60+temp+tLine;
+                hour = tLine/60;
+                min = tLine%60;
+                temp = trip.getTimeValue();
+
+            }
+            else if(position == 4)
+            {
+                tLine = 60+temp+tLine;
+                hour = tLine/60;
+                min = tLine%60;
+                temp = trip.getTimeValue();
+
+            }
+            else if(position == 5)
+            {
+                tLine = 60+temp+tLine;
+                hour = tLine/60;
+                min = tLine%60;
+                temp = trip.getTimeValue();
+
+            }
+            if(hour > 23)
+            {
+                hour = hour - 23;
+            }
             holder.name.setText(trip.getLocation().getName());
-            holder.time.setText("ERROR");
-            holder.tripLength.setText("ERROR");
+            if(hour < 10 && min < 10)
+            {
+                holder.time.setText("0"+hour + ":"+"0"+min);
+            }
+            else if(hour <10)
+            {
+                holder.time.setText("0"+hour + ":"+min);
+            }
+            else if(min <10)
+            {
+                holder.time.setText(hour + ":"+"0"+min);
+            }
+            else
+            {
+                holder.time.setText(hour + ":"+min);
+            }
+
+            holder.tripLength.setText(trip.getTimeText());
         }
 
     }

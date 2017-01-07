@@ -257,15 +257,16 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                 timePicker = new TimePickerDialog(TripPlannerOptions.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
+                        Time textTime = new Time(hourOfDay,minute,0);
+                        int time = hourOfDay*60+minute;
 
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setBreakfastStartTime(time.getTime());
+                        RealmController.getInstance().getTrip().setBreakfastStartTime(time);
                         realm.commitTransaction();
                         complete = true;
 
-                        startTimeBreakfast.setText(time.toString());
+                        startTimeBreakfast.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -279,15 +280,15 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                 timePicker = new TimePickerDialog(TripPlannerOptions.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
-
+                        int time = hourOfDay*60+minute;
+                        Time textTime = new Time(hourOfDay,minute,0);
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setBreakfastEndTime(time.getTime());
+                        RealmController.getInstance().getTrip().setBreakfastEndTime(time);
                         realm.commitTransaction();
                         complete = true;
 
-                        endTimeBreakfast.setText(time.toString());
+                        endTimeBreakfast.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -301,15 +302,15 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                 timePicker = new TimePickerDialog(TripPlannerOptions.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
-
+                        int time = hourOfDay*60+minute;
+                        Time textTime = new Time(hourOfDay,minute,0);
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setLunchStartTime(time.getTime());
+                        RealmController.getInstance().getTrip().setLunchStartTime(time);
                         realm.commitTransaction();
                         complete = true;
 
-                        startTimeLunch.setText(time.toString());
+                        startTimeLunch.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -323,15 +324,15 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                 timePicker = new TimePickerDialog(TripPlannerOptions.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
-
+                        int time = hourOfDay*60+minute;
+                        Time textTime = new Time(hourOfDay,minute,0);
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setLunchEndTime(time.getTime());
+                        RealmController.getInstance().getTrip().setLunchEndTime(time);
                         realm.commitTransaction();
                         complete = true;
 
-                        endTimeLunch.setText(time.toString());
+                        endTimeLunch.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -345,15 +346,15 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                 timePicker = new TimePickerDialog(TripPlannerOptions.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
-
+                        int time = hourOfDay*60+minute;
+                        Time textTime = new Time(hourOfDay,minute,0);
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setDinnerStartTime(time.getTime());
+                        RealmController.getInstance().getTrip().setDinnerStartTime(time);
                         realm.commitTransaction();
                         complete = true;
 
-                        startTimeDinner.setText(time.toString());
+                        startTimeDinner.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -367,15 +368,15 @@ public class TripPlannerOptions extends AppCompatActivity implements NavigationV
                 timePicker = new TimePickerDialog(TripPlannerOptions.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
-
+                        int time = hourOfDay*60+minute;
+                        Time textTime = new Time(hourOfDay,minute,0);
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setDinnerEndTime(time.getTime());
+                        RealmController.getInstance().getTrip().setDinnerEndTime(time);
                         realm.commitTransaction();
                         complete = true;
 
-                        endTimeDinner.setText(time.toString());
+                        endTimeDinner.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");

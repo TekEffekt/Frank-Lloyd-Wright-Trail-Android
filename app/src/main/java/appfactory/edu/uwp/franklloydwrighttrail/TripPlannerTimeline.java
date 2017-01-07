@@ -23,9 +23,11 @@ import android.widget.Toast;
 
 import com.vipul.hp_hp.timelineview.TimelineView;
 
+import java.sql.Time;
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,8 +44,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     private RecyclerView timelineView;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
-    public ArrayList<FLWLocation> locations = LocationModel.getLocations();
-    ArrayList<TripOrder> mTripOrder = new ArrayList<>();
+    public RealmList<FLWLocation> locations = LocationModel.getLocations();
+    RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
 
     public static Intent newIntent(Context packageContext) {
@@ -184,7 +186,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-    public int findLocation(int location,ArrayList<FLWLocation> locations)
+    public int findLocation(int location,RealmList<FLWLocation> locations)
     {
         for(int i=0;i<locations.size();i++){
             if(locations.get(i).getName() == location) {
@@ -195,30 +197,30 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         return -1;
     }
 
-    public void createTripPlan(ArrayList<TripOrder> tripOrder)
+    public void createTripPlan(RealmList<TripOrder> tripOrder)
     {
-        long breakfast = 3600;
-        breakfast = breakfast/60;
+        int startTime = trip.getStartTime();
+        int endTime = trip.getEndTime();
+        int totalTime = endTime - startTime;
+        Log.d("debug", "TotalTimeRealm: "+totalTime);
+
+        int breakfast = trip.getBreakfastEndTime()-trip.getBreakfastStartTime();
+
         Log.d("debug", "breakfast: "+breakfast);
-        long lunch = 3600;
-        lunch = lunch/60;
+        int lunch = trip.getLunchEndTime()-trip.getLunchStartTime();
+
         Log.d("debug", "lunch: "+lunch);
-        long dinner = 3600;
-        dinner = dinner/60;
+        int dinner = trip.getDinnerEndTime()-trip.getDinnerStartTime();
+
         Log.d("debug", "dinner: "+dinner);
-        int startHour = 9;
-        int startMin = 30;
-        int endHour = 7;
-        int endMin= 30;
-        long totalTime = 36000;
-        totalTime = totalTime/60;
         int time = 0;
         Toast toast;
-        long mealtime = breakfast+lunch+dinner;
+        int mealtime = breakfast+lunch+dinner;
         Log.d("debug", "mealtime: "+ mealtime);
+        Log.d("debug", "BeforeTripOrder: " + tripOrder.toString());
         for(int i=0;i<tripOrder.size();i++)
         {
-            time += tripOrder.get(i).getTimeValue()/60+60;
+            time += tripOrder.get(i).getTimeValue()+60;
         }
         Log.d("debug", "time: "+time);
         if(mealtime > totalTime)
@@ -269,6 +271,25 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         {
             Log.d("debug", "enough time ");
         }
+        TripObject tObject = new TripObject();
+        tObject.setTrips(tripOrder);
+        tObject.setBreakfastStartTime(trip.getBreakfastStartTime());
+        tObject.setBreakfastEndTime(trip.getBreakfastEndTime());
+        tObject.setLunchStartTime(trip.getLunchStartTime());
+        tObject.setLunchEndTime(trip.getLunchEndTime());
+        tObject.setDinnerStartTime(trip.getDinnerStartTime());
+        tObject.setDinnerEndTime(trip.getDinnerEndTime());
+        tObject.setStartTime(trip.getStartTime());
+        tObject.setEndTime(trip.getEndTime());
+        Log.d("debug", "afterTripOrder: " + tripOrder.toString());
+            realm.beginTransaction();
+
+            realm.copyToRealmOrUpdate(tObject);
+            realm.commitTransaction();
+        RealmController.getInstance().refresh();
+        trip = RealmController.getInstance().getTrip();
+        Log.d("debug", "realmTrip: " + trip.getTrips());
+
 
     }
 
@@ -287,6 +308,16 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         int aLoc;
         int bLoc;
         String midLatLong = "optimize:true|";
+        trip = RealmController.getInstance().getTrip();
+        locations = new RealmList<>();
+        for ( TripOrder tp: trip.getTrips())
+              {
+                  locations.add(tp.getLocation());
+
+
+        }
+        Log.d("debug", "location: "+ locations);
+
         String [] middleLatLong = new String[locations.size()-2];
         index = findLocation(R.string.scjohnson,locations);
 
@@ -394,13 +425,16 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                     for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++) {
                         if(i==0) {
                             TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            trip.setTimeValue(trip.getTimeValue()/60);
                             mTripOrder.add(trip);
                         }
                         else if(i==response.body().getRoutes().get(0).getLegs().size()) {
                             TripOrder trip = new TripOrder(endLocation,"",0);
+                            trip.setTimeValue(trip.getTimeValue()/60);
                             mTripOrder.add(trip);
                         } else {
                             TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            trip.setTimeValue(trip.getTimeValue()/60);
                             mTripOrder.add(trip);
                             j++;
                         }
