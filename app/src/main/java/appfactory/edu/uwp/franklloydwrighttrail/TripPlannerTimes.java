@@ -90,13 +90,14 @@ public class TripPlannerTimes extends AppCompatActivity{
                 timePicker = new TimePickerDialog(TripPlannerTimes.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
+                        Time textTime = new Time(hourOfDay,minute,0);
+                        int time = hourOfDay*60+minute;
                         realm.beginTransaction();
-                        RealmController.getInstance().getTripResults().get(0).setStartTime(time.getTime());
+                        RealmController.getInstance().getTripResults().get(0).setStartTime(time);
                         startTimeChosen = true;
                         //trip.setStartTime(time.getTime());
                         realm.commitTransaction();
-                        startTimeLabel.setText(time.toString());
+                        startTimeLabel.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -110,13 +111,14 @@ public class TripPlannerTimes extends AppCompatActivity{
                 timePicker = new TimePickerDialog(TripPlannerTimes.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        Time time = new Time(hourOfDay,minute,0);
+                        Time textTime = new Time(hourOfDay,minute,0);
+                        int time = hourOfDay*60+minute;
                         realm.beginTransaction();
-                        RealmController.getInstance().getTripResults().get(0).setEndTime(time.getTime());
+                        RealmController.getInstance().getTripResults().get(0).setEndTime(time);
                         endTimeChosen = true;
                         //trip.setEndTime(time.getTime());
                         realm.commitTransaction();
-                        endTimeLabel.setText(time.toString());
+                        endTimeLabel.setText(textTime.toString());
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");

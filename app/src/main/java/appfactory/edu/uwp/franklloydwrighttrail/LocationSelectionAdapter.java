@@ -18,17 +18,18 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Work in progress for the Recycler View
  */
 
 public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelectionAdapter.ViewHolder> {
-    private ArrayList<FLWLocation> locations;
+    private RealmList<FLWLocation> locations;
     private ArrayList<ViewHolder> views;
     private Context context;
 
-    public LocationSelectionAdapter (ArrayList<FLWLocation> locations) {
+    public LocationSelectionAdapter (RealmList<FLWLocation> locations) {
         this.locations = locations;
         this.views = new ArrayList<>();
     }

@@ -4,10 +4,12 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
+
 public class LocationModel {
     @NonNull
-    public static ArrayList<FLWLocation> getLocations() {
-        ArrayList<FLWLocation> locations = new ArrayList<>();
+    public static RealmList<FLWLocation> getLocations() {
+        RealmList<FLWLocation> locations = new RealmList<>();
         locations.add(0, new FLWLocation(R.string.scjohnson, R.drawable.scjohnson, R.drawable.marker_red,"42.7152375,-87.7906969",42.7152375,-87.7906969, "1525 Howe St, Racine, WI 53403, USA"));
         locations.add(1, new FLWLocation(R.string.wingspread, R.drawable.wingspread1, R.drawable.marker_yellow,"42.784562,-87.771588",42.784562,-87.771588,"36 E 4 Mile Rd, Wind Point, WI 53402, USA"));
         locations.add(2, new FLWLocation(R.string.built_homes, R.drawable.built_homes, R.drawable.marker_cyan,"43.010584,-87.948539",43.010584,-87.948539,"2714 W Burnham St, Milwaukee, WI 53215, USA"));
