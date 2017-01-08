@@ -191,8 +191,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 Intent intent = TripPlannerTimeline.newIntent(this);
                 startActivity(intent);
                 break;
-            case R.id.nav_scrapbook:
-                break;
+            //case R.id.nav_scrapbook:
+            //    break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_about:

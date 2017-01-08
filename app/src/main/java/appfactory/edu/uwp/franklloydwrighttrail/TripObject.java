@@ -19,26 +19,21 @@ public class TripObject extends RealmObject{
     private int startTime;
     private int endTime;
 
-    private int dinnerStartTime;
-    private int lunchStartTime;
-    private int breakfastStartTime;
 
-    private int dinnerEndTime;
-    private int lunchEndTime;
-    private int breakfastEndTime;
+
+    private int dinnerTime;
+    private int lunchTime;
+    private int breakfastTime;
+
 
     public TripObject (){
         trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
 
-        dinnerStartTime = 0;
-        lunchStartTime = 0;
-        breakfastStartTime = 0;
-
-        dinnerEndTime = 0;
-        lunchEndTime = 0;
-        breakfastEndTime = 0;
+        dinnerTime = 0;
+        lunchTime = 0;
+        breakfastTime = 0;
     };
     public RealmList<TripOrder> getTrips() {
         return trips;
@@ -65,51 +60,27 @@ public class TripObject extends RealmObject{
         this.endTime = endTime;
     }
 
-    public int getDinnerStartTime() {
-        return dinnerStartTime;
+    public int getDinnerTime() {
+        return dinnerTime;
     }
 
-    public void setDinnerStartTime(int dinnerStartTime) {
-        this.dinnerStartTime = dinnerStartTime;
+    public void setDinnerTime(int dinnerTime) {
+        this.dinnerTime = dinnerTime;
     }
 
-    public int getLunchStartTime() {
-        return lunchStartTime;
+    public int getLunchTime() {
+        return lunchTime;
     }
 
-    public void setLunchStartTime(int lunchStartTime) {
-        this.lunchStartTime = lunchStartTime;
+    public void setLunchTime(int lunchTime) {
+        this.lunchTime = lunchTime;
     }
 
-    public int getBreakfastStartTime() {
-        return breakfastStartTime;
+    public int getBreakfastTime() {
+        return breakfastTime;
     }
 
-    public void setBreakfastStartTime(int breakfastStartTime) {
-        this.breakfastStartTime = breakfastStartTime;
-    }
-
-    public int getDinnerEndTime() {
-        return dinnerEndTime;
-    }
-
-    public void setDinnerEndTime(int dinnerEndTime) {
-        this.dinnerEndTime = dinnerEndTime;
-    }
-
-    public int getLunchEndTime() {
-        return lunchEndTime;
-    }
-
-    public void setLunchEndTime(int lunchEndTime) {
-        this.lunchEndTime = lunchEndTime;
-    }
-
-    public int getBreakfastEndTime() {
-        return breakfastEndTime;
-    }
-
-    public void setBreakfastEndTime(int breakfastEndTime) {
-        this.breakfastEndTime = breakfastEndTime;
+    public void setBreakfastTime(int breakfastTime) {
+        this.breakfastTime = breakfastTime;
     }
 }

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="appfactory.edu.uwp.franklloydwrighttrail.TripPlannerTimes"
-    tools:showIn="@layout/activity_trip_times_toolbar"
+    tools:showIn="@layout/activity_trip_times"
     android:orientation="vertical">
     <ScrollView
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:orientation="vertical">
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="500dp"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <RelativeLayout
                     android:id="@+id/start_time_container"
@@ -31,7 +31,7 @@
                         android:id="@+id/starts"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/starts"
+                        android:text="@string/start"
                         android:textSize="20dp"
                         android:paddingLeft="10dp"/>
                     <TextView
@@ -63,7 +63,7 @@
                         android:id="@+id/ends"
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/ends"
+                        android:text="@string/end"
                         android:textSize="20dp"
                         android:paddingLeft="10dp"/>
                     <TextView
@@ -85,7 +85,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginTop="18dp"
+                android:layout_marginTop="40dp"
                 android:textAllCaps="false"
                 android:text="@string/cont"
                 android:textSize="22dp"
