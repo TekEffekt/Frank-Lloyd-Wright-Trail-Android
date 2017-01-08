@@ -204,13 +204,13 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         int totalTime = endTime - startTime;
         Log.d("debug", "TotalTimeRealm: "+totalTime);
 
-        int breakfast = trip.getBreakfastEndTime()-trip.getBreakfastStartTime();
+        int breakfast = trip.getBreakfastTime();
 
         Log.d("debug", "breakfast: "+breakfast);
-        int lunch = trip.getLunchEndTime()-trip.getLunchStartTime();
+        int lunch = trip.getLunchTime();
 
         Log.d("debug", "lunch: "+lunch);
-        int dinner = trip.getDinnerEndTime()-trip.getDinnerStartTime();
+        int dinner = trip.getDinnerTime();
 
         Log.d("debug", "dinner: "+dinner);
         int time = 0;
@@ -273,12 +273,12 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         }
         TripObject tObject = new TripObject();
         tObject.setTrips(tripOrder);
-        tObject.setBreakfastStartTime(trip.getBreakfastStartTime());
-        tObject.setBreakfastEndTime(trip.getBreakfastEndTime());
-        tObject.setLunchStartTime(trip.getLunchStartTime());
-        tObject.setLunchEndTime(trip.getLunchEndTime());
-        tObject.setDinnerStartTime(trip.getDinnerStartTime());
-        tObject.setDinnerEndTime(trip.getDinnerEndTime());
+        tObject.setBreakfastTime(trip.getBreakfastTime());
+
+        tObject.setLunchTime(trip.getLunchTime());
+
+        tObject.setDinnerTime(trip.getDinnerTime());
+        
         tObject.setStartTime(trip.getStartTime());
         tObject.setEndTime(trip.getEndTime());
         Log.d("debug", "afterTripOrder: " + tripOrder.toString());
