@@ -60,9 +60,8 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
     }
 
     public void updateDistance() {
-        for (int i = 0; i < views.size(); i++) {
-            ViewHolder holder = views.get(i);
-            float miles = LocationSelectionActivity.updateDistance(i)/(float) 1609.344;
+        for (ViewHolder holder: views) {
+            float miles = LocationSelectionActivity.updateDistance(holder.getAdapterPosition())/(float) 1609.344;
             holder.distance.setText(String.format("%.1f", miles) + " mi");
             holder.distance.setVisibility(View.VISIBLE);
         }
@@ -83,6 +82,7 @@ public class LocationSelectionAdapter extends RecyclerView.Adapter<LocationSelec
     public int getItemCount() { return locations.size(); }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
         @Nullable @Bind(R.id.name) TextView textView;
         @Nullable @Bind(R.id.picture) RelativeLayout picture;
         @Nullable @Bind(R.id.marker) ImageView marker;
