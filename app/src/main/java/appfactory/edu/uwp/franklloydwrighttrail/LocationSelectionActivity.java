@@ -327,19 +327,6 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 1:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "Monona Terrace");
-                    LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0717445, -89.38040180000002));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
-                break;
-            case 2:
-                if (currentLocation == position) {
-                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "Wingspread");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
@@ -350,10 +337,23 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     currentLocation = position;
                 }
                 break;
+            case 2:
+                if (currentLocation == position) {
+                    intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                    intent.putExtra("Title", "American System-Built Homes");
+                    LocationSelectionActivity.this.startActivity(intent);
+                } else {
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.010584, -87.948539));
+                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+                }
+                break;
             case 3:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "Meeting House");
+                    intent.putExtra("Title", "Monona Terrace");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
                     CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
@@ -366,10 +366,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 4:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "FLW Visitor Center");
+                    intent.putExtra("Title", "Meeting House");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.14390059999999, -90.05952260000004));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -379,10 +379,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 5:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "German Warehouse");
+                    intent.putExtra("Title", "FLW Visitor Center");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.14390059999999, -90.05952260000004));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
@@ -405,10 +405,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 7:
                 if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "American System-Built Homes");
+                    intent.putExtra("Title", "German Warehouse");
                     LocationSelectionActivity.this.startActivity(intent);
                 } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.010584, -87.948539));
+                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
                     CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
                     mMap.moveCamera(center);
                     mMap.animateCamera(zoom);
