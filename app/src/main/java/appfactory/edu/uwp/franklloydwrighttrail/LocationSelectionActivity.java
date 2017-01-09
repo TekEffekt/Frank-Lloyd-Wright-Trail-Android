@@ -52,7 +52,7 @@ import io.realm.RealmConfiguration;
 
 public class LocationSelectionActivity extends AppCompatActivity implements GoogleMap.OnMarkerClickListener,
         OnMapReadyCallback, RecyclerView.OnItemTouchListener, NavigationView.OnNavigationItemSelectedListener,
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener{
 
     // This is the Main Activity
 
@@ -309,111 +309,139 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     }
 
     private void onClick(int position) {
+        CameraUpdate center;
+        CameraUpdate zoom;
+        switch (position) {
+            case 0:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(42.7152375, -87.7906969));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 1:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 2:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(43.010584, -87.948539));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 3:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 4:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 5:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(43.14390059999999, -90.05952260000004));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 6:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(43.119255, -90.114908));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            case 7:
+
+                    center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
+                    zoom = CameraUpdateFactory.zoomTo(8);
+                    mMap.moveCamera(center);
+                    mMap.animateCamera(zoom);
+                    currentLocation = position;
+
+                break;
+            default:
+                break;
+        }
+    }
+
+    private void doubleClick(int position) {
         Intent intent;
         switch (position) {
             case 0:
-                if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "SC Johnson Headquarters");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.7152375, -87.7906969));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
                 break;
             case 1:
-                if (currentLocation == position) {
+
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "Wingspread");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(42.784562, -87.771588));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             case 2:
-                if (currentLocation == position) {
+
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "American System-Built Homes");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.010584, -87.948539));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             case 3:
-                if (currentLocation == position) {
+
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "Monona Terrace");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             case 4:
-                if (currentLocation == position) {
+
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "Meeting House");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.0757361, -89.43533680000002));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             case 5:
-                if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "FLW Visitor Center");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.14390059999999, -90.05952260000004));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             case 6:
-                if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "Wyoming Valley School");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.119255, -90.114908));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             case 7:
-                if (currentLocation == position) {
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
                     intent.putExtra("Title", "German Warehouse");
                     LocationSelectionActivity.this.startActivity(intent);
-                } else {
-                    CameraUpdate center = CameraUpdateFactory.newLatLng(new LatLng(43.3334718, -90.38436739999997));
-                    CameraUpdate zoom = CameraUpdateFactory.zoomTo(8);
-                    mMap.moveCamera(center);
-                    mMap.animateCamera(zoom);
-                    currentLocation = position;
-                }
+
                 break;
             default:
                 break;
@@ -452,6 +480,13 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        this.gestureDetector.onTouchEvent(e);
+        return super.onTouchEvent(e);
     }
 
     @Override
@@ -464,9 +499,22 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private class RecyclerViewGestureListener extends GestureDetector.SimpleOnGestureListener {
         @Override
         public boolean onSingleTapConfirmed(@NonNull MotionEvent e) {
-            View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
-            onClick(recyclerView.getChildAdapterPosition(view));
-            return super.onSingleTapConfirmed(e);
+            if (e.getAction() == MotionEvent.ACTION_DOWN) {
+                Log.d("GestureListener", "SingleTapUp event");
+                View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                onClick(recyclerView.getChildAdapterPosition(view));
+            }
+            return true;
+        }
+
+        @Override
+        public boolean onDoubleTapEvent(@NonNull MotionEvent e) {
+            if (e.getAction() == MotionEvent.ACTION_UP) {
+                Log.d("GestureListener", "DoubleTapEvent event");
+                View view = recyclerView.findChildViewUnder(e.getX(), e.getY());
+                doubleClick(recyclerView.getChildAdapterPosition(view));
+            }
+            return true;
         }
     }
 
