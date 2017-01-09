@@ -1,12 +1,10 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.content.Context;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +14,9 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelectionActivity;
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.RealmList;

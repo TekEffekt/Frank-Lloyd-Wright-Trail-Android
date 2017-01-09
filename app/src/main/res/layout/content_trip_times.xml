@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="appfactory.edu.uwp.franklloydwrighttrail.TripPlannerTimes"
+    tools:context="appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimes"
     tools:showIn="@layout/activity_trip_times"
     android:orientation="vertical">
     <ScrollView

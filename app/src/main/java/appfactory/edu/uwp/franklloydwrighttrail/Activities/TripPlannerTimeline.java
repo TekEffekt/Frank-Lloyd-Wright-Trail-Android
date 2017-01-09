@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,18 +14,23 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.vipul.hp_hp.timelineview.TimelineView;
-
-import java.sql.Time;
 import java.util.ArrayList;
 
+import appfactory.edu.uwp.franklloydwrighttrail.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
+import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
+import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TimelineAdapter;
+import appfactory.edu.uwp.franklloydwrighttrail.Models.TimelineRealmModelAdapter;
+import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
+import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;

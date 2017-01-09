@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,6 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.RealmList;

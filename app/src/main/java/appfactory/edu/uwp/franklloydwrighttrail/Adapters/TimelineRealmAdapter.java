@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;

@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Models;
 
 import android.content.Context;
 import android.view.View;

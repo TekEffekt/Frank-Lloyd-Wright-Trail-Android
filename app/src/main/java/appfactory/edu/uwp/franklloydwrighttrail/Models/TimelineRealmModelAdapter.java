@@ -1,7 +1,8 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Models;
 
 import android.content.Context;
 
+import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import io.realm.RealmResults;
 
 /**

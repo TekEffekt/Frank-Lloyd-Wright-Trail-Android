@@ -1,9 +1,12 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageOneFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageThreeFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageTwoFragment;
 
 /**
  * Created by zstue_000 on 8/16/2016.

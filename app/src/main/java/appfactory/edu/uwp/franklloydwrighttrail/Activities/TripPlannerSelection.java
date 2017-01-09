@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,8 +18,13 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
-import java.util.ArrayList;
-
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
+import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
+import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
+import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
+import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TripSelectionAdapter;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;

@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Models;
 
 /**
  * Created by zstue_000 on 10/31/2016.
@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import appfactory.edu.uwp.franklloydwrighttrail.GeocodedWaypoint;
+import appfactory.edu.uwp.franklloydwrighttrail.Route;
 
 public class DirectionsModel {
 

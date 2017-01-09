@@ -1,5 +1,6 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;

@@ -1,22 +1,22 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
 
 
-public class ImageThreeFragment extends Fragment {
-    public static ImageView imageThree;
-
-    public ImageThreeFragment() {
+public class ImageTwoFragment extends Fragment {
+    public static ImageView imageTwo;
+    public ImageTwoFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,42 +26,42 @@ public class ImageThreeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_image_three, container, false);
-        imageThree = (ImageView) view.findViewById(R.id.imageThree);
+        View view = inflater.inflate(R.layout.fragment_image_two, container, false);
+        imageTwo = (ImageView) view.findViewById(R.id.imageTwo);
 
         switch(DescriptonActivity.value)
         {
             case "SC Johnson Administration Building and Research Tower":
-                imageThree.setImageResource(R.drawable.scj3);
+                imageTwo.setImageResource(R.drawable.scjworkroom1);
 
                 break;
             case "Wingspread":
-                imageThree.setImageResource(R.drawable.wingspread3);
+                imageTwo.setImageResource(R.drawable.wingspread2);
 
                 break;
             case "Monona Terrace":
-                imageThree.setImageResource(R.drawable.mt3);
+                imageTwo.setImageResource(R.drawable.mt2);
 
                 break;
             case "Meeting House":
-                imageThree.setImageResource(R.drawable.meetinghouse3);
+                imageTwo.setImageResource(R.drawable.meetinghouse2);
 
                 break;
             case "FLW Visitor Center":
-                imageThree.setImageResource(R.drawable.vc3);
+                imageTwo.setImageResource(R.drawable.vc2);
 
                 break;
             case "German Warehouse":
-                imageThree.setImageResource(R.drawable.gw3);
+                imageTwo.setImageResource(R.drawable.gw2);
 
                 break;
             case "American System-Built Homes":
 
-                imageThree.setImageResource(R.drawable.bh3);
+                imageTwo.setImageResource(R.drawable.bh2);
                 break;
             case "Wyoming Valley School":
 
-                imageThree.setImageResource(R.drawable.wvs3);
+                imageTwo.setImageResource(R.drawable.wvs2);
                 break;
 
 

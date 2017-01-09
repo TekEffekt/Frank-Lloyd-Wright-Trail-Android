@@ -1,13 +1,11 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -33,7 +31,6 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
@@ -47,6 +44,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
+import appfactory.edu.uwp.franklloydwrighttrail.Adapters.LocationSelectionAdapter;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
+import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -527,29 +528,29 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 place.setLongitude(-87.7906969);
                 return myLocation.distanceTo(place);
             case 1:
-                //Wingspread1
-                place.setLatitude(43.0717445);
-                place.setLongitude(-89.38040180000002);
-                return myLocation.distanceTo(place);
-            case 2:
-                //Mono Terrace
+                //Wingspread
                 place.setLatitude(42.784562);
                 place.setLongitude(-87.771588);
                 return myLocation.distanceTo(place);
+            case 2:
+                //Built Homes
+                place.setLatitude(43.010584);
+                place.setLongitude(-87.948539);
+                return myLocation.distanceTo(place);
             case 3:
-                //Meeting house
+                //Monona Terrace
                 place.setLatitude(43.0757361);
                 place.setLongitude(-89.43533680000002);
                 return myLocation.distanceTo(place);
             case 4:
+                //Meeting House
+                place.setLatitude(43.0757361);
+                place.setLongitude(-89.43533680000002);
+                return myLocation.distanceTo(place);
+            case 5:
                 //FLW Visitor Center
                 place.setLatitude(43.14390059999999);
                 place.setLongitude(-90.05952260000004);
-                return myLocation.distanceTo(place);
-            case 5:
-                //German Warehouse
-                place.setLatitude(43.3334718);
-                place.setLongitude(-90.38436739999997);
                 return myLocation.distanceTo(place);
             case 6:
                 //Wyoming Valley School
@@ -557,9 +558,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 place.setLongitude(-90.114908);
                 return myLocation.distanceTo(place);
             case 7:
-                //American System-Built Homes
-                place.setLatitude(43.010584);
-                place.setLongitude(-87.948539);
+                //German Warehouse
+                place.setLatitude(43.3334718);
+                place.setLongitude(-90.38436739999997);
                 return myLocation.distanceTo(place);
             default:
                 return 0;

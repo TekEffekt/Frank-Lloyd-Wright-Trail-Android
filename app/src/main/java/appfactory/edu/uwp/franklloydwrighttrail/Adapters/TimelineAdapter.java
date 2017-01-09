@@ -1,11 +1,10 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,9 +16,12 @@ import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.ArrayList;
 
+import appfactory.edu.uwp.franklloydwrighttrail.R;
+import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
+import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
+import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 
 /**
  * Created by sterl on 11/3/2016.

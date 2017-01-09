@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -16,6 +16,9 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 
+import appfactory.edu.uwp.franklloydwrighttrail.R;
+import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
+import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import io.realm.Realm;
 
 /**

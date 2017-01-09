@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
+import appfactory.edu.uwp.franklloydwrighttrail.R;
 
 
 public class ImageOneFragment extends Fragment {
