@@ -176,4 +176,11 @@ public class TripPlannerSelection extends AppCompatActivity implements RecyclerV
             }
         });
     }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimeline.class);
+        TripPlannerSelection.this.startActivity(intent);
+        finish();
+    }
 }

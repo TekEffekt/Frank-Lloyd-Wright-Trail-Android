@@ -176,6 +176,14 @@ public class TripPlannerOptions extends AppCompatActivity{
             }
         });
     }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(TripPlannerOptions.this, TripPlannerTimes.class);
+        TripPlannerOptions.this.startActivity(intent);
+        finish();
+    }
+
 /*
     private void initializeContainers(){
         breakfastContainer.setOnClickListener(new View.OnClickListener() {

@@ -45,6 +45,7 @@ public class TripPlannerTimes extends AppCompatActivity{
 
     private boolean startTimeChosen = false;
     private boolean endTimeChosen = false;
+    private boolean timeValid = false;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerOptions.class);
@@ -64,7 +65,8 @@ public class TripPlannerTimes extends AppCompatActivity{
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (startTimeChosen && endTimeChosen){
+                timeValid = checkTimeValid();
+                if (startTimeChosen && endTimeChosen && timeValid){
                     Intent intent = new Intent(TripPlannerTimes.this, TripPlannerOptions.class);
                     TripPlannerTimes.this.startActivity(intent);
                     finish();
@@ -129,5 +131,24 @@ public class TripPlannerTimes extends AppCompatActivity{
             }
         });
 
+    }
+
+    private boolean checkTimeValid(){
+        if (trip.getStartTime() != 0 && trip.getEndTime() != 0) {
+            if (trip.getStartTime() > trip.getEndTime()) {
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public void onBackPressed(){
+        Intent intent = new Intent(TripPlannerTimes.this, TripPlannerSelection.class);
+        TripPlannerTimes.this.startActivity(intent);
+        finish();
     }
 }

@@ -127,21 +127,21 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
                 hour = hour - 23;
             }
             holder.name.setText(trip.getLocation().getName());
-            if(hour < 10 && min < 10)
+            if(hour < 12 && min < 10)
             {
-                holder.time.setText("0"+hour + ":"+"0"+min);
+                holder.time.setText(hour + ":" + "0" + min + " AM");
             }
-            else if(hour <10)
-            {
-                holder.time.setText("0"+hour + ":"+min);
+            else if (hour >= 12 && min < 10) {
+                int tempHour = hour - 12;
+                holder.time.setText(tempHour + ":" + "0" +min + " PM");
             }
-            else if(min <10)
-            {
-                holder.time.setText(hour + ":"+"0"+min);
+            else if (hour >= 12) {
+                int tempHour = hour - 12;
+                holder.time.setText(tempHour + ":" + min + " PM");
             }
             else
             {
-                holder.time.setText(hour + ":"+min);
+                holder.time.setText(hour + ":" + min + " AM");
             }
 
             holder.tripLength.setText(trip.getTimeText());

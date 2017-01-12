@@ -65,6 +65,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_trip_timeline);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Trip Planner");
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -177,6 +178,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     public boolean onNavigationItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.nav_locations:
+                finish();
                 break;
             case R.id.nav_trip_planner:
                 break;
