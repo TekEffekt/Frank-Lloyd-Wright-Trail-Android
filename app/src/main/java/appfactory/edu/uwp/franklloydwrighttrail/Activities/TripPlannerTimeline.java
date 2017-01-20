@@ -1,10 +1,17 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -38,17 +45,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelectionActivity.myLocation;
+
 /**
  * Created by sterl on 11/3/2016.
  */
 
-public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
     private DrawerLayout drawer;
     private Button create;
     private TripObject trip;
     private RecyclerView timelineView;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
+    private final static boolean forceNetwork = false;
+    public Location location;
+    private LocationManager locationManager;
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
@@ -57,6 +69,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
         return intent;
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +99,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 create.setVisibility(View.GONE);
                 timelineView.setVisibility(View.VISIBLE);
                 setRealmAdapter(RealmController.with(this).getTripResults());
+                initLocationService(this);
                 initiateDataCalculation();
             } else {
                 timelineView.setVisibility(View.GONE);
@@ -224,10 +238,13 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         Toast toast;
         int mealtime = breakfast+lunch+dinner;
         Log.d("debug", "mealtime: "+ mealtime);
-        Log.d("debug", "BeforeTripOrder: " + tripOrder.toString());
+
         for(int i=0;i<tripOrder.size();i++)
         {
-            time += tripOrder.get(i).getTimeValue()+60;
+            if(i==0)
+                time += tripOrder.get(i).getTimeValue();
+            else
+                time += tripOrder.get(i).getTimeValue()+60;
         }
         Log.d("debug", "time: "+time);
         if(mealtime > totalTime)
@@ -288,7 +305,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         
         tObject.setStartTime(trip.getStartTime());
         tObject.setEndTime(trip.getEndTime());
-        Log.d("debug", "afterTripOrder: " + tripOrder.toString());
             realm.beginTransaction();
 
             realm.copyToRealmOrUpdate(tObject);
@@ -299,13 +315,55 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
 
     }
+    @Override
+    public void onProviderEnabled(String provider){
 
+    }
+    @Override
+    public void onProviderDisabled(String provider){
+
+    }
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras){
+
+    }
+    @Override
+    public void onLocationChanged(Location location){
+
+    }
+    @TargetApi(23)
+    private void initLocationService(Context context)
+    {
+        boolean isGPSEnabled = false;
+
+        if(Build.VERSION.SDK_INT>=23 && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+            return;
+        }
+        try{
+            this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            if(forceNetwork) isGPSEnabled = false;
+
+
+
+                if(isGPSEnabled){
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,10,this);
+                    if(locationManager != null){
+                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    }
+                }
+
+        }catch (Exception ex)
+        {
+            Log.d("debug", "Error creating service: " + ex.getMessage());
+        }
+    }
     //Z's Code
     private void initiateDataCalculation(){
 
         FLWLocation aLatLong;
         FLWLocation bLatLong;
-        final FLWLocation startLocation;
+        final FLWLocation startLocation = new FLWLocation();
         final FLWLocation endLocation;
         String startLatLong;
         String endLatLong;
@@ -323,9 +381,33 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
 
         }
+
+        if(findLocation(R.string.user,locations) == -1)
+        {
+            Location myLocation = location;
+            // Sets start location to the users location
+            startLocation.setLatitude(myLocation.getLatitude());
+            startLocation.setLongitude(myLocation.getLongitude());
+            startLocation.setLatlong(myLocation.getLatitude()+","+myLocation.getLongitude());
+            startLocation.setName(R.string.user);
+            startLatLong = startLocation.getLatlong();
+            startLocation.setImage(android.R.color.transparent);
+            locations.add(0,startLocation);
+
+
+        }
+        startLoc = findLocation(R.string.user,locations);
+        startLocation.setLatitude(locations.get(startLoc).getLatitude());
+        startLocation.setLongitude(locations.get(startLoc).getLongitude());
+        startLocation.setLatlong(startLocation.getLatitude() + ","+ startLocation.getLongitude());
+        startLocation.setName(locations.get(startLoc).getName());
+        startLocation.setImage(locations.get(startLoc).getImage());
+        startLatLong = startLocation.getLatlong();
+
         Log.d("debug", "location: "+ locations);
 
-        String [] middleLatLong = new String[locations.size()-2];
+
+
         index = findLocation(R.string.scjohnson,locations);
 
         if(index == -1)
@@ -345,6 +427,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                             index = findLocation(R.string.visitor_center, locations);
                             if(index == -1)
                                 index = findLocation(R.string.valley_school,locations);
+
                         }
                     }
                 }
@@ -376,9 +459,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         bLatLong = locations.get(index);
         bLoc = index;
-        Location myLocation = new Location ("my location");
-        myLocation.setLatitude(LocationSelectionActivity.myLocation.getLatitude());
-        myLocation.setLongitude(LocationSelectionActivity.myLocation.getLongitude());
+
         Location locationA = new Location("point A");
         locationA.setLatitude(aLatLong.getLatitude());
         locationA.setLongitude(aLatLong.getLongitude());
@@ -387,20 +468,22 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         locationB.setLongitude(bLatLong.getLongitude());
 
         if(myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
-            startLocation = aLatLong;
-            startLatLong = aLatLong.getLatlong();
-            startLoc = aLoc;
+
             endLocation = bLatLong;
             endLatLong = bLatLong.getLatlong();
             endLoc = bLoc;
         } else {
-            startLocation = bLatLong;
-            startLatLong = bLatLong.getLatlong();
-            startLoc = bLoc;
+
             endLocation = aLatLong;
             endLatLong = aLatLong.getLatlong();
             endLoc = aLoc;
         }
+        Log.d("debug", "aloc: "+aLoc);
+        Log.d("debug", "bloc: "+bLoc);
+        locations.remove(endLoc);
+        locations.add(endLocation);
+        endLoc = findLocation(endLocation.getName(),locations);
+        String [] middleLatLong = new String[locations.size()-2];
         int j=0;
         for(int i=0;i<locations.size();i++) {
             if(startLoc != i && endLoc != i) {
@@ -415,6 +498,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 midLatLong += middleLatLong[i];
             }
         }
+        Log.d("debug", "midLatLong: "+ midLatLong);
         DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
         Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
         Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
@@ -429,19 +513,28 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                         waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k)+1);
 
                     }
+                    Log.d("debug", "actualwaypointOrder: "+waypointOrder.toString());
+                    for(int l = 0;l<locations.size();l++)
+                    {
+                        Log.d("debug", "locations: "+locations.get(l).getLatlong());
+
+                    }
                     for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++) {
                         if(i==0) {
                             TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
                             trip.setTimeValue(trip.getTimeValue()/60);
+                            Log.d("debug", "startLocation: "+startLocation.getLatlong());
                             mTripOrder.add(trip);
                         }
                         else if(i==response.body().getRoutes().get(0).getLegs().size()) {
                             TripOrder trip = new TripOrder(endLocation,"",0);
                             trip.setTimeValue(trip.getTimeValue()/60);
+                            Log.d("debug", "endLocation: "+endLocation.getLatlong());
                             mTripOrder.add(trip);
                         } else {
                             TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
                             trip.setTimeValue(trip.getTimeValue()/60);
+                            Log.d("debug", "middleLocations: "+locations.get(waypointOrder.get(j)).getLatlong());
                             mTripOrder.add(trip);
                             j++;
                         }
