@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -97,12 +98,32 @@ public class TripPlannerTimes extends AppCompatActivity{
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
                         int time = hourOfDay*60+minute;
+                        String hourDay = "";
+                        String minuteDay = "";
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults().get(0).setStartTime(time);
                         startTimeChosen = true;
                         //trip.setStartTime(time.getTime());
                         realm.commitTransaction();
-                        startTimeLabel.setText(textTime.toString());
+
+
+                        if(minute < 10)
+                            minuteDay = "0"+minute;
+                        else
+                            minuteDay = minute+"";
+
+                        if(hourOfDay > 12)
+                        {
+                            hourOfDay -= 12;
+                            hourDay = hourOfDay +"";
+                            minuteDay = minuteDay + " PM";
+                        }
+                        else
+                        {
+                            hourDay = hourOfDay +"";
+                            minuteDay = minuteDay + " AM";
+                        }
+                        startTimeLabel.setText(hourDay + ":" + minuteDay);
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -118,12 +139,30 @@ public class TripPlannerTimes extends AppCompatActivity{
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
                         int time = hourOfDay*60+minute;
+                        String hourDay = "";
+                        String minuteDay = "";
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults().get(0).setEndTime(time);
                         endTimeChosen = true;
                         //trip.setEndTime(time.getTime());
                         realm.commitTransaction();
-                        endTimeLabel.setText(textTime.toString());
+                        if(minute < 10)
+                            minuteDay = "0"+minute;
+                        else
+                            minuteDay = minute+"";
+
+                        if(hourOfDay > 12)
+                        {
+                            hourOfDay -= 12;
+                            hourDay = hourOfDay +"";
+                            minuteDay = minuteDay + " PM";
+                        }
+                        else
+                        {
+                            hourDay = hourOfDay +"";
+                            minuteDay = minuteDay + " AM";
+                        }
+                            endTimeLabel.setText(hourDay + ":" + minuteDay);
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
