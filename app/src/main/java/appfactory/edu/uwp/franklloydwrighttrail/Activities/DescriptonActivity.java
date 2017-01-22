@@ -2,6 +2,7 @@ package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.content.Intent;
 import android.content.res.ColorStateList;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -15,9 +16,12 @@ import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageOneFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageThreeFragment;
@@ -35,7 +39,10 @@ protected View view;
     private View textView;
     private RelativeLayout selection;
     public static String value;
-    private FloatingActionButton fab;
+
+    private Button locationButton;
+    private TextView phone;
+    private TextView website;
 
 
     @Override
@@ -62,8 +69,9 @@ protected View view;
         getSupportActionBar().setTitle(" ");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-
-
+        locationButton = (Button) findViewById(R.id.location_button);
+        phone = (TextView) findViewById(R.id.phone);
+        website = (TextView) findViewById(R.id.website);
 
         switch(value)
         {
@@ -71,50 +79,155 @@ protected View view;
                 name.setText(R.string.scjohnson);
                 built.setText("The SC Johnson Administration Building, designed\nby Frank Lloyd Wright in 1936.");
                 description.setText("Far outside the corridors of high-tech industry and startup spaces, the SC Johnson company headquarters in Racine, Wisconsin, still provides a dashing vision of the modern American workplace, despite having recently celebrated its 75th anniversary. The SC Johnson Administration Building, designed by Frank Lloyd Wright in 1936, eschews business clichés: workers are greeted by a streamlined, muscular exterior made from ribbons of glass and brick, more campus than corporate, before entering a light-filled interior, with rows of organic, curved columns creating an abstract forest surrounding the secretary pool. The 15-story Research Tower, completed in 1950, was built on a \"taproot\" system. A core of elevators, heating, and ductwork formed a spine at the center on the tower, supported by a foundation sunk 54-feet-deep into the ground. Disc-shaped mezzanines branched off the core, alternating with full sized, 40-foot wide floors. Walls of horizontal Pyrex tubes, the same used in the Administration Building, let in sunlight but block the view. The effect is of a tree enclosed in glass.");
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=42.7152375,-87.7906969");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.scj_website);
+                phone.setText(R.string.scj_phone);
+
                 break;
             case "Wingspread":
 
                 name.setText(R.string.wingspread);
                 built.setText("Wingspread designed for SC Johnson owner\nHerbert Fisk Johnson, Jr. in 1936");
                 description.setText("A private residence Wright designed for SC Johnson owner Herbert Fisk Johnson, Jr. in 1936, Wingspread lives up to its names, a low-slung streamlined brick home with four wings spreading across the property. The central living room, a dome-shaped room, features a 30-foot-tall vertical fireplace and original furniture designed by Wright. Considered the last of the Prairie Houses, it’s filled with unique touches, including a dramatic “Romeo and Juliet” balcony that cantilevers over the landscape and a crow’s nest lookout built above the home, a favorite play place for the Johnson children.");
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=42.784562,-87.771588");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.wingspread_website);
+                phone.setText(R.string.wingspread_phone);
+
                 break;
             case "Monona Terrace":
 
                 name.setText(R.string.monona_terrace);
                 built.setText("Monona Terrace completed in 1997");
                 description.setText("A sprawling, curved convention center on the shores of Lake Monona in Madison, this building was a posthumous addition to the Wright canon, rejected by officials during the architect’s lifetime, but finally approved via a referendum put local voters in the early ‘90s. The curvilinear “dream civic center,” which recalls the shape of the Guggenheim, was first proposed by Wright in 1938, and was a project he constantly altered and updated throughout his life. His former apprentice Anthony Puttnam would finish the designs for the interior before it was finally completed in 1997.");
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=43.0717445,-89.3804018");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.monona_website);
+                phone.setText(R.string.monona_phone);
+
                 break;
             case "Meeting House":
 
                 name.setText("First Unitarian Society Meeting House");
                 built.setText("A landmark in church architecture from 1951");
                 description.setText("A landmark in church architecture from 1951, Wright’s ship-like design for the First Unitarian Society, with a sharp prow jutting out from the earth towards the sky, offers a sense of transcendence, one he would often enjoy as a member of the congregation. His extensive use of copper and glass throughout the building provide a timeless feel to the unorthodox house of worship.");
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=43.0757361,-89.4353368");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.meeting_house_website);
+                phone.setText(R.string.meeting_house_phone);
+
                 break;
             case "FLW Visitor Center":
 
                 name.setText("Taliesin and Frank Lloyd Wright Visitor Center");
                 built.setText("Wright’s longtime home and studio.");
                 description.setText("Wright’s longtime home and studio, named after a Welsh term that means “Shining Brow,” is an icon of Prairie School design that saw numerous tragedies and rebirths over the decades as the architect continually renovated, rebuilt and expanded. Set on a 700-acre estate in the rolling hills of Spring Green where he grew up, it was the site where he created and designed many of his masterpieces beginning in 1911 and contains a collection of Wright-designed structures.");
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=43.144128,-90.059512");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.visitor_center_website);
+                phone.setText(R.string.visitor_center_phone);
+
                 break;
             case "German Warehouse":
 
                 name.setText("A.D. German Warehouse");
                 built.setText("A.D. German Warehouse built in 1921.");
                 description.setText("A small brick structure used by a local commodity wholesaler, Albert Dell German, this warehouse, finished in 1921, features an elaborate Mayan Revival exterior. Built in the town of Richland Center, where Wright was born, this offers a rare example of a project the architect designed in the late 1910’s that’s still standing.");
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=43.3334718,-90.38436739999997");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.german_warehouse_website);
+                phone.setText(R.string.german_warehouse_phone);
+
                 break;
             case "Wyoming Valley School":
                 name.setText(R.string.valley_school);
                 built.setText(R.string.valley_school_built);
                 description.setText(R.string.valley_school_desc);
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=43.119255,-90.114908");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.valley_school_website);
+                phone.setText(R.string.valley_school_phone);
+
                 break;
             case "American System-Built Homes":
                 name.setText(R.string.built_homes);
                 built.setText(R.string.built_homes_built);
                 description.setText(R.string.built_homes_desc);
+                locationButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Grab Location
+                        Uri gmmIntentUri = Uri.parse("google.navigation:q=43.010584,-87.948539");
+                        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                        mapIntent.setPackage("com.google.android.apps.maps");
+                        startActivity(mapIntent);
+                    }
+                });
+                website.setText(R.string.built_homes_website);
+                phone.setText(R.string.built_homes_phone);
+
                 break;
             default:
                 description.setText("Other Place");
                 getSupportActionBar().setTitle("Other");
+                break;
 
         }
 
@@ -152,7 +265,6 @@ protected View view;
                             selection.setVisibility(View.GONE);
                             textView.setVisibility(View.GONE);
                             _mViewPager.setVisibility(View.GONE);
-                            fab.setVisibility(View.GONE);
                         }
                 }
                 return false;
@@ -206,7 +318,6 @@ protected View view;
             selection.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);
             _mViewPager.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.VISIBLE);
         }else{
             super.onBackPressed();
         }
@@ -223,7 +334,6 @@ protected View view;
             selection.setVisibility(View.VISIBLE);
             textView.setVisibility(View.VISIBLE);
             _mViewPager.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.VISIBLE);
             return true;
         }else{
             super.onBackPressed();

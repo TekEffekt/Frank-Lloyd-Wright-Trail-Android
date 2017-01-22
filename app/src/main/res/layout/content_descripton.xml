@@ -87,42 +87,116 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingBottom="100dp"
-            >
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/red"
-            android:text="Name"
-            android:textSize="20sp"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            />
-        <TextView
-            android:id="@+id/built"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="The name and when the building was built."
-            android:layout_below="@+id/name"
-            android:background="@color/red"
-            android:paddingLeft="10dp"
-            android:paddingBottom="10dp"
-            android:textColor="@color/white"
-            android:textStyle="italic"/>
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:text="This is the description about the site."
-            android:scrollbars="vertical"
-            android:layout_below="@+id/built"
-            android:id="@+id/description"
-            android:paddingLeft="10dp"
-            android:paddingTop="5dp"/>
-    </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+            android:paddingBottom="100dp">
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/red"
+                android:text="Name"
+                android:textSize="20sp"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+            <TextView
+                android:id="@+id/built"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="The name and when the building was built."
+                android:layout_below="@+id/name"
+                android:background="@color/red"
+                android:paddingLeft="10dp"
+                android:paddingBottom="10dp"
+                android:textColor="@color/white"
+                android:textStyle="italic"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_webpage"/>
+                <TextView
+                    android:id="@+id/website"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="all"
+                    android:text="www.thisisthewebsite.org"
+                    android:textSize="14dp"
+                    android:padding="9dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_phone"/>
+                <TextView
+                    android:id="@+id/phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="all"
+                    android:text="+1-333-333-3333"
+                    android:textSize="14dp"
+                    android:padding="9dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="1dp"
+                android:layout_marginBottom="1dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="5dp">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_info"/>
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="This is the description about the site."
+                    android:scrollbars="vertical"
+                    android:textSize="14dp"
+                    android:padding="9dp"
+                    android:layout_marginLeft="10dp"/>
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/location_button"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:text="@string/launch"
+                android:background="@color/colorPrimary"
+                android:textColor="@color/white"
+                android:textSize="14dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="95dp"
+                android:layout_marginRight="95dp"/>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
