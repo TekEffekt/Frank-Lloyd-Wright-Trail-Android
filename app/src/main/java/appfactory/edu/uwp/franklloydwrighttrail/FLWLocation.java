@@ -3,15 +3,35 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
-public class FLWLocation {
+import io.realm.RealmObject;
+
+public class FLWLocation extends RealmObject {
     @StringRes private int name;
     @DrawableRes private int image;
     @DrawableRes private int markerColor;
+    private String latlong;
+    private double latitude;
+    private double longitude;
+    private String address;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor) {
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address) {
         this.name = name;
         this.image = image;
         this.markerColor = markerColor;
+        this.latlong = latlong;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+    }
+
+    public FLWLocation(){
+        this.name = -1;
+        this.image = -1;
+        this.markerColor = -1;
+        this.latlong = null;
+        this.latitude = -1;
+        this.longitude = -1;
+        this.address = null;
     }
 
     public int getImage() { return image; }
@@ -25,4 +45,28 @@ public class FLWLocation {
     public int getMarkerColor() { return markerColor; }
 
     public void setMarkerColor(int markerColor) { this.markerColor = markerColor; }
+
+    public String getLatlong() { return latlong; }
+
+    public void setLatlong(String latlong) { this.latlong = latlong; }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getAddress() {return address;}
+
+    public void setAddress(String address) { this.address = address;}
 }

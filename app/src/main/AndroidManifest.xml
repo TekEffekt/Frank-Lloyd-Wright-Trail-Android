@@ -4,7 +4,7 @@
 
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".LocationSelectionActivity"
+            android:name=".Activities.LocationSelectionActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -22,14 +22,20 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TripPlannerActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".Activities.TripPlannerTimeline"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".TripPlannerTimes"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:name=".Activities.TripPlannerSelection"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activities.TripPlannerTimes"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activities.TripPlannerOptions"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"
-            android:value=".LocationSelectionActivity"/>
+            android:value=".Activities.LocationSelectionActivity"/>
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version"/>
@@ -39,10 +45,10 @@
             android:value="AIzaSyChk0Ay1ekZgMhIVYFE3sIhhAvBaQXHpN4"/>
 
         <activity
-            android:name=".DescriptonActivity"
+            android:name=".Activities.DescriptonActivity"
             android:label="@string/title_activity_descripton"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".LocationSelectionActivity">
+            android:parentActivityName=".Activities.LocationSelectionActivity">
         </activity>
     </application>
 

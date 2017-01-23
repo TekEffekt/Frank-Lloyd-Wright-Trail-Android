@@ -1,75 +1,86 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
 
+import java.sql.Time;
 import java.util.ArrayList;
+
+import io.realm.RealmList;
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by sterl on 10/31/2016.
  */
 
-public class TripObject {
-    private ArrayList<FLWLocation> trips;
+public class TripObject extends RealmObject{
+    private RealmList<TripOrder> trips;
+    @PrimaryKey
+    private int key = 0;
+    private int startTime;
+    private int endTime;
 
-    private long startTime;
-    private long endTime;
 
-    private long dinnerTime;
-    private long lunchTime;
-    private long breakfastTime;
+
+    private int dinnerTime;
+    private int lunchTime;
+    private int breakfastTime;
+
 
     public TripObject (){
-        trips = new ArrayList<FLWLocation>();
+        trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
+
         dinnerTime = 0;
         lunchTime = 0;
         breakfastTime = 0;
     };
-    public long getDinnerTime() {
-        return dinnerTime;
-    }
-
-    public void setDinnerTime(long dinnerTime) {
-        this.dinnerTime = dinnerTime;
-    }
-
-    public long getLunchTime() {
-        return lunchTime;
-    }
-
-    public void setLunchTime(long lunchTime) {
-        this.lunchTime = lunchTime;
-    }
-
-    public long getBreakfastTime() {
-        return breakfastTime;
-    }
-
-    public void setBreakfastTime(long breakfastTime) {
-        this.breakfastTime = breakfastTime;
-    }
-
-    public ArrayList<FLWLocation> getTrips() {
+    public RealmList<TripOrder> getTrips() {
         return trips;
     }
 
-    public void setTrips(ArrayList<FLWLocation> trips) {
+    public void setTrips(RealmList<TripOrder> trips) {
         this.trips = trips;
     }
-
-    public long getStartTime() {
+    public int getKey() {return key;}
+    public void setKey(int key){ this.key= key; }
+    public int getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(long startTime) {
+    public void setStartTime(int startTime) {
         this.startTime = startTime;
     }
 
-    public long getEndTime() {
+    public int getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(long endTime) {
+    public void setEndTime(int endTime) {
         this.endTime = endTime;
+    }
+
+    public int getDinnerTime() {
+        return dinnerTime;
+    }
+
+    public void setDinnerTime(int dinnerTime) {
+        this.dinnerTime = dinnerTime;
+    }
+
+    public int getLunchTime() {
+        return lunchTime;
+    }
+
+    public void setLunchTime(int lunchTime) {
+        this.lunchTime = lunchTime;
+    }
+
+    public int getBreakfastTime() {
+        return breakfastTime;
+    }
+
+    public void setBreakfastTime(int breakfastTime) {
+        this.breakfastTime = breakfastTime;
     }
 }

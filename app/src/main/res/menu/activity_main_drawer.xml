@@ -12,10 +12,12 @@
                     android:id="@+id/nav_trip_planner"
                     android:icon="@drawable/ic_trip_planner"
                     android:title="@string/trip_planner" />
+                <!--
                 <item
                     android:id="@+id/nav_scrapbook"
                     android:icon="@drawable/ic_scrapbook"
                     android:title="@string/scrapbook" />
+                 -->
             </group>
         </menu>
     </item>

@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="bottom">
-
+<!--
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -32,9 +32,9 @@
             android:textStyle="bold"
             android:id="@+id/viewing_distance"/>
     </FrameLayout>
-
+-->
     <LinearLayout
-        tools:context=".LocationSelectionActivity"
+        tools:context=".Activities.LocationSelectionActivity"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
