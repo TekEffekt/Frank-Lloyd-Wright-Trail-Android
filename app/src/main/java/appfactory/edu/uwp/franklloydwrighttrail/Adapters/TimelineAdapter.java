@@ -1,6 +1,9 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -8,6 +11,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,6 +21,8 @@ import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.ArrayList;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelectionActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
@@ -57,9 +64,39 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             holder.tripLengthContainer.setVisibility(View.GONE);
         }
 
-        TripOrder trip = trips.getTrips().get(position);
+        final TripOrder trip = trips.getTrips().get(position);
         holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
         //Debug Code
+
+        if (position != 0) {
+            holder.infoButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String sName = context.getString(trip.getLocation().getName());
+                    Intent intent = new Intent(context, DescriptonActivity.class);
+                    intent.putExtra("Title", sName);
+                    context.startActivity(intent);
+                }
+            });
+
+            holder.locationButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //Grab Location
+                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + trip.getLocation().getLatlong());
+                    Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                    mapIntent.setPackage("com.google.android.apps.maps");
+                    context.startActivity(mapIntent);
+                }
+            });
+
+
+        } else {
+            holder.infoButton.setVisibility(View.GONE);
+            holder.locationButton.setVisibility(View.GONE);
+            holder.picture.setVisibility(View.GONE);
+        }
+
         if (trip.getTimeText() == null){
             holder.name.setText(trip.getLocation().getName());
             holder.time.setText(trip.getTimeText());
@@ -162,11 +199,18 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             {
                 holder.time.setText(hour + ":" + "0" + min + " AM");
             }
-            else if (hour >= 12 && min < 10) {
+            else if (hour == 12 && min < 10) {
+                holder.time.setText(hour + ":" + "0" +min + " PM");
+            }
+            else if (hour == 12) {
+                int tempHour = hour - 12;
+                holder.time.setText(hour + ":" + min + " PM");
+            }
+            else if (hour > 12 && min < 10) {
                 int tempHour = hour - 12;
                 holder.time.setText(tempHour + ":" + "0" +min + " PM");
             }
-            else if (hour >= 12) {
+            else if (hour > 12) {
                 int tempHour = hour - 12;
                 holder.time.setText(tempHour + ":" + min + " PM");
             }
@@ -203,6 +247,11 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
         LinearLayout tripLengthContainer;
         @Nullable @Bind(R.id.trip_length_time)
         TextView tripLength;
+
+        @Nullable @Bind(R.id.info_button)
+        ImageButton infoButton;
+        @Nullable @Bind(R.id.location_button)
+        ImageButton locationButton;
 
         public TimelineViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
