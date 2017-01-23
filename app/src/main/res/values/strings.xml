@@ -66,4 +66,7 @@
     <string name="valley_school_phone">+1 608&#8211;588&#8211;2544</string>
     <string name="built_homes_website">http://wrightinmilwaukee.com/</string>
     <string name="built_homes_phone">+1 608&#8211;287&#8211;0339</string>
+
+    <string name="new_trip_intro">Click the new trip button or tap the screen to start</string>
+    <string name="recycler_view_instruction">Click on a marker above or double tap a location below to learn more</string>
 </resources>

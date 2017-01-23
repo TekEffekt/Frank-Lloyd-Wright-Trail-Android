@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -79,6 +78,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private DrawerLayout drawer;
     private int currentLocation = -1;
     private GridLayoutManager layoutManager;
+    private NavigationView navigationView;
 
     private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
     private LocationRequest mLocationRequest;
@@ -107,8 +107,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
@@ -202,7 +203,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         }
 
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     @Override

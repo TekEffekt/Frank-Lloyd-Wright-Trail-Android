@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -53,7 +54,7 @@ import static appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelect
 
 public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
     private DrawerLayout drawer;
-    private Button create;
+    private RelativeLayout create;
     private TripObject trip;
     private RecyclerView timelineView;
     private TimelineAdapter adapter;
@@ -64,6 +65,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
+    private NavigationView navigationView;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -86,14 +88,14 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         this.realm = RealmController.with(this).getRealm();
 
         // Creates Timeline if there is a trip
         timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
         setupTimeline();
-        create = (Button) findViewById(R.id.create);
+        create = (RelativeLayout) findViewById(R.id.create);
         if (RealmController.getInstance().hasTrip()){
             if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()){
                 create.setVisibility(View.GONE);
@@ -120,7 +122,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             realm.commitTransaction();
         }
 
-        create = (Button) findViewById(R.id.create);
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,7 +206,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         }
 
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
     public int findLocation(int location,RealmList<FLWLocation> locations)
     {
