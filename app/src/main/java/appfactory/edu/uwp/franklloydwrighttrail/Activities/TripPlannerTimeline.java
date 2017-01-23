@@ -332,7 +332,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     public void onLocationChanged(Location location){
 
     }
-    @TargetApi(23)
+    //@TargetApi(23)
     private void initLocationService(Context context)
     {
         boolean isGPSEnabled = false;
