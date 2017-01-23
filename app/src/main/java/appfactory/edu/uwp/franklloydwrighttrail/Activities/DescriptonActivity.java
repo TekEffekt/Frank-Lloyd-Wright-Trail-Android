@@ -12,6 +12,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -89,8 +91,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.scj_website);
-                phone.setText(R.string.scj_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.scj_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.scj_phone)));
 
                 break;
             case "Wingspread":
@@ -108,8 +112,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.wingspread_website);
-                phone.setText(R.string.wingspread_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.wingspread_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.wingspread_phone)));
 
                 break;
             case "Monona Terrace":
@@ -127,9 +133,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.monona_website);
-                phone.setText(R.string.monona_phone);
-
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.monona_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.monona_phone)));
                 break;
             case "Meeting House":
 
@@ -146,8 +153,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.meeting_house_website);
-                phone.setText(R.string.meeting_house_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.meeting_house_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.meeting_house_phone)));
 
                 break;
             case "FLW Visitor Center":
@@ -165,8 +174,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.visitor_center_website);
-                phone.setText(R.string.visitor_center_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.visitor_center_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.visitor_center_phone)));
 
                 break;
             case "German Warehouse":
@@ -184,8 +195,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.german_warehouse_website);
-                phone.setText(R.string.german_warehouse_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.german_warehouse_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.german_warehouse_phone)));
 
                 break;
             case "Wyoming Valley School":
@@ -202,8 +215,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.valley_school_website);
-                phone.setText(R.string.valley_school_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.valley_school_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.valley_school_phone)));
 
                 break;
             case "American System-Built Homes":
@@ -220,8 +235,10 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
-                website.setText(R.string.built_homes_website);
-                phone.setText(R.string.built_homes_phone);
+                website.setMovementMethod(LinkMovementMethod.getInstance());
+                website.setText(Html.fromHtml(this.getResources().getString(R.string.built_homes_website)));
+                phone.setMovementMethod(LinkMovementMethod.getInstance());
+                phone.setText(Html.fromHtml(this.getResources().getString(R.string.built_homes_phone)));
 
                 break;
             default:
