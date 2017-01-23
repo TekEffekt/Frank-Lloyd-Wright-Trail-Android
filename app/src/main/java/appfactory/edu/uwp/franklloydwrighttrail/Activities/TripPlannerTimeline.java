@@ -385,6 +385,11 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         if(findLocation(R.string.user,locations) == -1)
         {
+            if (location == null) {
+                location = new Location("default");
+                location.setLatitude(42.7152375);
+                location.setLongitude(-87.7906969);
+            }
             Location myLocation = location;
             // Sets start location to the users location
             startLocation.setLatitude(myLocation.getLatitude());
@@ -551,5 +556,12 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        locationManager.removeUpdates(this);
+
     }
 }
