@@ -561,7 +561,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     @Override
     protected void onPause() {
         super.onPause();
-        locationManager.removeUpdates(this);
+        if (locationManager != null)
+            locationManager.removeUpdates(this);
 
     }
 }

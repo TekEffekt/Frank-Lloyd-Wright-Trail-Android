@@ -16,7 +16,7 @@ public class RealmController {
     private final Realm realm;
 
     public RealmController(Application application) {
-        realm = Realm.getDefaultInstance();
+        realm = Realm.getInstance(application.getApplicationContext());
     }
 
     public static RealmController with(Fragment fragment){
