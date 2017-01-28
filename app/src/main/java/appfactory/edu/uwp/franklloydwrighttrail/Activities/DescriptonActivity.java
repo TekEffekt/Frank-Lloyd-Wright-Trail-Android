@@ -79,8 +79,8 @@ protected View view;
         {
             case "SC Johnson Headquarters":
                 name.setText(R.string.scjohnson);
-                built.setText("The SC Johnson Administration Building, designed\nby Frank Lloyd Wright in 1936.");
-                description.setText("Far outside the corridors of high-tech industry and startup spaces, the SC Johnson company headquarters in Racine, Wisconsin, still provides a dashing vision of the modern American workplace, despite having recently celebrated its 75th anniversary. The SC Johnson Administration Building, designed by Frank Lloyd Wright in 1936, eschews business clichés: workers are greeted by a streamlined, muscular exterior made from ribbons of glass and brick, more campus than corporate, before entering a light-filled interior, with rows of organic, curved columns creating an abstract forest surrounding the secretary pool. The 15-story Research Tower, completed in 1950, was built on a \"taproot\" system. A core of elevators, heating, and ductwork formed a spine at the center on the tower, supported by a foundation sunk 54-feet-deep into the ground. Disc-shaped mezzanines branched off the core, alternating with full sized, 40-foot wide floors. Walls of horizontal Pyrex tubes, the same used in the Administration Building, let in sunlight but block the view. The effect is of a tree enclosed in glass.");
+                built.setText(R.string.scj_built);
+                description.setText(R.string.scj_desc);
                 locationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -100,8 +100,8 @@ protected View view;
             case "Wingspread":
 
                 name.setText(R.string.wingspread);
-                built.setText("Wingspread designed for SC Johnson owner\nHerbert Fisk Johnson, Jr. in 1936");
-                description.setText("A private residence Wright designed for SC Johnson owner Herbert Fisk Johnson, Jr. in 1936, Wingspread lives up to its names, a low-slung streamlined brick home with four wings spreading across the property. The central living room, a dome-shaped room, features a 30-foot-tall vertical fireplace and original furniture designed by Wright. Considered the last of the Prairie Houses, it’s filled with unique touches, including a dramatic “Romeo and Juliet” balcony that cantilevers over the landscape and a crow’s nest lookout built above the home, a favorite play place for the Johnson children.");
+                built.setText(R.string.wingspread_built);
+                description.setText(R.string.wingspread_desc);
                 locationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -121,8 +121,8 @@ protected View view;
             case "Monona Terrace":
 
                 name.setText(R.string.monona_terrace);
-                built.setText("Monona Terrace completed in 1997");
-                description.setText("A sprawling, curved convention center on the shores of Lake Monona in Madison, this building was a posthumous addition to the Wright canon, rejected by officials during the architect’s lifetime, but finally approved via a referendum put local voters in the early ‘90s. The curvilinear “dream civic center,” which recalls the shape of the Guggenheim, was first proposed by Wright in 1938, and was a project he constantly altered and updated throughout his life. His former apprentice Anthony Puttnam would finish the designs for the interior before it was finally completed in 1997.");
+                built.setText(R.string.monona_terrace_built);
+                description.setText(R.string.monona_terrace_desc);
                 locationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -140,9 +140,9 @@ protected View view;
                 break;
             case "Meeting House":
 
-                name.setText("First Unitarian Society Meeting House");
-                built.setText("A landmark in church architecture from 1951");
-                description.setText("A landmark in church architecture from 1951, Wright’s ship-like design for the First Unitarian Society, with a sharp prow jutting out from the earth towards the sky, offers a sense of transcendence, one he would often enjoy as a member of the congregation. His extensive use of copper and glass throughout the building provide a timeless feel to the unorthodox house of worship.");
+                name.setText(R.string.meeting_house);
+                built.setText(R.string.meeting_house_built);
+                description.setText(R.string.meeting_house_desc);
                 locationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -161,9 +161,9 @@ protected View view;
                 break;
             case "FLW Visitor Center":
 
-                name.setText("Taliesin and Frank Lloyd Wright Visitor Center");
-                built.setText("Wright’s longtime home and studio.");
-                description.setText("Wright’s longtime home and studio, named after a Welsh term that means “Shining Brow,” is an icon of Prairie School design that saw numerous tragedies and rebirths over the decades as the architect continually renovated, rebuilt and expanded. Set on a 700-acre estate in the rolling hills of Spring Green where he grew up, it was the site where he created and designed many of his masterpieces beginning in 1911 and contains a collection of Wright-designed structures.");
+                name.setText(R.string.visitor_center);
+                built.setText(R.string.visitor_center_sub);
+                description.setText(R.string.visitor_center_desc);
                 locationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -182,9 +182,9 @@ protected View view;
                 break;
             case "German Warehouse":
 
-                name.setText("A.D. German Warehouse");
-                built.setText("A.D. German Warehouse built in 1921.");
-                description.setText("A small brick structure used by a local commodity wholesaler, Albert Dell German, this warehouse, finished in 1921, features an elaborate Mayan Revival exterior. Built in the town of Richland Center, where Wright was born, this offers a rare example of a project the architect designed in the late 1910’s that’s still standing.");
+                name.setText(R.string.german_warehouse);
+                built.setText(R.string.german_warehouse_built);
+                description.setText(R.string.german_warehouse_desc);
                 locationButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
