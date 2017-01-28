@@ -52,7 +52,7 @@ public class ImageOneFragment extends Fragment {
 
                 break;
             case "German Warehouse":
-                imageOne.setImageResource(R.drawable.adgermanwarehouse1);
+                imageOne.setImageResource(R.drawable.germanwarehouse1);
 
                 break;
 
