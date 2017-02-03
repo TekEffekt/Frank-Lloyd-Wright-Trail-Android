@@ -1,7 +1,7 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -23,13 +23,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelection;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -125,9 +125,9 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
-                TripPlannerTimeline.this.startActivity(intent);
-                finish();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.add(TripPlannerSelection.newInstance(), null);
+                fragmentTransaction.commit();
             }
         });
 
@@ -174,9 +174,9 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         newTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
-                TripPlannerTimeline.this.startActivity(intent);
-                finish();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.add(TripPlannerSelection.newInstance(), null);
+                fragmentTransaction.commit();
                 return true;
             }
         });
@@ -197,8 +197,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 break;
             case R.id.nav_trip_planner:
                 break;
-            //case R.id.nav_scrapbook:
-            //    break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_about:

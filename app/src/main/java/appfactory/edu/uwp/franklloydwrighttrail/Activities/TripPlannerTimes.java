@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
@@ -17,6 +16,7 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelection;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;

@@ -25,7 +25,7 @@
             android:name=".Activities.TripPlannerTimeline"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".Activities.TripPlannerSelection"
+            android:name=".Fragments.TripPlannerSelection"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".Activities.TripPlannerTimes"
