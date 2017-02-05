@@ -1,13 +1,11 @@
-package appfactory.edu.uwp.franklloydwrighttrail.Activities;
+package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,7 +14,6 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 
-import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelection;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
@@ -26,8 +23,7 @@ import io.realm.Realm;
  * Created by sterl on 10/28/2016.
  */
 
-public class TripPlannerTimes extends AppCompatActivity{
-    private DrawerLayout drawer;
+public class TripPlannerTimesFragment extends Fragment {
     private Button cont;
 
     private RelativeLayout startTimeLayout;
@@ -48,29 +44,26 @@ public class TripPlannerTimes extends AppCompatActivity{
     private boolean endTimeChosen = false;
     private boolean timeValid = false;
 
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, TripPlannerOptions.class);
-        return intent;
+    public static TripPlannerTimesFragment newInstance(){
+        TripPlannerTimesFragment tripPlannerTimesFragment = new TripPlannerTimesFragment();
+        return tripPlannerTimesFragment;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_times);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.content_trip_times, container, false);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.choose_times);
-        setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar); */
 
-        cont = (Button) findViewById(R.id.cont);
+        cont = (Button) view.findViewById(R.id.cont);
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timeValid = checkTimeValid();
                 if (startTimeChosen && endTimeChosen && timeValid){
-                    Intent intent = new Intent(TripPlannerTimes.this, TripPlannerOptions.class);
-                    TripPlannerTimes.this.startActivity(intent);
-                    finish();
+                    //Transition
                 } else {
                     //Make toast yelling at user
                 }
@@ -81,10 +74,10 @@ public class TripPlannerTimes extends AppCompatActivity{
         realm = RealmController.getInstance().getRealm();
         trip = RealmController.getInstance().getTrip();
 
-        startTimeLayout = (RelativeLayout) findViewById(R.id.start_time_container);
-        endTimeLayout = (RelativeLayout) findViewById(R.id.end_time_container);
-        startTimeLabel = (TextView) findViewById(R.id.start_time);
-        endTimeLabel = (TextView) findViewById(R.id.end_time);
+        startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
+        endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
+        startTimeLabel = (TextView) view.findViewById(R.id.start_time);
+        endTimeLabel = (TextView) view.findViewById(R.id.end_time);
 
         currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
@@ -93,7 +86,7 @@ public class TripPlannerTimes extends AppCompatActivity{
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(TripPlannerTimes.this, new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -134,7 +127,7 @@ public class TripPlannerTimes extends AppCompatActivity{
         endTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(TripPlannerTimes.this, new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -170,6 +163,7 @@ public class TripPlannerTimes extends AppCompatActivity{
             }
         });
 
+        return view;
     }
 
     private boolean checkTimeValid(){
@@ -182,12 +176,5 @@ public class TripPlannerTimes extends AppCompatActivity{
         } else {
             return false;
         }
-    }
-
-    @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(TripPlannerTimes.this, TripPlannerSelection.class);
-        TripPlannerTimes.this.startActivity(intent);
-        finish();
     }
 }

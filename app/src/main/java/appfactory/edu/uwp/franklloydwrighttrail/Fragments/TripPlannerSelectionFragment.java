@@ -1,9 +1,11 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -33,7 +35,7 @@ import io.realm.RealmResults;
  * Created by sterl on 10/28/2016.
  */
 
-public class TripPlannerSelection extends Fragment implements RecyclerView.OnItemTouchListener{
+public class TripPlannerSelectionFragment extends Fragment implements RecyclerView.OnItemTouchListener{
     public TripObject trip;
     private RealmList<FLWLocation> locations;
     private Button cont;
@@ -47,22 +49,22 @@ public class TripPlannerSelection extends Fragment implements RecyclerView.OnIte
 
     private CardView destinationCard;
 
-    public static TripPlannerSelection newInstance(){
-        TripPlannerSelection selection = new TripPlannerSelection();
+    public static TripPlannerSelectionFragment newInstance(){
+        TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
         return selection;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.activity_trip_planner, container, false);
+        View view = inflater.inflate(R.layout.content_trip_planner, container, false);
 
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         adapter = new TripSelectionAdapter((LocationModel.getLocations()));
         recyclerView.setAdapter(adapter);
 
-        Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
+        /* Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.choose_destinations);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar); */
 
         layoutManager = new GridLayoutManager(getActivity(), 2);
         layoutManager.generateDefaultLayoutParams();
@@ -73,7 +75,7 @@ public class TripPlannerSelection extends Fragment implements RecyclerView.OnIte
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addOnItemTouchListener(this);
-        gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelection.RecyclerViewGestureListener());
+        gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelectionFragment.RecyclerViewGestureListener());
 
         realm = RealmController.getInstance().getRealm();
         //resetTrip();
@@ -90,7 +92,14 @@ public class TripPlannerSelection extends Fragment implements RecyclerView.OnIte
                     results.clear();
                     realm.copyToRealm(trip);
                     realm.commitTransaction();
-                    //Transition to next page
+
+                    Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
+                    toolbar.setTitle(R.string.choose_times);
+                    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+                    FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.content_frame, TripPlannerTimesFragment.newInstance()).commit();
                 } else {
                     //make toast yelling at user
                 }

@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import io.realm.Realm;
@@ -179,7 +180,7 @@ public class TripPlannerOptions extends AppCompatActivity{
 
     @Override
     public void onBackPressed(){
-        Intent intent = new Intent(TripPlannerOptions.this, TripPlannerTimes.class);
+        Intent intent = new Intent(TripPlannerOptions.this, TripPlannerTimesFragment.class);
         TripPlannerOptions.this.startActivity(intent);
         finish();
     }
