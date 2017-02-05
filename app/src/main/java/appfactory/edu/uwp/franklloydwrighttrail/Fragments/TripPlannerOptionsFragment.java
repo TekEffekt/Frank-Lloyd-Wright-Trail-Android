@@ -3,6 +3,8 @@ package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -75,6 +77,7 @@ public class TripPlannerOptionsFragment extends Fragment {
                 if (complete) {
                     Intent intent = new TripPlannerTimeline().newIntent(getContext());
                     startActivity(intent);
+                    TripPlannerTimeline.setFragmentIndex(0);
                     ((AppCompatActivity)getActivity()).finish();
                 }
 
