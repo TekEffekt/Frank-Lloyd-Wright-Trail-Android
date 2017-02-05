@@ -31,7 +31,7 @@
             android:name=".Fragments.TripPlannerTimesFragment"
             android:theme="@style/AppTheme.NoActionBar"/>
         <activity
-            android:name=".Activities.TripPlannerOptions"
+            android:name=".Fragments.TripPlannerOptionsFragment"
             android:theme="@style/AppTheme.NoActionBar"/>
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"

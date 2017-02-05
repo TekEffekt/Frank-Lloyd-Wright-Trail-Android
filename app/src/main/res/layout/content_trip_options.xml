@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerOptions"
+    tools:context="appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment"
     tools:showIn="@layout/activity_trip_options">
     <ScrollView
         android:layout_width="match_parent"

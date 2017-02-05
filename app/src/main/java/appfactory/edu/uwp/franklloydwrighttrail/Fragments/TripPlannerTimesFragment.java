@@ -3,6 +3,10 @@ package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +18,7 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimeline;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
@@ -57,13 +62,21 @@ public class TripPlannerTimesFragment extends Fragment {
         toolbar.setTitle(R.string.choose_times);
         setSupportActionBar(toolbar); */
 
+        TripPlannerTimeline.setFragmentIndex(2);
+
         cont = (Button) view.findViewById(R.id.cont);
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 timeValid = checkTimeValid();
                 if (startTimeChosen && endTimeChosen && timeValid){
-                    //Transition
+                    Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
+                    toolbar.setTitle(R.string.trip_options);
+                    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+                    FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.content_frame, TripPlannerOptionsFragment.newInstance()).commit();
                 } else {
                     //Make toast yelling at user
                 }

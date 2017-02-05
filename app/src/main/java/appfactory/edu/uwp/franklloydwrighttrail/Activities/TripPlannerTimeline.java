@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.DirectionsApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -67,7 +68,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
     private NavigationView navigationView;
-    public boolean infragment = false;
+    private static int fragment = 0;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -137,8 +138,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.setTitle(R.string.choose_destinations);
                 setSupportActionBar(toolbar);
-
-                infragment = true;
             }
         });
 
@@ -154,31 +153,53 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (infragment) {
-            if (trip == null) {
-                create.setVisibility(View.VISIBLE);
-                timelineView.setVisibility(View.GONE);
-                getSupportFragmentManager().beginTransaction()
-                        .remove(getSupportFragmentManager().findFragmentById(R.id.content_frame)).commit();
-
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Trip Planner");
-                setSupportActionBar(toolbar);
-
-                infragment = false;
-            } else {
-                timelineView.setVisibility(View.VISIBLE);
-                getSupportFragmentManager().beginTransaction()
-                        .remove(getSupportFragmentManager().findFragmentById(R.id.content_frame)).commit();
-
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Trip Planner");
-                setSupportActionBar(toolbar);
-
-                infragment = false;
-            }
         } else {
-            super.onBackPressed();
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+            switch (fragment) {
+                case 1:
+                    if (trip == null) {
+                        create.setVisibility(View.VISIBLE);
+                        timelineView.setVisibility(View.GONE);
+                        getSupportFragmentManager().beginTransaction()
+                                .remove(getSupportFragmentManager().findFragmentById(R.id.content_frame)).commit();
+
+                        toolbar.setTitle("Trip Planner");
+                        setSupportActionBar(toolbar);
+
+                        fragment = 0;
+                    } else {
+                        timelineView.setVisibility(View.VISIBLE);
+                        getSupportFragmentManager().beginTransaction()
+                                .remove(getSupportFragmentManager().findFragmentById(R.id.content_frame)).commit();
+
+                        toolbar.setTitle("Trip Planner");
+                        setSupportActionBar(toolbar);
+
+                        fragment = 0;
+                    }
+                    break;
+
+                case 2:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
+
+                    toolbar.setTitle(R.string.choose_destinations);
+                    setSupportActionBar(toolbar);
+                    break;
+
+                case 3:
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.content_frame, TripPlannerTimesFragment.newInstance()).commit();
+
+                    toolbar.setTitle(R.string.choose_times);
+                    setSupportActionBar(toolbar);
+                    break;
+
+                default:
+                    super.onBackPressed();
+                    break;
+            }
         }
     }
 
@@ -218,8 +239,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.setTitle(R.string.choose_destinations);
                 setSupportActionBar(toolbar);
-
-                infragment = true;
                 return true;
             }
         });
@@ -605,5 +624,13 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         if (locationManager != null)
             locationManager.removeUpdates(this);
 
+    }
+
+    public static void setFragmentIndex(int fragmentIndex){
+        fragment = fragmentIndex;
+    }
+
+    public static int getFragmentIndex(){
+        return fragment;
     }
 }

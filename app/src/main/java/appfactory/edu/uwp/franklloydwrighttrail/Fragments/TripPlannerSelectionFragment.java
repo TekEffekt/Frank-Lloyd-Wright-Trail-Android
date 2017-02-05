@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimeline;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -82,6 +83,8 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         trip = new TripObject();
         locations = new LocationModel().getLocations();
 
+        TripPlannerTimeline.setFragmentIndex(1);
+
         cont = (Button) view.findViewById(R.id.cont);
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +99,8 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                     Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
                     toolbar.setTitle(R.string.choose_times);
                     ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+                    TripPlannerTimeline.setFragmentIndex(2);
 
                     FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();

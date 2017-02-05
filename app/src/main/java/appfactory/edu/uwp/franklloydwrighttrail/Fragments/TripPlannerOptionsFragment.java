@@ -1,18 +1,19 @@
-package appfactory.edu.uwp.franklloydwrighttrail.Activities;
+package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
-import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimeline;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import io.realm.Realm;
@@ -21,7 +22,7 @@ import io.realm.Realm;
  * Created by sterl on 10/28/2016.
  */
 
-public class TripPlannerOptions extends AppCompatActivity{
+public class TripPlannerOptionsFragment extends Fragment {
     private Button cont;
 
     private Switch breakfastSwitch;
@@ -44,21 +45,23 @@ public class TripPlannerOptions extends AppCompatActivity{
 
     private Realm realm;
 
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, TripPlannerOptions.class);
-        return intent;
+    public static TripPlannerOptionsFragment newInstance(){
+        TripPlannerOptionsFragment tripPlannerOptionsFragment = new TripPlannerOptionsFragment();
+        return tripPlannerOptionsFragment;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_options);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.content_trip_options, container, false);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.trip_options);
-        setSupportActionBar(toolbar);
-        cont = (Button) findViewById(R.id.cont);
-        initializeViews();
+        setSupportActionBar(toolbar); */
+
+        cont = (Button) view.findViewById(R.id.cont);
+        initializeViews(view);
+
+        TripPlannerTimeline.setFragmentIndex(3);
 
         realm = RealmController.getInstance().getRealm();
 
@@ -70,13 +73,14 @@ public class TripPlannerOptions extends AppCompatActivity{
             public void onClick(View v) {
                 mealCheck();
                 if (complete) {
-                    Intent intent = new Intent(TripPlannerOptions.this, TripPlannerTimeline.class);
+                    Intent intent = new TripPlannerTimeline().newIntent(getContext());
                     startActivity(intent);
-                    finish();
+                    ((AppCompatActivity)getActivity()).finish();
                 }
 
             }
         });
+        return view;
     }
 
     private void mealCheck(){
@@ -132,18 +136,18 @@ public class TripPlannerOptions extends AppCompatActivity{
     }
 
     // Easy Clump of all the used views
-    private void initializeViews(){
-        breakfastSwitch = (Switch) findViewById(R.id.breakfast_switch);
-        lunchSwitch = (Switch) findViewById(R.id.lunch_switch);
-        dinnerSwitch = (Switch) findViewById(R.id.dinner_switch);
+    private void initializeViews(View view){
+        breakfastSwitch = (Switch) view.findViewById(R.id.breakfast_switch);
+        lunchSwitch = (Switch) view.findViewById(R.id.lunch_switch);
+        dinnerSwitch = (Switch) view.findViewById(R.id.dinner_switch);
 
-        breakfastContainer = (RelativeLayout) findViewById(R.id.length_breakfast_container);
-        lunchContainer = (RelativeLayout) findViewById(R.id.length_lunch_container);
-        dinnerContainer = (RelativeLayout) findViewById(R.id.length_dinner_container);
+        breakfastContainer = (RelativeLayout) view.findViewById(R.id.length_breakfast_container);
+        lunchContainer = (RelativeLayout) view.findViewById(R.id.length_lunch_container);
+        dinnerContainer = (RelativeLayout) view.findViewById(R.id.length_dinner_container);
 
-        timeBreakfast = (EditText) findViewById(R.id.length_time_breakfast);
-        timeLunch = (EditText) findViewById(R.id.length_time_lunch);
-        timeDinner = (EditText) findViewById(R.id.length_time_dinner);
+        timeBreakfast = (EditText) view.findViewById(R.id.length_time_breakfast);
+        timeLunch = (EditText) view.findViewById(R.id.length_time_lunch);
+        timeDinner = (EditText) view.findViewById(R.id.length_time_dinner);
     }
 
     private void initializeSwitches(){
@@ -176,13 +180,6 @@ public class TripPlannerOptions extends AppCompatActivity{
                 realm.commitTransaction();
             }
         });
-    }
-
-    @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(TripPlannerOptions.this, TripPlannerTimesFragment.class);
-        TripPlannerOptions.this.startActivity(intent);
-        finish();
     }
 
 /*
