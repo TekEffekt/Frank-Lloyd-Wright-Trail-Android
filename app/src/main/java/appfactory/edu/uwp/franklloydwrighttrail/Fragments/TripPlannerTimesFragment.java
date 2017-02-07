@@ -62,8 +62,7 @@ public class TripPlannerTimesFragment extends Fragment {
         toolbar.setTitle(R.string.choose_times);
         setSupportActionBar(toolbar); */
 
-        TripPlannerTimeline.setFragmentIndex(2);
-
+        /*
         cont = (Button) view.findViewById(R.id.cont);
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,12 +75,12 @@ public class TripPlannerTimesFragment extends Fragment {
 
                     FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.content_frame, TripPlannerOptionsFragment.newInstance()).commit();
+                    transaction.add(TripPlannerOptionsFragment.newInstance(), null).commit();
                 } else {
                     //Make toast yelling at user
                 }
             }
-        });
+        }); */
 
         //Grab Trip Object
         realm = RealmController.getInstance().getRealm();

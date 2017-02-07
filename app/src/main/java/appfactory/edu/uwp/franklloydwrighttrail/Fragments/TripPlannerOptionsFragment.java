@@ -60,16 +60,15 @@ public class TripPlannerOptionsFragment extends Fragment {
         toolbar.setTitle(R.string.trip_options);
         setSupportActionBar(toolbar); */
 
-        cont = (Button) view.findViewById(R.id.cont);
+        //cont = (Button) view.findViewById(R.id.cont);
         initializeViews(view);
-
-        TripPlannerTimeline.setFragmentIndex(3);
 
         realm = RealmController.getInstance().getRealm();
 
         initializeSwitches();
         //initializeContainers();
 
+        /*
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,12 +76,11 @@ public class TripPlannerOptionsFragment extends Fragment {
                 if (complete) {
                     Intent intent = new TripPlannerTimeline().newIntent(getContext());
                     startActivity(intent);
-                    TripPlannerTimeline.setFragmentIndex(0);
                     ((AppCompatActivity)getActivity()).finish();
                 }
 
             }
-        });
+        }); */
         return view;
     }
 

@@ -7,10 +7,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/content_frame"
+    <RelativeLayout
+        android:id="@+id/fragment_position"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:visibility="gone">
+        <ImageView
+            android:id="@+id/left_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_left"/>
+        <ImageView
+            android:id="@+id/right_fragment"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_right"/>
+    </RelativeLayout>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragment_position"
+        android:visibility="gone">
+        <FrameLayout
+            android:id="@+id/content_frame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </android.support.v4.view.ViewPager>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/trip_timeline"

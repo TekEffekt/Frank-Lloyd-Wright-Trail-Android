@@ -39,7 +39,7 @@ import io.realm.RealmResults;
 public class TripPlannerSelectionFragment extends Fragment implements RecyclerView.OnItemTouchListener{
     public TripObject trip;
     private RealmList<FLWLocation> locations;
-    private Button cont;
+    //private Button cont;
 
     private RecyclerView recyclerView;
     private TripSelectionAdapter adapter;
@@ -83,9 +83,9 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         trip = new TripObject();
         locations = new LocationModel().getLocations();
 
-        TripPlannerTimeline.setFragmentIndex(1);
+        //cont = (Button) view.findViewById(R.id.cont);
 
-        cont = (Button) view.findViewById(R.id.cont);
+        /*
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,16 +100,14 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                     toolbar.setTitle(R.string.choose_times);
                     ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
 
-                    TripPlannerTimeline.setFragmentIndex(2);
-
                     FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.content_frame, TripPlannerTimesFragment.newInstance()).commit();
+                    transaction.add(TripPlannerTimesFragment.newInstance(), null).commit();
                 } else {
                     //make toast yelling at user
                 }
             }
-        });
+        }); */
 
         return view;
     }
@@ -167,6 +165,11 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
             trip.getTrips().add(new TripOrder(locations.get(selection)));
             showSelection(selection,existed);
         }
+        realm.beginTransaction();
+        RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
+        results.clear();
+        realm.copyToRealm(trip);
+        realm.commitTransaction();
     }
 
     private void showSelection(int selection, boolean isSelected) {

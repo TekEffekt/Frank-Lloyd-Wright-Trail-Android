@@ -10,10 +10,13 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -24,12 +27,14 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
@@ -55,20 +60,28 @@ import static appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelect
  */
 
 public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
-    private DrawerLayout drawer;
-    private RelativeLayout create;
     private TripObject trip;
-    private RecyclerView timelineView;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private final static boolean forceNetwork = false;
     public Location location;
     private LocationManager locationManager;
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
+    private FragmentPositionAdapter fragmentPositionAdapter;
+
+    private ViewPager viewPager;
+    private ImageView rightFragment;
+    private ImageView leftFragment;
+    private RelativeLayout fragmentNav;
+    private DrawerLayout drawer;
+    private RelativeLayout create;
+    private RecyclerView timelineView;
     private NavigationView navigationView;
-    private static int fragment = 0;
+
+    private static int fragment;
+    private final static boolean forceNetwork = false;
+    private final int TOTAL_FRAGMENTS = 2;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -79,6 +92,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragment = 0;
 
         setContentView(R.layout.activity_trip_timeline);
 
@@ -98,7 +112,13 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         // Creates Timeline if there is a trip
         timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
         setupTimeline();
+
         create = (RelativeLayout) findViewById(R.id.create);
+        fragmentNav = (RelativeLayout) findViewById(R.id.fragment_position);
+        leftFragment = (ImageView) findViewById(R.id.left_fragment);
+        rightFragment = (ImageView) findViewById(R.id.right_fragment);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+
         if (RealmController.getInstance().hasTrip()){
             if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()){
                 create.setVisibility(View.GONE);
@@ -132,12 +152,41 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
 
+                fragmentNav.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
                 create.setVisibility(View.GONE);
                 timelineView.setVisibility(View.GONE);
 
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle(R.string.choose_destinations);
+                toolbar.setTitle("Trip Creation");
                 setSupportActionBar(toolbar);
+            }
+        });
+
+        fragmentPositionAdapter = new FragmentPositionAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(fragmentPositionAdapter);
+
+        leftFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment--;
+                viewPager.setCurrentItem(previousFragmentIndex());
+            }
+        });
+
+        rightFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fragment < TOTAL_FRAGMENTS){
+                    fragment++;
+                    viewPager.setCurrentItem(nextFragmentIndex());
+                } else {
+                    Intent intent = new TripPlannerTimeline().newIntent(getBaseContext());
+                    startActivity(intent);
+                    fragment = 0;
+                    finish();
+                }
+
             }
         });
 
@@ -154,52 +203,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-
-            switch (fragment) {
-                case 1:
-                    if (trip == null) {
-                        create.setVisibility(View.VISIBLE);
-                        timelineView.setVisibility(View.GONE);
-                        getSupportFragmentManager().beginTransaction()
-                                .remove(getSupportFragmentManager().findFragmentById(R.id.content_frame)).commit();
-
-                        toolbar.setTitle("Trip Planner");
-                        setSupportActionBar(toolbar);
-
-                        fragment = 0;
-                    } else {
-                        timelineView.setVisibility(View.VISIBLE);
-                        getSupportFragmentManager().beginTransaction()
-                                .remove(getSupportFragmentManager().findFragmentById(R.id.content_frame)).commit();
-
-                        toolbar.setTitle("Trip Planner");
-                        setSupportActionBar(toolbar);
-
-                        fragment = 0;
-                    }
-                    break;
-
-                case 2:
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
-
-                    toolbar.setTitle(R.string.choose_destinations);
-                    setSupportActionBar(toolbar);
-                    break;
-
-                case 3:
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.content_frame, TripPlannerTimesFragment.newInstance()).commit();
-
-                    toolbar.setTitle(R.string.choose_times);
-                    setSupportActionBar(toolbar);
-                    break;
-
-                default:
-                    super.onBackPressed();
-                    break;
-            }
+            super.onBackPressed();
         }
     }
 
@@ -233,11 +237,13 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
 
+                fragmentNav.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
                 create.setVisibility(View.GONE);
                 timelineView.setVisibility(View.GONE);
 
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle(R.string.choose_destinations);
+                toolbar.setTitle("Trip Creation");
                 setSupportActionBar(toolbar);
                 return true;
             }
@@ -626,11 +632,53 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
     }
 
-    public static void setFragmentIndex(int fragmentIndex){
+    public void setFragmentIndex(int fragmentIndex){
         fragment = fragmentIndex;
     }
 
-    public static int getFragmentIndex(){
+    public int getFragmentIndex(){
         return fragment;
+    }
+
+    public int nextFragmentIndex(){
+        if (fragment >= TOTAL_FRAGMENTS) {
+            fragment = TOTAL_FRAGMENTS;
+        }
+
+        return fragment;
+    }
+
+    public int previousFragmentIndex(){
+        if (fragment <= 0) {
+            fragment = 0;
+        }
+
+        return fragment;
+    }
+
+    public static class FragmentPositionAdapter extends FragmentStatePagerAdapter {
+
+        public FragmentPositionAdapter(FragmentManager fragmentManager){
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position){
+                case 0:
+                    return TripPlannerSelectionFragment.newInstance();
+                case 1:
+                    return TripPlannerTimesFragment.newInstance();
+                case 2:
+                    return TripPlannerOptionsFragment.newInstance();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 3;
+        }
     }
 }
