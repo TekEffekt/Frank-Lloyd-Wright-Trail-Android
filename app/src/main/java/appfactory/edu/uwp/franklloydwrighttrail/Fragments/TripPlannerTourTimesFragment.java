@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import appfactory.edu.uwp.franklloydwrighttrail.R;
+
 /**
  * Created by sterl on 2/19/2017.
  */
@@ -20,5 +22,7 @@ public class TripPlannerTourTimesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_trip_tour_times, container, false);
+
+        return view;
     }
 }
