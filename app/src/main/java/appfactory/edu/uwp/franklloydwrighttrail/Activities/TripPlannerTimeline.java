@@ -33,10 +33,12 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.DirectionsApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTourTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -81,7 +83,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
     private static int fragment;
     private final static boolean forceNetwork = false;
-    private final int TOTAL_FRAGMENTS = 2;
+    private final int TOTAL_FRAGMENTS = 3;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -671,6 +673,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                     return TripPlannerTimesFragment.newInstance();
                 case 2:
                     return TripPlannerOptionsFragment.newInstance();
+                case 3:
+                    return TripPlannerTourTimesFragment.newInstance();
                 default:
                     return null;
             }
@@ -678,7 +682,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         @Override
         public int getCount() {
-            return 3;
+            return 4;
         }
     }
 }

@@ -3,55 +3,181 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:background="@color/gray"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="5dp">
         <TextView
             android:id="@+id/tour_time_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="20dp"
             android:textSize="16dp"
-            android:text="@string/scjohnson"/>
+            android:text="@string/scjohnson"
+            android:layout_centerVertical="true"/>
         <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:id="@+id/dropdown_trip_item"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:src="@drawable/ic_hint"/>
+            android:layout_marginRight="15dp"
+            android:src="@drawable/ic_dropdown"
+            android:layout_centerVertical="true"/>
     </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/tour_time_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:id="@+id/tour_time_edit_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="2dp">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:textStyle="bold"
+                android:text="@string/tour_signup"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"/>
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="20dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_hint"/>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal">
-            <EditText
-                android:id="@+id/tour_time_start"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent" />
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@color/white">
+
+            <RelativeLayout
+                android:id="@+id/signup_container"
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:id="@+id/signup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/signup"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/gray"/>
+                <ImageView
+                    android:id="@+id/right_arrow_signup"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"/>
+                <TextView
+                    android:id="@+id/tour_website"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/right_arrow_signup"
+                    android:layout_marginRight="20dp"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/red"
+                    android:text="www.website.com"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:id="@+id/date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:hint="@string/tour_date"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColorHint="@color/gray"/>
+                <ImageView
+                    android:id="@+id/right_arrow_date"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"/>
+                <TextView
+                    android:id="@+id/tour_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/right_arrow_date"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/red"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/gray"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/tour_time"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"/>
+                <ImageView
+                    android:id="@+id/right_arrow_time"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"/>
+                <TextView
+                    android:id="@+id/tour_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/right_arrow_time"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/red"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
         </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/gray"/>
+            android:layout_height="10dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
+
 </LinearLayout>

@@ -19,7 +19,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="10dp"
-                android:id="@+id/recycler_container">
+                android:id="@+id/recycler_container"
+                android:orientation="vertical">
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler"
                     android:padding="10dp"
