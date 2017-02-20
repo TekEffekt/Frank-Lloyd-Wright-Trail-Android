@@ -98,7 +98,7 @@ public class TripPlannerTimesFragment extends Fragment {
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(),TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -112,19 +112,19 @@ public class TripPlannerTimesFragment extends Fragment {
                         realm.commitTransaction();
 
 
-                        if(minute < 10)
-                            minuteDay = "0"+minute;
-                        else
-                            minuteDay = minute+"";
-
-                        if(hourOfDay > 12)
-                        {
+                        if(minute < 10) {
+                            minuteDay = "0" + minute;
+                        } else {
+                            minuteDay = minute + "";
+                        }
+                        if(hourOfDay > 12) {
                             hourOfDay -= 12;
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " PM";
-                        }
-                        else
-                        {
+                        } else {
+                            if (hourOfDay == 0){
+                                hourOfDay = 12;
+                            }
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " AM";
                         }
@@ -139,7 +139,7 @@ public class TripPlannerTimesFragment extends Fragment {
         endTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -151,19 +151,20 @@ public class TripPlannerTimesFragment extends Fragment {
                         endTimeChosen = true;
                         //trip.setEndTime(time.getTime());
                         realm.commitTransaction();
-                        if(minute < 10)
-                            minuteDay = "0"+minute;
-                        else
-                            minuteDay = minute+"";
+                        if(minute < 10) {
+                            minuteDay = "0" + minute;
+                        } else {
+                            minuteDay = minute + "";
+                        }
 
-                        if(hourOfDay > 12)
-                        {
+                        if(hourOfDay > 12) {
                             hourOfDay -= 12;
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " PM";
-                        }
-                        else
-                        {
+                        } else {
+                            if (hourOfDay == 0){
+                                hourOfDay = 12;
+                            }
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " AM";
                         }
@@ -174,7 +175,6 @@ public class TripPlannerTimesFragment extends Fragment {
                 timePicker.show();
             }
         });
-
         return view;
     }
 
