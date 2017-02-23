@@ -5,12 +5,10 @@ package appfactory.edu.uwp.franklloydwrighttrail.Models;
  */
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import appfactory.edu.uwp.franklloydwrighttrail.GeocodedWaypoint;
-import appfactory.edu.uwp.franklloydwrighttrail.Route;
+import appfactory.edu.uwp.franklloydwrighttrail.Apis.GeocodedWaypoint;
+import appfactory.edu.uwp.franklloydwrighttrail.Apis.Route;
 
 public class DirectionsModel {
 

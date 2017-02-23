@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
 /**
  * Created by zstue_000 on 10/31/2016.
@@ -7,7 +7,7 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import java.util.HashMap;
 import java.util.Map;
 
-public class StartLocation {
+public class Northeast {
 
     private Double lat;
     private Double lng;
@@ -48,7 +48,6 @@ public class StartLocation {
     public void setLng(Double lng) {
         this.lng = lng;
     }
-
 
 
 }

@@ -59,11 +59,20 @@ public class RealmController {
             return null;
         }
     }
-
+    public UserLocation getUserLocation(){
+        if(hasUserLocation())
+        {
+            RealmResults<UserLocation> results = realm.where(UserLocation.class).findAll();
+            return results.get(0);
+        }
+        else{
+            return null;
+        }
+    }
     public RealmResults<TripObject> getTripResults(){
         return realm.where(TripObject.class).findAll();
     }
-
+    public boolean hasUserLocation() {return !realm.allObjects(UserLocation.class).isEmpty();}
     public boolean hasTrip() {
         return !realm.allObjects(TripObject.class).isEmpty();
     }

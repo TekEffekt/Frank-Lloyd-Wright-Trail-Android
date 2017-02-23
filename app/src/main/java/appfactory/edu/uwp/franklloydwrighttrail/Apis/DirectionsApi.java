@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import okhttp3.OkHttpClient;
