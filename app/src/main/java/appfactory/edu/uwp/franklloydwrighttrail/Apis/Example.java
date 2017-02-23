@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
 /**
  * Created by zstue_000 on 10/25/2016.
@@ -6,9 +6,8 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
 public class Example {
         @SerializedName("destination_addresses")
         private List<String> destinationAddresses = new ArrayList<String>();

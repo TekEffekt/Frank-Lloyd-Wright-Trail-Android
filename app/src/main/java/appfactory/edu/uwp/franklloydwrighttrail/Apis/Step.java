@@ -1,11 +1,8 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
 /**
  * Created by zstue_000 on 10/31/2016.
  */
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Step {
 

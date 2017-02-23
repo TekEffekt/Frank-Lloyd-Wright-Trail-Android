@@ -1,12 +1,9 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
+package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
 /**
  * Created by zstue_000 on 10/25/2016.
  */
 import com.google.gson.annotations.SerializedName;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class Element {
 
