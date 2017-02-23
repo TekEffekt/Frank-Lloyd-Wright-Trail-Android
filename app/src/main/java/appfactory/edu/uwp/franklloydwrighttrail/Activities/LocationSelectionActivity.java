@@ -48,6 +48,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.LocationSelectionAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
+import appfactory.edu.uwp.franklloydwrighttrail.UserLocation;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -153,11 +154,13 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     }
 
     private void initializeRealm() {
+
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
                 .name(Realm.DEFAULT_REALM_NAME)
                 .schemaVersion(0)
                 .deleteRealmIfMigrationNeeded()
                 .build();
+        //Realm.deleteRealm(realmConfiguration);
         Realm.setDefaultConfiguration(realmConfiguration);
 
         this.realm = RealmController.with(this).getRealm();
@@ -191,6 +194,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case R.id.nav_locations:
                 break;
             case R.id.nav_trip_planner:
+                realm.beginTransaction();
+                UserLocation ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
+                realm.copyToRealmOrUpdate(ul);
+                realm.commitTransaction();
                 Intent intent = TripPlannerTimeline.newIntent(this);
                 startActivity(intent);
                 break;

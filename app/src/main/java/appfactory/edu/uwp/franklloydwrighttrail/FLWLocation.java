@@ -13,8 +13,10 @@ public class FLWLocation extends RealmObject {
     private double latitude;
     private double longitude;
     private String address;
+    private long startTourTime;
+    private long endTourTime;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address) {
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime) {
         this.name = name;
         this.image = image;
         this.markerColor = markerColor;
@@ -22,6 +24,8 @@ public class FLWLocation extends RealmObject {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.startTourTime = startTourTime;
+        this.endTourTime = endTourTime;
     }
 
     public FLWLocation(){
@@ -69,4 +73,20 @@ public class FLWLocation extends RealmObject {
     public String getAddress() {return address;}
 
     public void setAddress(String address) { this.address = address;}
+
+    public long getStartTourTime() {
+        return startTourTime;
+    }
+
+    public void setStartTourTime(long startTourTime) {
+        this.startTourTime = startTourTime;
+    }
+
+    public long getEndTourTime() {
+        return endTourTime;
+    }
+
+    public void setEndTourTime(long endTourTime) {
+        this.endTourTime = endTourTime;
+    }
 }

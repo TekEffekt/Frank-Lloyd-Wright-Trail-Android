@@ -1,21 +1,21 @@
-package appfactory.edu.uwp.franklloydwrighttrail;
-
-import com.google.gson.annotations.SerializedName;
-
-import java.util.Map;
+package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
 /**
  * Created by zstue_000 on 10/25/2016.
  */
-    import java.util.HashMap;
-    import java.util.Map;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Distance {
 
 
-    public class Duration {
         @SerializedName("text")
         private String text;
         @SerializedName("value")
         private Integer value;
+
 
         /**
          *
@@ -25,6 +25,7 @@ import java.util.Map;
         public String getText() {
             return text;
         }
+
         /**
          *
          * @param text
@@ -33,6 +34,7 @@ import java.util.Map;
         public void setText(String text) {
             this.text = text;
         }
+
         /**
          *
          * @return
@@ -41,6 +43,7 @@ import java.util.Map;
         public Integer getValue() {
             return value;
         }
+
         /**
          *
          * @param value
@@ -53,3 +56,4 @@ import java.util.Map;
 
 
     }
+
