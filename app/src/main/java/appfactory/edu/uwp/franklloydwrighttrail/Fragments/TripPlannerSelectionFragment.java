@@ -1,22 +1,22 @@
-package appfactory.edu.uwp.franklloydwrighttrail.Activities;
+package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -33,42 +33,38 @@ import io.realm.RealmResults;
  * Created by sterl on 10/28/2016.
  */
 
-public class TripPlannerSelection extends AppCompatActivity implements RecyclerView.OnItemTouchListener{
-    private DrawerLayout drawer;
+public class TripPlannerSelectionFragment extends Fragment implements RecyclerView.OnItemTouchListener{
     public TripObject trip;
     private RealmList<FLWLocation> locations;
-    private Button cont;
+    //private Button cont;
 
     private RecyclerView recyclerView;
     private TripSelectionAdapter adapter;
     private GridLayoutManager layoutManager;
     private GestureDetectorCompat gestureDetector;
 
-    private static final int SELECTION_ACTIVITY = 1;
-
     private Realm realm;
 
     private CardView destinationCard;
 
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, TripPlannerSelection.class);
-        intent.putExtra("SELECTION", SELECTION_ACTIVITY);
-        return intent;
+    public static TripPlannerSelectionFragment newInstance(){
+        TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
+        return selection;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_trip_planner);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState){
+        View view = inflater.inflate(R.layout.content_trip_planner, container, false);
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         adapter = new TripSelectionAdapter((LocationModel.getLocations()));
         recyclerView.setAdapter(adapter);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        /* Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
         toolbar.setTitle(R.string.choose_destinations);
-        setSupportActionBar(toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar); */
 
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
         layoutManager.generateDefaultLayoutParams();
         layoutManager.setOrientation(GridLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
@@ -77,14 +73,16 @@ public class TripPlannerSelection extends AppCompatActivity implements RecyclerV
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.addOnItemTouchListener(this);
-        gestureDetector = new GestureDetectorCompat(this, new TripPlannerSelection.RecyclerViewGestureListener());
+        gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelectionFragment.RecyclerViewGestureListener());
 
         realm = RealmController.getInstance().getRealm();
         //resetTrip();
         trip = new TripObject();
         locations = new LocationModel().getLocations();
 
-        cont = (Button) findViewById(R.id.cont);
+        //cont = (Button) view.findViewById(R.id.cont);
+
+        /*
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,14 +92,21 @@ public class TripPlannerSelection extends AppCompatActivity implements RecyclerV
                     results.clear();
                     realm.copyToRealm(trip);
                     realm.commitTransaction();
-                    Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimes.class);
-                    TripPlannerSelection.this.startActivity(intent);
-                    finish();
+
+                    Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
+                    toolbar.setTitle(R.string.choose_times);
+                    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
+
+                    FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.add(TripPlannerTimesFragment.newInstance(), null).commit();
                 } else {
                     //make toast yelling at user
                 }
             }
-        });
+        }); */
+
+        return view;
     }
 
     @Override
@@ -157,6 +162,11 @@ public class TripPlannerSelection extends AppCompatActivity implements RecyclerV
             trip.getTrips().add(new TripOrder(locations.get(selection)));
             showSelection(selection,existed);
         }
+        realm.beginTransaction();
+        RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
+        results.clear();
+        realm.copyToRealm(trip);
+        realm.commitTransaction();
     }
 
     private void showSelection(int selection, boolean isSelected) {
@@ -177,10 +187,4 @@ public class TripPlannerSelection extends AppCompatActivity implements RecyclerV
         });
     }
 
-    @Override
-    public void onBackPressed(){
-        Intent intent = new Intent(TripPlannerSelection.this, TripPlannerTimeline.class);
-        TripPlannerSelection.this.startActivity(intent);
-        finish();
-    }
 }

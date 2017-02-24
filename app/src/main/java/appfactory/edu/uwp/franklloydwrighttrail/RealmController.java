@@ -16,7 +16,7 @@ public class RealmController {
     private final Realm realm;
 
     public RealmController(Application application) {
-        realm = Realm.getDefaultInstance();
+        realm = Realm.getInstance(application.getApplicationContext());
     }
 
     public static RealmController with(Fragment fragment){
@@ -59,11 +59,20 @@ public class RealmController {
             return null;
         }
     }
-
+    public UserLocation getUserLocation(){
+        if(hasUserLocation())
+        {
+            RealmResults<UserLocation> results = realm.where(UserLocation.class).findAll();
+            return results.get(0);
+        }
+        else{
+            return null;
+        }
+    }
     public RealmResults<TripObject> getTripResults(){
         return realm.where(TripObject.class).findAll();
     }
-
+    public boolean hasUserLocation() {return !realm.allObjects(UserLocation.class).isEmpty();}
     public boolean hasTrip() {
         return !realm.allObjects(TripObject.class).isEmpty();
     }

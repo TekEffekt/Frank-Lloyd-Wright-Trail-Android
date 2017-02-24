@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimes"
+    tools:context="appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment"
     tools:showIn="@layout/activity_trip_times"
     android:orientation="vertical">
     <ScrollView
@@ -79,6 +79,8 @@
                         android:layout_toRightOf="@id/ends"/>
                 </RelativeLayout>
             </LinearLayout>
+
+            <!--
             <Button
                 android:id="@+id/cont"
                 android:layout_width="match_parent"
@@ -90,7 +92,8 @@
                 android:text="@string/cont"
                 android:textSize="22dp"
                 android:background="@color/colorPrimary"
-                android:textColor="@color/white"/>
+                android:textColor="@color/white"/> -->
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

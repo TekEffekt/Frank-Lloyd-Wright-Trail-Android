@@ -1,7 +1,6 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.Manifest;
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,8 +10,13 @@ import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -23,13 +27,17 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-import appfactory.edu.uwp.franklloydwrighttrail.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTourTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -39,6 +47,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TimelineAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.TimelineRealmModelAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
+import appfactory.edu.uwp.franklloydwrighttrail.UserLocation;
 import io.realm.Realm;
 import io.realm.RealmList;
 import io.realm.RealmResults;
@@ -46,26 +55,33 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import static appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelectionActivity.myLocation;
+
 
 /**
  * Created by sterl on 11/3/2016.
  */
 
-public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, LocationListener {
-    private DrawerLayout drawer;
-    private RelativeLayout create;
+public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private TripObject trip;
-    private RecyclerView timelineView;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
-    private final static boolean forceNetwork = false;
     public Location location;
-    private LocationManager locationManager;
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
+    private FragmentPositionAdapter fragmentPositionAdapter;
+
+    private ViewPager viewPager;
+    private ImageView rightFragment;
+    private ImageView leftFragment;
+    private RelativeLayout fragmentNav;
+    private DrawerLayout drawer;
+    private RelativeLayout create;
+    private RecyclerView timelineView;
     private NavigationView navigationView;
+
+    private static int fragment;
+    private final int TOTAL_FRAGMENTS = 3;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -76,6 +92,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        fragment = 0;
 
         setContentView(R.layout.activity_trip_timeline);
 
@@ -95,13 +112,19 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         // Creates Timeline if there is a trip
         timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
         setupTimeline();
+
         create = (RelativeLayout) findViewById(R.id.create);
+        fragmentNav = (RelativeLayout) findViewById(R.id.fragment_position);
+        leftFragment = (ImageView) findViewById(R.id.left_fragment);
+        rightFragment = (ImageView) findViewById(R.id.right_fragment);
+        viewPager = (ViewPager) findViewById(R.id.view_pager);
+
         if (RealmController.getInstance().hasTrip()){
             if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()){
                 create.setVisibility(View.GONE);
                 timelineView.setVisibility(View.VISIBLE);
                 setRealmAdapter(RealmController.with(this).getTripResults());
-                initLocationService(this);
+
                 initiateDataCalculation();
             } else {
                 timelineView.setVisibility(View.GONE);
@@ -125,9 +148,45 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
-                TripPlannerTimeline.this.startActivity(intent);
-                finish();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
+
+                fragmentNav.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
+                create.setVisibility(View.GONE);
+                timelineView.setVisibility(View.GONE);
+
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                toolbar.setTitle("Trip Creation");
+                setSupportActionBar(toolbar);
+            }
+        });
+
+        fragmentPositionAdapter = new FragmentPositionAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(fragmentPositionAdapter);
+
+        leftFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                fragment--;
+                viewPager.setCurrentItem(previousFragmentIndex());
+            }
+        });
+
+        rightFragment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (fragment < TOTAL_FRAGMENTS){
+                    fragment++;
+                    viewPager.setCurrentItem(nextFragmentIndex());
+                } else {
+                    Intent intent = new TripPlannerTimeline().newIntent(getBaseContext());
+                    startActivity(intent);
+                    fragment = 0;
+                    finish();
+                }
+
             }
         });
 
@@ -174,9 +233,18 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         newTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                Intent intent = new Intent(TripPlannerTimeline.this, TripPlannerSelection.class);
-                TripPlannerTimeline.this.startActivity(intent);
-                finish();
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
+
+                fragmentNav.setVisibility(View.VISIBLE);
+                viewPager.setVisibility(View.VISIBLE);
+                create.setVisibility(View.GONE);
+                timelineView.setVisibility(View.GONE);
+
+                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+                toolbar.setTitle("Trip Creation");
+                setSupportActionBar(toolbar);
                 return true;
             }
         });
@@ -197,8 +265,6 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 break;
             case R.id.nav_trip_planner:
                 break;
-            //case R.id.nav_scrapbook:
-            //    break;
             case R.id.nav_settings:
                 break;
             case R.id.nav_about:
@@ -224,21 +290,20 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         int startTime = trip.getStartTime();
         int endTime = trip.getEndTime();
         int totalTime = endTime - startTime;
-        Log.d("debug", "TotalTimeRealm: "+totalTime);
+
 
         int breakfast = trip.getBreakfastTime();
 
-        Log.d("debug", "breakfast: "+breakfast);
+
         int lunch = trip.getLunchTime();
 
-        Log.d("debug", "lunch: "+lunch);
+
         int dinner = trip.getDinnerTime();
 
-        Log.d("debug", "dinner: "+dinner);
+
         int time = 0;
         Toast toast;
         int mealtime = breakfast+lunch+dinner;
-        Log.d("debug", "mealtime: "+ mealtime);
 
         for(int i=0;i<tripOrder.size();i++)
         {
@@ -247,26 +312,21 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             else
                 time += tripOrder.get(i).getTimeValue()+60;
         }
-        Log.d("debug", "time: "+time);
         if(mealtime > totalTime)
         {
-            Log.d("debug", "meals take too much time.");
             toast = Toast.makeText(getApplicationContext(),"Meals take too much time.",Toast.LENGTH_SHORT);
             toast.show();
         }
         else if(mealtime+time > totalTime)
         {
-            Log.d("debug", "total trip too long ");
 
             time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
             tripOrder.remove(tripOrder.size()-1);
             if(mealtime+time> totalTime)
             {
-                Log.d("debug", "total trip still too long ");
                 time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
                 tripOrder.remove(tripOrder.size()-1);
                 if(mealtime+time>totalTime){
-                    Log.d("debug", "total trip is still too long ");
                     time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
                     tripOrder.remove(tripOrder.size()-1);
                     if(mealtime+time>totalTime){
@@ -280,22 +340,20 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 }
                 else
                 {
-                    Log.d("debug", "enough time with 2 sites taken off ");
                     toast = Toast.makeText(getApplicationContext(),"Total trip too long 2 sites taken off.",Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
             else
             {
-                Log.d("debug", "enough time with 1 site taken off ");
                 toast = Toast.makeText(getApplicationContext(),"Total trip too long 1 site taken off.",Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
         else
         {
-            Log.d("debug", "enough time ");
         }
+        // Fill the trip object with the new times
         TripObject tObject = new TripObject();
         tObject.setTrips(tripOrder);
         tObject.setBreakfastTime(trip.getBreakfastTime());
@@ -303,62 +361,20 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         tObject.setLunchTime(trip.getLunchTime());
 
         tObject.setDinnerTime(trip.getDinnerTime());
-        
+
         tObject.setStartTime(trip.getStartTime());
         tObject.setEndTime(trip.getEndTime());
+        // Update realm with the new times
             realm.beginTransaction();
 
             realm.copyToRealmOrUpdate(tObject);
             realm.commitTransaction();
         RealmController.getInstance().refresh();
         trip = RealmController.getInstance().getTrip();
-        Log.d("debug", "realmTrip: " + trip.getTrips());
 
 
     }
-    @Override
-    public void onProviderEnabled(String provider){
 
-    }
-    @Override
-    public void onProviderDisabled(String provider){
-
-    }
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras){
-
-    }
-    @Override
-    public void onLocationChanged(Location location){
-
-    }
-    @TargetApi(23)
-    private void initLocationService(Context context)
-    {
-        boolean isGPSEnabled = false;
-
-        if(Build.VERSION.SDK_INT>=23 && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION ) != PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
-            return;
-        }
-        try{
-            this.locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            if(forceNetwork) isGPSEnabled = false;
-
-
-
-                if(isGPSEnabled){
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,2000,10,this);
-                    if(locationManager != null){
-                        location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    }
-                }
-
-        }catch (Exception ex)
-        {
-            Log.d("debug", "Error creating service: " + ex.getMessage());
-        }
-    }
     //Z's Code
     private void initiateDataCalculation(){
 
@@ -376,16 +392,42 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         String midLatLong = "optimize:true|";
         trip = RealmController.getInstance().getTrip();
         locations = new RealmList<>();
+
         for ( TripOrder tp: trip.getTrips())
               {
                   locations.add(tp.getLocation());
 
 
         }
+        // Get the users location from realm
+        UserLocation ul = RealmController.getInstance().getUserLocation();
+        Location myLocation = new Location("user");
+        myLocation.setLatitude(ul.getLatitude());
+        myLocation.setLongitude(ul.getLongitude());
+        startLocation.setLatitude(ul.getLatitude());
+        startLocation.setLongitude(ul.getLongitude());
+        startLocation.setLatlong(ul.getLatitude()+","+ul.getLongitude());
+        startLocation.setName(R.string.user);
+        startLatLong = startLocation.getLatlong();
+        startLocation.setImage(android.R.color.transparent);
+        if(findLocation(R.string.user,locations) != -1)
+        {
+            locations.remove(0);
+            locations.add(0,startLocation);
+        }
+        else
+        {
+            locations.add(0,startLocation);
+        }
 
         if(findLocation(R.string.user,locations) == -1)
         {
-            Location myLocation = location;
+            if (location == null) {
+                location = new Location("default");
+                location.setLatitude(42.7152375);
+                location.setLongitude(-87.7906969);
+            }
+             myLocation = location;
             // Sets start location to the users location
             startLocation.setLatitude(myLocation.getLatitude());
             startLocation.setLongitude(myLocation.getLongitude());
@@ -397,6 +439,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
 
         }
+
         startLoc = findLocation(R.string.user,locations);
         startLocation.setLatitude(locations.get(startLoc).getLatitude());
         startLocation.setLongitude(locations.get(startLoc).getLongitude());
@@ -405,10 +448,10 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         startLocation.setImage(locations.get(startLoc).getImage());
         startLatLong = startLocation.getLatlong();
 
-        Log.d("debug", "location: "+ locations);
 
 
 
+        // Find one end point
         index = findLocation(R.string.scjohnson,locations);
 
         if(index == -1)
@@ -438,7 +481,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         aLatLong = locations.get(index);
         aLoc = index;
         index = findLocation(R.string.german_warehouse, locations);
-
+        // Find the second end point
         if(index == -1) {
             index = findLocation(R.string.valley_school,locations);
             if(index == -1) {
@@ -467,7 +510,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         Location locationB = new Location("point B");
         locationB.setLatitude(bLatLong.getLatitude());
         locationB.setLongitude(bLatLong.getLongitude());
-
+        // Check which end point is closer to the user location
         if(myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
 
             endLocation = bLatLong;
@@ -479,19 +522,19 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             endLatLong = aLatLong.getLatlong();
             endLoc = aLoc;
         }
-        Log.d("debug", "aloc: "+aLoc);
-        Log.d("debug", "bloc: "+bLoc);
         locations.remove(endLoc);
         locations.add(endLocation);
         endLoc = findLocation(endLocation.getName(),locations);
         String [] middleLatLong = new String[locations.size()-2];
         int j=0;
+        // Put the middle locations in an array
         for(int i=0;i<locations.size();i++) {
             if(startLoc != i && endLoc != i) {
                 middleLatLong[j] = locations.get(i).getLatlong();
                 j++;
             }
         }
+        // Create the middle locations string for the api
         for(int i=0;i<middleLatLong.length;i++) {
             if(i!= middleLatLong.length-1) {
                 midLatLong += middleLatLong[i] + "|";
@@ -499,43 +542,37 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 midLatLong += middleLatLong[i];
             }
         }
-        Log.d("debug", "midLatLong: "+ midLatLong);
+        // Call the Directions api to get the order and travel times for each site
         DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
         Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
-        Log.d("debug", "onCreate: "+startLatLong+"  "+endLatLong+"  "+midLatLong);
+
         call2.enqueue(new Callback<DirectionsModel>() {
             @Override
             public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
                 if(response.isSuccessful()) {
                     int j=0;
                     ArrayList<Integer> waypointOrder = new ArrayList<>();
-                    Log.d("debug", "waypointOrder: "+ response.body().getRoutes().get(0).getWaypointOrder().toString());
+                    // Grab the order of the middle sites
                     for(int k=0;k<response.body().getRoutes().get(0).getWaypointOrder().size();k++) {
                         waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k)+1);
-
-                    }
-                    Log.d("debug", "actualwaypointOrder: "+waypointOrder.toString());
-                    for(int l = 0;l<locations.size();l++)
-                    {
-                        Log.d("debug", "locations: "+locations.get(l).getLatlong());
-
                     }
                     for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++) {
+                        // Get travel time for the start location
                         if(i==0) {
                             TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
                             trip.setTimeValue(trip.getTimeValue()/60);
-                            Log.d("debug", "startLocation: "+startLocation.getLatlong());
                             mTripOrder.add(trip);
                         }
+                        // Get travel time for the end location
                         else if(i==response.body().getRoutes().get(0).getLegs().size()) {
                             TripOrder trip = new TripOrder(endLocation,"",0);
                             trip.setTimeValue(trip.getTimeValue()/60);
-                            Log.d("debug", "endLocation: "+endLocation.getLatlong());
                             mTripOrder.add(trip);
-                        } else {
+                        }
+                        // Get the travel time for the middle locations
+                        else {
                             TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
                             trip.setTimeValue(trip.getTimeValue()/60);
-                            Log.d("debug", "middleLocations: "+locations.get(waypointOrder.get(j)).getLatlong());
                             mTripOrder.add(trip);
                             j++;
                         }
@@ -551,5 +588,64 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+
+    }
+
+    public void setFragmentIndex(int fragmentIndex){
+        fragment = fragmentIndex;
+    }
+
+    public int getFragmentIndex(){
+        return fragment;
+    }
+
+    public int nextFragmentIndex(){
+        if (fragment >= TOTAL_FRAGMENTS) {
+            fragment = TOTAL_FRAGMENTS;
+        }
+
+        return fragment;
+    }
+
+    public int previousFragmentIndex(){
+        if (fragment <= 0) {
+            fragment = 0;
+        }
+
+        return fragment;
+    }
+
+    public static class FragmentPositionAdapter extends FragmentStatePagerAdapter {
+
+        public FragmentPositionAdapter(FragmentManager fragmentManager){
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position){
+                case 0:
+                    return TripPlannerSelectionFragment.newInstance();
+                case 1:
+                    return TripPlannerTimesFragment.newInstance();
+                case 2:
+                    return TripPlannerOptionsFragment.newInstance();
+                case 3:
+                    return TripPlannerTourTimesFragment.newInstance();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 4;
+        }
     }
 }
