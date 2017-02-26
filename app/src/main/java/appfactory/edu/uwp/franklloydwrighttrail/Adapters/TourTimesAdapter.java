@@ -279,10 +279,10 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         ImageView startTimeArrow;
 
         @Nullable
-        @Bind(R.id.tour_start_time)
+        @Bind(R.id.tour_end_time)
         TextView endTime;
         @Nullable
-        @Bind(R.id.right_arrow_start_time)
+        @Bind(R.id.right_arrow_end_time)
         ImageView endTimeArrow;
 
         public ViewHolder(@NonNull View itemView) {
