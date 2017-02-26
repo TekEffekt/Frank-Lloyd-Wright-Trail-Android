@@ -31,6 +31,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 /**
  * Created by sterl on 2/19/2017.
@@ -40,6 +41,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private TripObject locations;
     private ArrayList<TourTimesAdapter.ViewHolder> views;
     private Context context;
+    private Realm realm;
 
     private Calendar calendar;
 
@@ -75,7 +77,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
         holder.name.setText(location.getName());
 
@@ -101,42 +103,57 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         holder.date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTourDate(holder);
+                getTourDate(holder, position);
             }
         });
 
         holder.dateArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTourDate(holder);
+                getTourDate(holder, position);
             }
         });
 
         // Gather tour time
-        holder.time.setOnClickListener(new View.OnClickListener() {
+        holder.startTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTourTime(holder);
+                getTourStartTime(holder, position);
             }
         });
 
-        holder.timeArrow.setOnClickListener(new View.OnClickListener() {
+        holder.startTimeArrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getTourTime(holder);
+                getTourStartTime(holder, position);
             }
         });
 
+        // Gather tour time
+        holder.endTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getTourEndTime(holder, position);
+            }
+        });
 
-
+        holder.endTimeArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getTourEndTime(holder, position);
+            }
+        });
     }
 
     // This method enables the user to input a new tour date
-    private void getTourDate(@NonNull final TourTimesAdapter.ViewHolder holder){
+    private void getTourDate(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
         datePicker = new DatePickerDialog(context, DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Date tourDate = new Date(year,month,dayOfMonth);
+
+                //setTourDate(tourDate);
+
                 String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
                 holder.date.setText(dateString);
             }
@@ -145,17 +162,20 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         datePicker.show();
     }
 
-    // This method enables the user to input a new tour time
-    private void getTourTime(@NonNull final TourTimesAdapter.ViewHolder holder){
+    // This method enables the user to input a new start tour time
+    private void getTourStartTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
         timePicker = new TimePickerDialog(context, TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Time textTime = new Time(hourOfDay,minute,0);
                 int time = hourOfDay*60+minute;
 
+                realm.beginTransaction();
+                RealmController.getInstance().getTrip().getTrips().get(position).getLocation().setStartTourTime(time);
+                realm.commitTransaction();
+
                 String hourDay = "";
                 String minuteDay = "";
-                //trip.setStartTime(time.getTime());
 
                 if(minute < 10) {
                     minuteDay = "0" + minute;
@@ -173,7 +193,45 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                     hourDay = hourOfDay +"";
                     minuteDay = minuteDay + " AM";
                 }
-                holder.time.setText(hourDay + ":" + minuteDay);
+                holder.startTime.setText(hourDay + ":" + minuteDay);
+            }
+        }, hour, minute, false);
+        timePicker.setTitle("Trip Tour Time");
+        timePicker.show();
+    }
+
+    // This method enables the user to input a new start tour time
+    private void getTourEndTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
+        timePicker = new TimePickerDialog(context, TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                Time textTime = new Time(hourOfDay,minute,0);
+                int time = hourOfDay*60+minute;
+
+                realm.beginTransaction();
+                RealmController.getInstance().getTrip().getTrips().get(position).getLocation().setEndTourTime(time);
+                realm.commitTransaction();
+
+                String hourDay = "";
+                String minuteDay = "";
+
+                if(minute < 10) {
+                    minuteDay = "0" + minute;
+                } else {
+                    minuteDay = minute + "";
+                }
+                if(hourOfDay > 12) {
+                    hourOfDay -= 12;
+                    hourDay = hourOfDay +"";
+                    minuteDay = minuteDay + " PM";
+                } else {
+                    if (hourOfDay == 0){
+                        hourOfDay = 12;
+                    }
+                    hourDay = hourOfDay +"";
+                    minuteDay = minuteDay + " AM";
+                }
+                holder.endTime.setText(hourDay + ":" + minuteDay);
             }
         }, hour, minute, false);
         timePicker.setTitle("Trip Tour Time");
@@ -214,11 +272,18 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         ImageView dateArrow;
 
         @Nullable
-        @Bind(R.id.tour_time)
-        TextView time;
+        @Bind(R.id.tour_start_time)
+        TextView startTime;
         @Nullable
-        @Bind(R.id.right_arrow_time)
-        ImageView timeArrow;
+        @Bind(R.id.right_arrow_start_time)
+        ImageView startTimeArrow;
+
+        @Nullable
+        @Bind(R.id.tour_start_time)
+        TextView endTime;
+        @Nullable
+        @Bind(R.id.right_arrow_start_time)
+        ImageView endTimeArrow;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

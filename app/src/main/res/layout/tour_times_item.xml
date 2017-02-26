@@ -149,12 +149,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:text="@string/tour_time"
+                    android:text="@string/tour_start_time"
                     android:textColor="@color/gray"
                     android:textSize="16dp"
                     android:layout_centerVertical="true"/>
                 <ImageView
-                    android:id="@+id/right_arrow_time"
+                    android:id="@+id/right_arrow_start_time"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_centerVertical="true"
@@ -162,10 +162,40 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="15dp"/>
                 <TextView
-                    android:id="@+id/tour_time"
+                    android:id="@+id/tour_start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_toLeftOf="@id/right_arrow_time"
+                    android:layout_toLeftOf="@id/right_arrow_start_time"
+                    android:layout_marginRight="20dp"
+                    android:textColor="@color/red"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/tour_end_time"
+                    android:textColor="@color/gray"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"/>
+                <ImageView
+                    android:id="@+id/right_arrow_end_time"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_right"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"/>
+                <TextView
+                    android:id="@+id/tour_end_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/right_arrow_end_time"
                     android:layout_marginRight="20dp"
                     android:textColor="@color/red"
                     android:textSize="16dp"
