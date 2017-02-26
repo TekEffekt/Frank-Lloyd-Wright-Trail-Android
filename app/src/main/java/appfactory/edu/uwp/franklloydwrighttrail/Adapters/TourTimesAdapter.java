@@ -72,6 +72,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     public TourTimesAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         context = parent.getContext();
+        realm = RealmController.getInstance().getRealm();
         views.add(new TourTimesAdapter.ViewHolder(inflater.inflate(R.layout.tour_times_item, parent, false)));
         return views.get(views.size() - 1);
     }
