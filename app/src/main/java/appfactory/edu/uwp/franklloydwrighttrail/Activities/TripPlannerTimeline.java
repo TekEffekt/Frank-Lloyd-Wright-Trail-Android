@@ -81,7 +81,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     private NavigationView navigationView;
 
     private static int fragment;
-    private final int TOTAL_FRAGMENTS = 3;
+    private final int TOTAL_FRAGMENTS = 2;
 
     public static Intent newIntent(Context packageContext) {
         Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
@@ -633,9 +633,9 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 case 0:
                     return TripPlannerSelectionFragment.newInstance();
                 case 1:
-                    return TripPlannerTimesFragment.newInstance();
-                case 2:
                     return TripPlannerTourTimesFragment.newInstance();
+                case 2:
+                    return TripPlannerTimesFragment.newInstance();
                 case 3:
                     return TripPlannerOptionsFragment.newInstance();
                 default:
