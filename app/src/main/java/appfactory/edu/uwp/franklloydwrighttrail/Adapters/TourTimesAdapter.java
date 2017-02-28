@@ -43,7 +43,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private Context context;
     private Realm realm;
 
-    private Calendar calendar;
+    private Calendar currentTime;
 
     private TimePickerDialog timePicker;
     private int hour;
@@ -59,12 +59,12 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         this.views = new ArrayList<>();
 
         // Initialize Times
-        calendar = Calendar.getInstance();
-        year = calendar.getTime().getYear();
-        month = calendar.getTime().getMonth();
-        day = calendar.getTime().getDay();
-        hour = calendar.getTime().getHours();
-        minute = calendar.getTime().getMinutes();
+        currentTime = Calendar.getInstance();
+        hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        minute = currentTime.get(Calendar.MINUTE);
+        year = currentTime.get(Calendar.YEAR);
+        month = currentTime.get(Calendar.MONTH);
+        day = currentTime.get(Calendar.DAY_OF_MONTH);
     }
 
     @NonNull

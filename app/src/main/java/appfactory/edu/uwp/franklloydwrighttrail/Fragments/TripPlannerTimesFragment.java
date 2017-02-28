@@ -1,5 +1,6 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
+import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -11,12 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.sql.Time;
 import java.util.Calendar;
+import java.util.Date;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimeline;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -33,14 +36,23 @@ public class TripPlannerTimesFragment extends Fragment {
 
     private RelativeLayout startTimeLayout;
     private RelativeLayout endTimeLayout;
+    private RelativeLayout startDateLayout;
+    private RelativeLayout endDateLayout;
 
     private TextView startTimeLabel;
     private TextView endTimeLabel;
+    private TextView startDateLabel;
+    private TextView endDateLabel;
 
     private TimePickerDialog timePicker;
     private Calendar currentTime;
     private int hour;
     private int minute;
+
+    private DatePickerDialog datePicker;
+    private int year;
+    private int month;
+    private int day;
 
     private TripObject trip;
     private Realm realm;
@@ -58,42 +70,25 @@ public class TripPlannerTimesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_trip_times, container, false);
 
-        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.choose_times);
-        setSupportActionBar(toolbar); */
-
-        /*
-        cont = (Button) view.findViewById(R.id.cont);
-        cont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                timeValid = checkTimeValid();
-                if (startTimeChosen && endTimeChosen && timeValid){
-                    Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
-                    toolbar.setTitle(R.string.trip_options);
-                    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-                    FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(TripPlannerOptionsFragment.newInstance(), null).commit();
-                } else {
-                    //Make toast yelling at user
-                }
-            }
-        }); */
-
         //Grab Trip Object
         realm = RealmController.getInstance().getRealm();
         trip = RealmController.getInstance().getTrip();
 
         startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
+        startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
+        endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
         startTimeLabel = (TextView) view.findViewById(R.id.start_time);
         endTimeLabel = (TextView) view.findViewById(R.id.end_time);
+        startDateLabel = (TextView) view.findViewById(R.id.start_date);
+        endDateLabel = (TextView) view.findViewById(R.id.end_date);
 
         currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
+        year = currentTime.get(Calendar.YEAR);
+        month = currentTime.get(Calendar.MONTH);
+        day = currentTime.get(Calendar.DAY_OF_MONTH);
 
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +103,6 @@ public class TripPlannerTimesFragment extends Fragment {
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults().get(0).setStartTime(time);
                         startTimeChosen = true;
-                        //trip.setStartTime(time.getTime());
                         realm.commitTransaction();
 
 
@@ -149,8 +143,8 @@ public class TripPlannerTimesFragment extends Fragment {
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults().get(0).setEndTime(time);
                         endTimeChosen = true;
-                        //trip.setEndTime(time.getTime());
                         realm.commitTransaction();
+
                         if(minute < 10) {
                             minuteDay = "0" + minute;
                         } else {
@@ -175,6 +169,45 @@ public class TripPlannerTimesFragment extends Fragment {
                 timePicker.show();
             }
         });
+
+        startDateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Date tourDate = new Date(year,month,dayOfMonth);
+
+                        //setTourDate(tourDate);
+
+                        String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
+                        startDateLabel.setText(dateString);
+                    }
+                }, year, month, day);
+                datePicker.setTitle("Trip Tour Date");
+                datePicker.show();
+            }
+        });
+
+        endDateLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        Date tourDate = new Date(year,month,dayOfMonth);
+
+                        //setTourDate(tourDate);
+
+                        String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
+                        endDateLabel.setText(dateString);
+                    }
+                }, year, month, day);
+                datePicker.setTitle("Trip Tour Date");
+                datePicker.show();
+            }
+        });
+
         return view;
     }
 
@@ -187,6 +220,37 @@ public class TripPlannerTimesFragment extends Fragment {
             }
         } else {
             return false;
+        }
+    }
+
+    private String getMonth(int month){
+        switch (month){
+            case 0:
+                return "January";
+            case 1:
+                return "February";
+            case 2:
+                return "March";
+            case 3:
+                return "April";
+            case 4:
+                return "May";
+            case 5:
+                return "June";
+            case 6:
+                return "July";
+            case 7:
+                return "August";
+            case 8:
+                return "September";
+            case 9:
+                return "October";
+            case 10:
+                return "November";
+            case 11:
+                return "December";
+            default:
+                return "Month";
         }
     }
 }
