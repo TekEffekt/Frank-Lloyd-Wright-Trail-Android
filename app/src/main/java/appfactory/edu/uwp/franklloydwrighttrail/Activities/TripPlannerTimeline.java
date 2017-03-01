@@ -636,6 +636,8 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                     return TripPlannerTimesFragment.newInstance();
                 case 2:
                     return TripPlannerTourTimesFragment.newInstance();
+                case 3:
+                    return TripPlannerOptionsFragment.newInstance();
                 default:
                     return null;
             }
