@@ -1,4 +1,4 @@
-package appfactory.edu.uwp.franklloydwrighttrail.Apis;
+package appfactory.edu.uwp.franklloydwrighttrail.Models;
 
 /**
  * Created by zstue_000 on 10/25/2016.
@@ -8,7 +8,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Example {
+import appfactory.edu.uwp.franklloydwrighttrail.Apis.Row;
+
+public class DistanceModel {
         @SerializedName("destination_addresses")
         private List<String> destinationAddresses = new ArrayList<String>();
         @SerializedName("origin_addresses")
