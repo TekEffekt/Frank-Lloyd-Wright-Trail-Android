@@ -34,12 +34,14 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Apis.DistanceMatrixApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTourTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.Models.DistanceModel;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
@@ -70,7 +72,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
     private FragmentPositionAdapter fragmentPositionAdapter;
-
+    public int locationIndex;
     private ViewPager viewPager;
     private ImageView rightFragment;
     private ImageView leftFragment;
@@ -124,8 +126,10 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                 create.setVisibility(View.GONE);
                 timelineView.setVisibility(View.VISIBLE);
                 setRealmAdapter(RealmController.with(this).getTripResults());
-
+                createFinalTripPlan();
                 initiateDataCalculation();
+
+
             } else {
                 timelineView.setVisibility(View.GONE);
                 create.setVisibility(View.VISIBLE);
@@ -137,7 +141,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
         //Grab Trip Object
         if (RealmController.getInstance().hasTrip()) {
-            trip = RealmController.getInstance().getTrip();
+            trip = RealmController.getInstance().getTripResults().get(0);
         } else {
             realm.beginTransaction();
             trip = new TripObject();
@@ -284,9 +288,78 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         }
         return -1;
     }
+    public void createFinalTripPlan()
+    {
+        trip = RealmController.getInstance().getTripResults().get(0);
+        int i = 0;
+        long startTourTime = 0;
+        long endTourTime = 0;
+        Toast toast;
 
+        while(i< trip.getTrips().size()-1)
+        {
+
+            startTourTime = trip.getTrips().get(i+1).getLocation().getStartTourTime();
+            endTourTime = trip.getTrips().get(i).getLocation().getEndTourTime();
+            if(trip.getTrips().get(i).getLocation().getName() == R.string.user)
+            {
+                i++;
+            }
+            else if(startTourTime != 0 && endTourTime != 0)
+            {
+                if(startTourTime >= (endTourTime + trip.getTrips().get(i).getTimeValue()))
+                {
+
+                    i++;
+                }
+                else
+                {
+                    toast = Toast.makeText(getApplicationContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
+                    toast.show();
+
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults().get(0).getTrips().remove(i+1);
+                    realm.commitTransaction();
+
+                    trip = RealmController.getInstance().getTripResults().get(0);
+                    adapter.notifyDataSetChanged();
+                    Log.d("debug", "Size: "+trip.getTrips().size());
+                    locationIndex = i;
+                    if(i < trip.getTrips().size()-1 && trip.getTrips().get(i+1).getLocation().getStartTourTime() != 0){
+                        DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
+                        Call<DistanceModel> call2 = distanceMatrixApi.timeDuration("imperial", trip.getTrips().get(i).getLocation().getLatlong(), trip.getTrips().get(i+1).getLocation().getLatlong());
+
+                        call2.enqueue(new Callback<DistanceModel>() {
+                            @Override
+                            public void onResponse(Call<DistanceModel> call, Response<DistanceModel> response) {
+                                if(response.isSuccessful()) {
+                                    realm.beginTransaction();
+                                    RealmController.getInstance().getTripResults().get(0).getTrips().get(locationIndex).setTimeValue(response.body().getRows().get(0).getElements().get(0).getDuration().getValue()/60 +1);
+                                    realm.commitTransaction();
+                                    trip = RealmController.getInstance().getTripResults().get(0);
+                                    adapter.notifyDataSetChanged();
+                                } else {
+
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<DistanceModel> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                }
+
+            }
+
+            Log.d("debug", "Adapter Size: " + adapter.getItemCount());
+        }
+
+    }
     public void createTripPlan(RealmList<TripOrder> tripOrder)
     {
+        trip = RealmController.getInstance().getTripResults().get(0);
         int startTime = trip.getStartTime();
         int endTime = trip.getEndTime();
         int totalTime = endTime - startTime;
@@ -390,7 +463,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         int aLoc;
         int bLoc;
         String midLatLong = "optimize:true|";
-        trip = RealmController.getInstance().getTrip();
+        trip = RealmController.getInstance().getTripResults().get(0);
         locations = new RealmList<>();
 
         for ( TripOrder tp: trip.getTrips())
