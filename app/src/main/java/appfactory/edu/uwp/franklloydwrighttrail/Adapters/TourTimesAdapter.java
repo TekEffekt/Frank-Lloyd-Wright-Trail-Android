@@ -201,7 +201,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         timePicker.show();
     }
 
-    // This method enables the user to input a new start tour time
+    // This method enables the user to input a new end tour time
     private void getTourEndTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
         timePicker = new TimePickerDialog(context, TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
             @Override

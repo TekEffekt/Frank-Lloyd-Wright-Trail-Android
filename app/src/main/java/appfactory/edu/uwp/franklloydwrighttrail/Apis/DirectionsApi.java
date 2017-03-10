@@ -25,8 +25,8 @@ public interface DirectionsApi {
 
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    public static final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).client(httpClient.addInterceptor(logging.setLevel(HttpLoggingInterceptor.Level.BODY)).build()).build();
+    //.client(httpClient.addInterceptor(logging.setLevel(HttpLoggingInterceptor.Level.BODY)).build()
+    public static final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
 
 }
 
