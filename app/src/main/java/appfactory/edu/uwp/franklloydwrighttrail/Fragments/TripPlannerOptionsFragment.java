@@ -1,11 +1,7 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +11,6 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
-import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimeline;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import io.realm.Realm;
@@ -55,32 +50,9 @@ public class TripPlannerOptionsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_trip_options, container, false);
-
-        /* Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.trip_options);
-        setSupportActionBar(toolbar); */
-
-        //cont = (Button) view.findViewById(R.id.cont);
         initializeViews(view);
-
         realm = RealmController.getInstance().getRealm();
-
         initializeSwitches();
-        //initializeContainers();
-
-        /*
-        cont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mealCheck();
-                if (complete) {
-                    Intent intent = new TripPlannerTimeline().newIntent(getContext());
-                    startActivity(intent);
-                    ((AppCompatActivity)getActivity()).finish();
-                }
-
-            }
-        }); */
         return view;
     }
 

@@ -198,7 +198,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 UserLocation ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
                 realm.copyToRealmOrUpdate(ul);
                 realm.commitTransaction();
-                Intent intent = TripPlannerTimeline.newIntent(this);
+                Intent intent = TripPlannerActivity.newIntent(this);
                 startActivity(intent);
                 break;
             //case R.id.nav_scrapbook:

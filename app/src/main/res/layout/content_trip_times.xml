@@ -23,6 +23,46 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp">
                 <TextView
+                    android:id="@+id/trip_name_header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="16dp"
+                    android:text="@string/trip_name_caps"
+                    android:layout_centerVertical="true"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/trip_name_container"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:background="@color/white">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/trip_name"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/gray"/>
+                <EditText
+                    android:id="@+id/trip_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="20dp"
+                    android:textSize="16dp"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/red"
+                    android:hint="@string/name_entry"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+                <TextView
                     android:id="@+id/trip_start_container"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

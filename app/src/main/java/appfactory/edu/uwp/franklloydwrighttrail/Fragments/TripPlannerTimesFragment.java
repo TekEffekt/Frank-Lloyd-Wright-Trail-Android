@@ -4,15 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -21,7 +18,6 @@ import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
-import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerTimeline;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
@@ -43,6 +39,8 @@ public class TripPlannerTimesFragment extends Fragment {
     private TextView endTimeLabel;
     private TextView startDateLabel;
     private TextView endDateLabel;
+
+    private EditText tripNameEdit;
 
     private TimePickerDialog timePicker;
     private Calendar currentTime;
@@ -74,6 +72,7 @@ public class TripPlannerTimesFragment extends Fragment {
         realm = RealmController.getInstance().getRealm();
         trip = RealmController.getInstance().getTrip();
 
+        tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
         startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
         startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
@@ -89,6 +88,8 @@ public class TripPlannerTimesFragment extends Fragment {
         year = currentTime.get(Calendar.YEAR);
         month = currentTime.get(Calendar.MONTH);
         day = currentTime.get(Calendar.DAY_OF_MONTH);
+
+        //Make the text edit work and register name in object
 
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override

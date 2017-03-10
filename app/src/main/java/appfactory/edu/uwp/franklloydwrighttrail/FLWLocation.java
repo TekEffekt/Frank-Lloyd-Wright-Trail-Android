@@ -3,20 +3,28 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.StringRes;
 
+import java.util.Date;
+
 import io.realm.RealmObject;
 
 public class FLWLocation extends RealmObject {
     @StringRes private int name;
+
+    // These are exclusive to FLW Stops
     @DrawableRes private int image;
     @DrawableRes private int markerColor;
     private String latlong;
     private double latitude;
     private double longitude;
     private String address;
+
+    private Date day;
+
+    // These also double as Generic Stop End and Start times
     private long startTourTime;
     private long endTourTime;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime) {
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime, Date day) {
         this.name = name;
         this.image = image;
         this.markerColor = markerColor;
@@ -26,6 +34,7 @@ public class FLWLocation extends RealmObject {
         this.address = address;
         this.startTourTime = startTourTime;
         this.endTourTime = endTourTime;
+        this.day = day;
     }
 
     public FLWLocation(){
@@ -36,6 +45,9 @@ public class FLWLocation extends RealmObject {
         this.latitude = -1;
         this.longitude = -1;
         this.address = null;
+        this.startTourTime = -1;
+        this.endTourTime = -1;
+        this.day = null;
     }
 
     public int getImage() { return image; }
@@ -88,5 +100,13 @@ public class FLWLocation extends RealmObject {
 
     public void setEndTourTime(long endTourTime) {
         this.endTourTime = endTourTime;
+    }
+
+    public Date getDay() {
+        return day;
+    }
+
+    public void setDay(Date day) {
+        this.day = day;
     }
 }

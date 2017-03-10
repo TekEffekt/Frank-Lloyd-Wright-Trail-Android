@@ -1,43 +1,20 @@
-package appfactory.edu.uwp.franklloydwrighttrail.Activities;
+package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
-import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
-import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
-import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimesFragment;
-import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTourTimesFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -55,13 +32,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-
 /**
  * Created by sterl on 11/3/2016.
  */
 
-public class TripPlannerTimeline extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class TripPlannerTimelineFragment extends Fragment {
     private TripObject trip;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
@@ -69,71 +44,35 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
-    private FragmentPositionAdapter fragmentPositionAdapter;
 
-    private ViewPager viewPager;
-    private ImageView rightFragment;
-    private ImageView leftFragment;
-    private RelativeLayout fragmentNav;
-    private DrawerLayout drawer;
-    private RelativeLayout create;
     private RecyclerView timelineView;
-    private NavigationView navigationView;
 
-    private static int fragment;
-    private final int TOTAL_FRAGMENTS = 2;
-
-    public static Intent newIntent(Context packageContext) {
-        Intent intent = new Intent(packageContext, TripPlannerTimeline.class);
-        return intent;
+    public static TripPlannerTimelineFragment newInstance(){
+        TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
+        return tripPlannerTimelineFragment;
     }
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        fragment = 0;
-
-        setContentView(R.layout.activity_trip_timeline);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Trip Planner");
-        setSupportActionBar(toolbar);
-
-        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        this.realm = RealmController.with(this).getRealm();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.content_trip_timeline, container, false);
+        realm = RealmController.with(this).getRealm();
 
         // Creates Timeline if there is a trip
-        timelineView = (RecyclerView) findViewById(R.id.trip_timeline);
+        timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
         setupTimeline();
 
-        create = (RelativeLayout) findViewById(R.id.create);
-        fragmentNav = (RelativeLayout) findViewById(R.id.fragment_position);
-        leftFragment = (ImageView) findViewById(R.id.left_fragment);
-        rightFragment = (ImageView) findViewById(R.id.right_fragment);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-
-        if (RealmController.getInstance().hasTrip()){
-            if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()){
-                create.setVisibility(View.GONE);
-                timelineView.setVisibility(View.VISIBLE);
-                setRealmAdapter(RealmController.with(this).getTripResults());
-
-                initiateDataCalculation();
+        //if (RealmController.getInstance().hasTrip()){
+        if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()) {
+            setRealmAdapter(RealmController.with(this).getTripResults());
+            initiateDataCalculation();
+        }
+                /*
             } else {
                 timelineView.setVisibility(View.GONE);
-                create.setVisibility(View.VISIBLE);
             }
         } else {
             timelineView.setVisibility(View.GONE);
-            create.setVisibility(View.VISIBLE);
-        }
+        }*/
 
         //Grab Trip Object
         if (RealmController.getInstance().hasTrip()) {
@@ -144,136 +83,26 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
             realm.copyToRealm(trip);
             realm.commitTransaction();
         }
-
-        create.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
-
-                fragmentNav.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.VISIBLE);
-                create.setVisibility(View.GONE);
-                timelineView.setVisibility(View.GONE);
-
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Trip Creation");
-                setSupportActionBar(toolbar);
-            }
-        });
-
-        fragmentPositionAdapter = new FragmentPositionAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(fragmentPositionAdapter);
-
-        leftFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment--;
-                viewPager.setCurrentItem(previousFragmentIndex());
-            }
-        });
-
-        rightFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fragment < TOTAL_FRAGMENTS){
-                    fragment++;
-                    viewPager.setCurrentItem(nextFragmentIndex());
-                } else {
-                    Intent intent = new TripPlannerTimeline().newIntent(getBaseContext());
-                    startActivity(intent);
-                    fragment = 0;
-                    finish();
-                }
-
-            }
-        });
-
-        /*
-        if (trip === null) {
-            create.setVisibility(View.VISIBLE);
-            timelineView.setVisibility(View.GONE);
-        } */
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
+        return view;
     }
 
     private void setRealmAdapter(RealmResults<TripObject> trip){
-        TimelineRealmModelAdapter realmAdapter = new TimelineRealmModelAdapter(this.getApplicationContext(), trip, true);
+        TimelineRealmModelAdapter realmAdapter = new TimelineRealmModelAdapter(this.getContext(), trip, true);
         adapter.setRealmAdapter(realmAdapter);
         adapter.notifyDataSetChanged();
     }
 
     private void setupTimeline(){
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.generateDefaultLayoutParams();
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
         timelineView.setLayoutManager(layoutManager);
 
-        adapter = new TimelineAdapter(this);
+        adapter = new TimelineAdapter(getActivity());
         timelineView.setAdapter(adapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.trip_planner_timeline, menu);
-
-        final MenuItem newTrip = menu.findItem(R.id.menu_item_new_trip);
-        newTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
-
-                fragmentNav.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.VISIBLE);
-                create.setVisibility(View.GONE);
-                timelineView.setVisibility(View.GONE);
-
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Trip Creation");
-                setSupportActionBar(toolbar);
-                return true;
-            }
-        });
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return false;
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.nav_locations:
-                finish();
-                break;
-            case R.id.nav_trip_planner:
-                break;
-            case R.id.nav_settings:
-                break;
-            case R.id.nav_about:
-                break;
-        }
-
-        drawer.closeDrawer(GravityCompat.START);
-        return false;
-    }
     public int findLocation(int location,RealmList<FLWLocation> locations)
     {
         for(int i=0;i<locations.size();i++){
@@ -314,7 +143,7 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
         }
         if(mealtime > totalTime)
         {
-            toast = Toast.makeText(getApplicationContext(),"Meals take too much time.",Toast.LENGTH_SHORT);
+            toast = Toast.makeText(getContext(),"Meals take too much time.",Toast.LENGTH_SHORT);
             toast.show();
         }
         else if(mealtime+time > totalTime)
@@ -334,19 +163,19 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
                     }
                     else
                     {
-                        toast = Toast.makeText(getApplicationContext(),"Total trip too long 3 sites taken off.",Toast.LENGTH_SHORT);
+                        toast = Toast.makeText(getContext(),"Total trip too long 3 sites taken off.",Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }
                 else
                 {
-                    toast = Toast.makeText(getApplicationContext(),"Total trip too long 2 sites taken off.",Toast.LENGTH_SHORT);
+                    toast = Toast.makeText(getContext(),"Total trip too long 2 sites taken off.",Toast.LENGTH_SHORT);
                     toast.show();
                 }
             }
             else
             {
-                toast = Toast.makeText(getApplicationContext(),"Total trip too long 1 site taken off.",Toast.LENGTH_SHORT);
+                toast = Toast.makeText(getContext(),"Total trip too long 1 site taken off.",Toast.LENGTH_SHORT);
                 toast.show();
             }
         }
@@ -588,64 +417,5 @@ public class TripPlannerTimeline extends AppCompatActivity implements Navigation
 
             }
         });
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-
-    }
-
-    public void setFragmentIndex(int fragmentIndex){
-        fragment = fragmentIndex;
-    }
-
-    public int getFragmentIndex(){
-        return fragment;
-    }
-
-    public int nextFragmentIndex(){
-        if (fragment >= TOTAL_FRAGMENTS) {
-            fragment = TOTAL_FRAGMENTS;
-        }
-
-        return fragment;
-    }
-
-    public int previousFragmentIndex(){
-        if (fragment <= 0) {
-            fragment = 0;
-        }
-
-        return fragment;
-    }
-
-    public static class FragmentPositionAdapter extends FragmentStatePagerAdapter {
-
-        public FragmentPositionAdapter(FragmentManager fragmentManager){
-            super(fragmentManager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    return TripPlannerSelectionFragment.newInstance();
-                case 1:
-                    return TripPlannerTimesFragment.newInstance();
-                case 2:
-                    return TripPlannerTourTimesFragment.newInstance();
-                case 3:
-                    return TripPlannerOptionsFragment.newInstance();
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return 4;
-        }
     }
 }

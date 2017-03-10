@@ -19,22 +19,24 @@ public class TripObject extends RealmObject{
     private int startTime;
     private int endTime;
 
-
+    private String name;
 
     private int dinnerTime;
     private int lunchTime;
     private int breakfastTime;
-
 
     public TripObject (){
         trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
 
+        name = "Default Trip";
+
         dinnerTime = 0;
         lunchTime = 0;
         breakfastTime = 0;
     };
+
     public RealmList<TripOrder> getTrips() {
         return trips;
     }
@@ -42,8 +44,11 @@ public class TripObject extends RealmObject{
     public void setTrips(RealmList<TripOrder> trips) {
         this.trips = trips;
     }
+
     public int getKey() {return key;}
+
     public void setKey(int key){ this.key= key; }
+
     public int getStartTime() {
         return startTime;
     }
@@ -82,5 +87,13 @@ public class TripObject extends RealmObject{
 
     public void setBreakfastTime(int breakfastTime) {
         this.breakfastTime = breakfastTime;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

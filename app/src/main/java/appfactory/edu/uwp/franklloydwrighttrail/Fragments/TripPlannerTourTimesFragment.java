@@ -34,8 +34,6 @@ public class TripPlannerTourTimesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_trip_tour_times, container, false);
 
-        realm = RealmController.getInstance().getRealm();
-
         recyclerView = (RecyclerView) view.findViewById(R.id.tour_edit_recycler);
         adapter = new TourTimesAdapter(RealmController.getInstance().getTrip());
         recyclerView.setAdapter(adapter);
@@ -45,6 +43,8 @@ public class TripPlannerTourTimesFragment extends Fragment {
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
+
+        realm = RealmController.getInstance().getRealm();
 
         return view;
     }

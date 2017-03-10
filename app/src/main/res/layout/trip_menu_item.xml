@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:text="Sample Trip" />
         <ImageView
-            android:id="@+id/right_arrow_edit"
+            android:id="@+id/right_arrow_view"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
