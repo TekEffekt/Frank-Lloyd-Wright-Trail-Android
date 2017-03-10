@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
+import appfactory.edu.uwp.franklloydwrighttrail.Apis.DistanceMatrixApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DistanceModel;
@@ -45,14 +47,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
     private Realm realm;
-    private FragmentPositionAdapter fragmentPositionAdapter;
     public int locationIndex;
-    private ViewPager viewPager;
-    private ImageView rightFragment;
-    private ImageView leftFragment;
-    private RelativeLayout fragmentNav;
-    private DrawerLayout drawer;
-    private RelativeLayout create;
     private RecyclerView timelineView;
 
     public static TripPlannerTimelineFragment newInstance(){
@@ -147,7 +142,7 @@ public class TripPlannerTimelineFragment extends Fragment {
                 }
                 else
                 {
-                    toast = Toast.makeText(getApplicationContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
+                    toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
                     toast.show();
 
                     realm.beginTransaction();
