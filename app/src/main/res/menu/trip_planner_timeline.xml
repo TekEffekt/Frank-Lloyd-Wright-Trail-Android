@@ -3,8 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_item_new_trip"
-        android:title="@string/new_trip"
+        android:id="@+id/menu_item_remove_trip"
+        android:icon="@drawable/ic_remove"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/menu_item_add_trip"
+        android:icon="@drawable/ic_add"
         app:showAsAction="ifRoom"/>
 
 </menu>

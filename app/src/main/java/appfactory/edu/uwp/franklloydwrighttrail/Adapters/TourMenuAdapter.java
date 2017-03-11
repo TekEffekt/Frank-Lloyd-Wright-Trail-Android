@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -26,11 +27,11 @@ import io.realm.RealmList;
 
 // This adapter is used for the Tour Menu Activity to manage all trips
 public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHolder> {
-    private RealmList<TripObject> trips;
+    private List<TripObject> trips;
     private ArrayList<TourMenuAdapter.ViewHolder> views;
     private Context context;
 
-    public TourMenuAdapter (RealmList<TripObject> trips) {
+    public TourMenuAdapter (List<TripObject> trips) {
         this.trips = trips;
         this.views = new ArrayList<>();
     }

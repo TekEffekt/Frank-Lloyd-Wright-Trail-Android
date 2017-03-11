@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -95,6 +96,7 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             holder.infoButton.setVisibility(View.GONE);
             holder.locationButton.setVisibility(View.GONE);
             holder.picture.setVisibility(View.GONE);
+            holder.homeIcon.setVisibility(View.VISIBLE);
         }
 
         if (trip.getTimeText() == null){
@@ -252,6 +254,8 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
         ImageButton infoButton;
         @Nullable @Bind(R.id.location_button)
         ImageButton locationButton;
+        @Nullable @Bind(R.id.home_icon)
+        ImageView homeIcon;
 
         public TimelineViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);
