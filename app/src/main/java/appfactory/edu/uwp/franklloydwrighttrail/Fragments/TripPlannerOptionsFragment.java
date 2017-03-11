@@ -41,9 +41,11 @@ public class TripPlannerOptionsFragment extends Fragment {
     private EditText timeDinner;
 
     private Realm realm;
+    private static int tripPosition;
 
-    public static TripPlannerOptionsFragment newInstance(){
+    public static TripPlannerOptionsFragment newInstance(int position){
         TripPlannerOptionsFragment tripPlannerOptionsFragment = new TripPlannerOptionsFragment();
+        tripPosition = position;
         return tripPlannerOptionsFragment;
     }
 
@@ -62,7 +64,7 @@ public class TripPlannerOptionsFragment extends Fragment {
                 complete = false;
             } else {
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().setBreakfastTime(Integer.parseInt(timeBreakfast.getText().toString()));
+                RealmController.getInstance().getTripResults().get(tripPosition).setBreakfastTime(Integer.parseInt(timeBreakfast.getText().toString()));
                 realm.commitTransaction();
                 complete = true;
             }
@@ -74,7 +76,7 @@ public class TripPlannerOptionsFragment extends Fragment {
                 complete = false;
             } else {
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().setLunchTime(Integer.parseInt(timeLunch.getText().toString()));
+                RealmController.getInstance().getTripResults().get(tripPosition).setLunchTime(Integer.parseInt(timeLunch.getText().toString()));
                 realm.commitTransaction();
                 complete = true;
             }
@@ -86,7 +88,7 @@ public class TripPlannerOptionsFragment extends Fragment {
                 complete = false;
             } else {
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().setDinnerTime(Integer.parseInt(timeDinner.getText().toString()));
+                RealmController.getInstance().getTripResults().get(tripPosition).setDinnerTime(Integer.parseInt(timeDinner.getText().toString()));
                 realm.commitTransaction();
                 complete = true;
             }
@@ -129,7 +131,7 @@ public class TripPlannerOptionsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 yesBreakfast = mealToggle(breakfastContainer,yesBreakfast);
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().setBreakfastTime(0);
+                RealmController.getInstance().getTripResults().get(tripPosition).setBreakfastTime(0);
                 realm.commitTransaction();
             }
         });
@@ -139,7 +141,7 @@ public class TripPlannerOptionsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 yesLunch = mealToggle(lunchContainer,yesLunch);
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().setLunchTime(0);
+                RealmController.getInstance().getTripResults().get(tripPosition).setLunchTime(0);
                 realm.commitTransaction();
             }
         });
@@ -149,7 +151,7 @@ public class TripPlannerOptionsFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 yesDinner = mealToggle(dinnerContainer,yesDinner);
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().setDinnerTime(0);
+                RealmController.getInstance().getTripResults().get(tripPosition).setDinnerTime(0);
                 realm.commitTransaction();
             }
         });
@@ -161,7 +163,7 @@ public class TripPlannerOptionsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setBreakfastTime(2);
+                        RealmController.getInstance().getTripResults().get(tripPosition).setBreakfastTime(2);
                         realm.commitTransaction();
                         complete = true;
             }
@@ -171,7 +173,7 @@ public class TripPlannerOptionsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setLunchTime(2);
+                        RealmController.getInstance().getTripResults().get(tripPosition).setLunchTime(2);
                         realm.commitTransaction();
                         complete = true;
             }
@@ -182,7 +184,7 @@ public class TripPlannerOptionsFragment extends Fragment {
             public void onClick(View v) {
                         //Set time here
                         realm.beginTransaction();
-                        RealmController.getInstance().getTrip().setDinnerTime(2);
+                        RealmController.getInstance().getTripResults().get(tripPosition).setDinnerTime(2);
                         realm.commitTransaction();
                         complete = true;
             }

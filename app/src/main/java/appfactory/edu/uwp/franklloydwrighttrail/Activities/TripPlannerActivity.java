@@ -22,6 +22,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourMenuAdapter;
@@ -59,6 +61,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
     private static int fragment;
     private static final int TOTAL_FRAGMENTS = 4;
+    private static int newTripPosition;
 
 
     public static Intent newIntent(Context packageContext) {
@@ -79,9 +82,10 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_menu);
-        fragment = 0;
 
         this.realm = RealmController.with(this).getRealm();
+        newTripPosition = RealmController.getInstance().getTripResults().size(); // ensures it's always one more than normal
+        fragment = 0;
 
         setupNavMenu();
         setupViewPager();
@@ -92,11 +96,12 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
             public void onClick(View v) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
+                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(newTripPosition)).commit();
 
                 fragmentNav.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.VISIBLE);
                 create.setVisibility(View.GONE);
+                recycler.setVisibility(View.GONE);
 
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.setTitle("Trip Creation");
@@ -167,8 +172,9 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
     private void setupRecycler(){
         recycler =(RecyclerView) findViewById(R.id.recycler);
+
         RealmResults realmResults = RealmController.getInstance().getTripResults();
-        List<TripObject> trips = realmResults.subList(0, realmResults.size());
+        TripObject[] trips = Arrays.copyOf(realmResults.toArray(), realmResults.toArray().length, TripObject[].class);
 
         layoutManager = new LinearLayoutManager(this);
         layoutManager.generateDefaultLayoutParams();
@@ -178,6 +184,12 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         adapter = new TourMenuAdapter(trips);
         recycler.setAdapter(adapter);
+
+        if (trips.length > 0){
+            recycler.setVisibility(View.VISIBLE);
+        } else {
+            recycler.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -193,11 +205,12 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
             public boolean onMenuItemClick(MenuItem item) {
                 FragmentManager fragmentManager = getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance()).commit();
+                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(newTripPosition)).commit();
 
                 fragmentNav.setVisibility(View.VISIBLE);
                 viewPager.setVisibility(View.VISIBLE);
                 create.setVisibility(View.GONE);
+                recycler.setVisibility(View.GONE);
 
                 Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
                 toolbar.setTitle("Trip Creation");
@@ -283,15 +296,15 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         public Fragment getItem(int position) {
             switch (position){
                 case 0:
-                    return TripPlannerSelectionFragment.newInstance();
+                    return TripPlannerSelectionFragment.newInstance(newTripPosition);
                 case 1:
-                    return TripPlannerTimesFragment.newInstance();
+                    return TripPlannerTimesFragment.newInstance(newTripPosition);
                 case 2:
-                    return TripPlannerOptionsFragment.newInstance();
+                    return TripPlannerOptionsFragment.newInstance(newTripPosition);
                 case 3:
-                    return TripPlannerTimelineFragment.newInstance();
+                    return TripPlannerTimelineFragment.newInstance(false, newTripPosition);
                 case 4:
-                    return TripPlannerTourTimesFragment.newInstance();
+                    return TripPlannerTourTimesFragment.newInstance(newTripPosition);
                 default:
                     return null;
             }

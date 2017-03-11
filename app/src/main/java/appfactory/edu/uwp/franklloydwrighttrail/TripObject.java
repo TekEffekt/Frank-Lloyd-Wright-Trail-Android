@@ -29,6 +29,7 @@ public class TripObject extends RealmObject{
         trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
+        key = (int) (Math.random() * 10000);
 
         name = "Default Trip";
 

@@ -11,14 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.RealmList;
 
 /**
  * Created by sterl on 3/8/2017.
@@ -27,11 +24,11 @@ import io.realm.RealmList;
 
 // This adapter is used for the Tour Menu Activity to manage all trips
 public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHolder> {
-    private List<TripObject> trips;
+    private TripObject[] trips;
     private ArrayList<TourMenuAdapter.ViewHolder> views;
     private Context context;
 
-    public TourMenuAdapter (List<TripObject> trips) {
+    public TourMenuAdapter (TripObject[] trips) {
         this.trips = trips;
         this.views = new ArrayList<>();
     }
@@ -47,7 +44,7 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull TourMenuAdapter.ViewHolder holder, int position) {
-        TripObject trip = trips.get(position);
+        TripObject trip = trips[position];
         holder.name.setText(trip.getName());
         holder.viewTrip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,11 +55,11 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
     }
 
     public TripObject getItem(int position) {
-        return trips.get(position);
+        return trips[position];
     }
 
     @Override
-    public int getItemCount() { return trips.size(); }
+    public int getItemCount() { return trips.length; }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
