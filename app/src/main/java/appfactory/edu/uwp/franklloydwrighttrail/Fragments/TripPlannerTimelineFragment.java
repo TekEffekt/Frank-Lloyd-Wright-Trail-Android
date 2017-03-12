@@ -71,23 +71,9 @@ public class TripPlannerTimelineFragment extends Fragment {
             setRealmAdapter(RealmController.with(this).getTripResults());
             initiateDataCalculation();
         }
-                /*
-            } else {
-                timelineView.setVisibility(View.GONE);
-            }
-        } else {
-            timelineView.setVisibility(View.GONE);
-        }*/
 
         //Grab Trip Object
-        if (RealmController.getInstance().hasTrip()) {
-            trip = RealmController.getInstance().getTripResults().get(tripPosition);
-        } else {
-            realm.beginTransaction();
-            trip = new TripObject();
-            realm.copyToRealm(trip);
-            realm.commitTransaction();
-        }
+        trip = RealmController.getInstance().getTripResults().get(tripPosition);
         return view;
     }
 
@@ -269,7 +255,6 @@ public class TripPlannerTimelineFragment extends Fragment {
         tObject.setEndTime(trip.getEndTime());
         // Update realm with the new times
             realm.beginTransaction();
-
             realm.copyToRealmOrUpdate(tObject);
             realm.commitTransaction();
         RealmController.getInstance().refresh();

@@ -94,18 +94,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(newTripPosition)).commit();
-
-                fragmentNav.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.VISIBLE);
-                create.setVisibility(View.GONE);
-                recycler.setVisibility(View.GONE);
-
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Trip Creation");
-                setSupportActionBar(toolbar);
+                addTrip();
             }
         });
 
@@ -182,12 +171,11 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         layoutManager.scrollToPosition(0);
         recycler.setLayoutManager(layoutManager);
 
-        adapter = new TourMenuAdapter(trips);
-        recycler.setAdapter(adapter);
-
         if (trips.length > 0){
             recycler.setVisibility(View.VISIBLE);
         } else {
+            adapter = new TourMenuAdapter();
+            recycler.setAdapter(adapter);
             recycler.setVisibility(View.GONE);
         }
     }
@@ -197,32 +185,12 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.trip_planner_timeline, menu);
-
         final MenuItem addTrip = menu.findItem(R.id.menu_item_add_trip);
-        final MenuItem removeTrip = menu.findItem(R.id.menu_item_remove_trip);
         addTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(newTripPosition)).commit();
-
-                fragmentNav.setVisibility(View.VISIBLE);
-                viewPager.setVisibility(View.VISIBLE);
-                create.setVisibility(View.GONE);
-                recycler.setVisibility(View.GONE);
-
-                Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-                toolbar.setTitle("Trip Creation");
-                setSupportActionBar(toolbar);
+                addTrip();
                 return true;
-            }
-        });
-        removeTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                // Program to delete item
-                return false;
             }
         });
 
@@ -230,13 +198,26 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         // Sets New Trip option to disappear after fragment stuff happens
         if (fragment != 0){
             addTrip.setVisible(false);
-            removeTrip.setVisible(false);
         } else {
             addTrip.setVisible(true);
-            removeTrip.setVisible(true);
         }
 
         return true;
+    }
+
+    private void addTrip(){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(newTripPosition)).commit();
+
+        fragmentNav.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        create.setVisibility(View.GONE);
+        recycler.setVisibility(View.GONE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Trip Creation");
+        setSupportActionBar(toolbar);
     }
 
     @Override

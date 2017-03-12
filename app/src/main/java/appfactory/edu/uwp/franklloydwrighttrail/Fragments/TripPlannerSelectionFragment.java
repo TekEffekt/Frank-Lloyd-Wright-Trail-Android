@@ -37,7 +37,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private TripObject trip;
     private RealmList<TripOrder> trips;
     private RealmList<FLWLocation> locations;
-    //private Button cont;
 
     private RecyclerView recyclerView;
     private TripSelectionAdapter adapter;
@@ -77,9 +76,8 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         realm = RealmController.getInstance().getRealm();
         trip = new TripObject();
         trips = new RealmList<TripOrder>();
-
         realm.beginTransaction();
-        realm.copyToRealm(trip);
+        realm.copyToRealm(new TripObject());
         realm.commitTransaction();
 
         locations = new LocationModel().getLocations();
@@ -120,10 +118,16 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
 
     private void onClick(int position) {
         checkSelection(position);
+        realm.beginTransaction();
+        //RealmController.getInstance().getTripResults().get(tripPosition).setTrips(trips);
+        trip.setTrips(trips);
+        realm.copyToRealmOrUpdate(trip);
+        realm.commitTransaction();
     }
 
     private void checkSelection(int selection) {
         boolean existed = false;
+        System.out.println(trips.toString());
         if (trips.size() != 0) {
             for (int i = 0; i < trips.size(); i++) {
                 if (trips.get(i).getLocation() == locations.get(selection)) {
@@ -140,10 +144,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
             trips.add(new TripOrder(locations.get(selection)));
             showSelection(selection,existed);
         }
-        //Change trip
-        realm.beginTransaction();
-        RealmController.getInstance().getTripResults().get(tripPosition).setTrips(trips);
-        realm.commitTransaction();
     }
 
     private void showSelection(int selection, boolean isSelected) {
