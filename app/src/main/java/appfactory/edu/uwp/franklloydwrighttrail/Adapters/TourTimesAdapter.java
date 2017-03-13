@@ -42,7 +42,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private ArrayList<TourTimesAdapter.ViewHolder> views;
     private Context context;
     private Realm realm;
-    private int tripPosition
+    private int tripPosition;
 
     private Calendar currentTime;
 
