@@ -69,6 +69,9 @@ public class RealmController {
             return null;
         }
     }
+    public RealmResults<TripObject> getTripResults(int key){
+        return realm.where(TripObject.class).equalTo("key",key).findAll();
+    }
     public RealmResults<TripObject> getTripResults(){
         return realm.where(TripObject.class).findAll();
     }

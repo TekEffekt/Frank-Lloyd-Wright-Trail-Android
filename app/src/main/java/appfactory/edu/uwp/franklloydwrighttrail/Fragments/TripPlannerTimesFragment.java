@@ -4,9 +4,13 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -54,13 +58,15 @@ public class TripPlannerTimesFragment extends Fragment {
 
     private TripObject trip;
     private Realm realm;
+    private static int tripPosition;
 
     private boolean startTimeChosen = false;
     private boolean endTimeChosen = false;
     private boolean timeValid = false;
 
-    public static TripPlannerTimesFragment newInstance(){
+    public static TripPlannerTimesFragment newInstance(int position){
         TripPlannerTimesFragment tripPlannerTimesFragment = new TripPlannerTimesFragment();
+        tripPosition = position;
         return tripPlannerTimesFragment;
     }
 
@@ -89,7 +95,24 @@ public class TripPlannerTimesFragment extends Fragment {
         month = currentTime.get(Calendar.MONTH);
         day = currentTime.get(Calendar.DAY_OF_MONTH);
 
-        //Make the text edit work and register name in object
+        // Name
+        tripNameEdit.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                    if (v != null) {
+                        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    }
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setName(tripNameEdit.getText().toString());
+                    realm.commitTransaction();
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +125,7 @@ public class TripPlannerTimesFragment extends Fragment {
                         String hourDay = "";
                         String minuteDay = "";
                         realm.beginTransaction();
-                        RealmController.getInstance().getTripResults().get(0).setStartTime(time);
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).setStartTime(time);
                         startTimeChosen = true;
                         realm.commitTransaction();
 
@@ -142,7 +165,7 @@ public class TripPlannerTimesFragment extends Fragment {
                         String hourDay = "";
                         String minuteDay = "";
                         realm.beginTransaction();
-                        RealmController.getInstance().getTripResults().get(0).setEndTime(time);
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).setEndTime(time);
                         endTimeChosen = true;
                         realm.commitTransaction();
 

@@ -34,9 +34,9 @@ import io.realm.RealmResults;
  */
 
 public class TripPlannerSelectionFragment extends Fragment implements RecyclerView.OnItemTouchListener{
-    public TripObject trip;
+    private TripObject trip;
+    private RealmList<TripOrder> trips;
     private RealmList<FLWLocation> locations;
-    //private Button cont;
 
     private RecyclerView recyclerView;
     private TripSelectionAdapter adapter;
@@ -44,11 +44,13 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private GestureDetectorCompat gestureDetector;
 
     private Realm realm;
+    private static int tripPosition;
 
     private CardView destinationCard;
 
-    public static TripPlannerSelectionFragment newInstance(){
+    public static TripPlannerSelectionFragment newInstance(int position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
+        tripPosition = position;
         return selection;
     }
 
@@ -59,10 +61,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         recyclerView = (RecyclerView) view.findViewById(R.id.recycler);
         adapter = new TripSelectionAdapter((LocationModel.getLocations()));
         recyclerView.setAdapter(adapter);
-
-        /* Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.choose_destinations);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar); */
 
         layoutManager = new GridLayoutManager(getActivity(), 2);
         layoutManager.generateDefaultLayoutParams();
@@ -76,35 +74,13 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelectionFragment.RecyclerViewGestureListener());
 
         realm = RealmController.getInstance().getRealm();
-        //resetTrip();
-        trip = new TripObject();
+        trip = new TripObject(tripPosition);
+        trips = new RealmList<TripOrder>();
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(new TripObject(tripPosition));
+        realm.commitTransaction();
+
         locations = new LocationModel().getLocations();
-
-        //cont = (Button) view.findViewById(R.id.cont);
-
-        /*
-        cont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (trip.getTrips().size() != 0) {
-                    realm.beginTransaction();
-                    RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
-                    results.clear();
-                    realm.copyToRealm(trip);
-                    realm.commitTransaction();
-
-                    Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
-                    toolbar.setTitle(R.string.choose_times);
-                    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-                    FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(TripPlannerTimesFragment.newInstance(), null).commit();
-                } else {
-                    //make toast yelling at user
-                }
-            }
-        }); */
 
         return view;
     }
@@ -142,31 +118,32 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
 
     private void onClick(int position) {
         checkSelection(position);
+        realm.beginTransaction();
+        //RealmController.getInstance().getTripResults(tripPosition).get(0).setTrips(trips);
+        trip.setTrips(trips);
+        realm.copyToRealmOrUpdate(trip);
+        realm.commitTransaction();
     }
 
     private void checkSelection(int selection) {
         boolean existed = false;
-        if (trip.getTrips().size() != 0) {
-            for (int i = 0; i < trip.getTrips().size(); i++) {
-                if (trip.getTrips().get(i).getLocation() == locations.get(selection)) {
-                    trip.getTrips().remove(i);
+        System.out.println(trips.toString());
+        if (trips.size() != 0) {
+            for (int i = 0; i < trips.size(); i++) {
+                if (trips.get(i).getLocation() == locations.get(selection)) {
+                    trips.remove(i);
                     existed = true;
                     showSelection(selection,existed);
                 }
             }
             if (!existed) {
-                trip.getTrips().add(new TripOrder(locations.get(selection)));
+                trips.add(new TripOrder(locations.get(selection)));
                 showSelection(selection,existed);
             }
         } else {
-            trip.getTrips().add(new TripOrder(locations.get(selection)));
+            trips.add(new TripOrder(locations.get(selection)));
             showSelection(selection,existed);
         }
-        realm.beginTransaction();
-        RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
-        results.clear();
-        realm.copyToRealm(trip);
-        realm.commitTransaction();
     }
 
     private void showSelection(int selection, boolean isSelected) {
@@ -175,16 +152,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         } else {
             destinationCard.setCardBackgroundColor(Color.LTGRAY);
         }
-    }
-
-    private void resetTrip(){
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
-                results.clear();
-            }
-        });
     }
 
 }
