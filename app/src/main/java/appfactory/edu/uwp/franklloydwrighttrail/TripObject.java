@@ -3,6 +3,7 @@ package appfactory.edu.uwp.franklloydwrighttrail;
 
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
@@ -15,7 +16,7 @@ import io.realm.annotations.PrimaryKey;
 public class TripObject extends RealmObject{
     private RealmList<TripOrder> trips;
     @PrimaryKey
-    private int key = 0;
+    private String key;
     private int startTime;
     private int endTime;
 
@@ -29,7 +30,6 @@ public class TripObject extends RealmObject{
         trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
-        //this.key = key;
 
         name = "Default Trip";
 
@@ -37,13 +37,13 @@ public class TripObject extends RealmObject{
         lunchTime = 0;
         breakfastTime = 0;
     }
-    public TripObject (int key){
+    public TripObject (String key){
         trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
         this.key = key;
 
-        name = "Trip " + key;
+        name = "Trip " + key.toString();
 
         dinnerTime = 0;
         lunchTime = 0;
@@ -58,9 +58,9 @@ public class TripObject extends RealmObject{
         this.trips = trips;
     }
 
-    public int getKey() {return key;}
+    public String getKey() {return key;}
 
-    public void setKey(int key){ this.key= key; }
+    public void setKey(String key){ this.key= key; }
 
     public int getStartTime() {
         return startTime;

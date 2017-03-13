@@ -3,11 +3,13 @@ package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
@@ -16,8 +18,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -25,6 +30,7 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourMenuAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
@@ -61,7 +67,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
     private static int fragment;
     private static final int TOTAL_FRAGMENTS = 4;
-    private static int newTripPosition;
+    private static String newTripPosition;
 
 
     public static Intent newIntent(Context packageContext) {
@@ -84,7 +90,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_trip_menu);
 
         this.realm = RealmController.with(this).getRealm();
-        newTripPosition = RealmController.getInstance().getTripResults(newTripPosition).size(); // ensures it's always one more than normal
+        newTripPosition = UUID.randomUUID().toString(); // ensures it's random
         fragment = 0;
 
         setupNavMenu();
@@ -162,7 +168,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private void setupRecycler(){
         recycler =(RecyclerView) findViewById(R.id.recycler);
 
-        RealmResults realmResults = RealmController.getInstance().getTripResults(newTripPosition);
+        RealmResults realmResults = RealmController.getInstance().getTripResults();
         TripObject[] trips = Arrays.copyOf(realmResults.toArray(), realmResults.toArray().length, TripObject[].class);
 
         layoutManager = new LinearLayoutManager(this);
@@ -171,13 +177,16 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         layoutManager.scrollToPosition(0);
         recycler.setLayoutManager(layoutManager);
 
+        adapter = new TourMenuAdapter();
+        recycler.setAdapter(adapter);
+
         if (trips.length > 0){
             recycler.setVisibility(View.VISIBLE);
         } else {
-            adapter = new TourMenuAdapter();
-            recycler.setAdapter(adapter);
             recycler.setVisibility(View.GONE);
         }
+
+        adapter.notifyDataSetChanged();
     }
 
     @Override

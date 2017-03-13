@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
 
+import java.util.UUID;
+
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -69,8 +71,8 @@ public class RealmController {
             return null;
         }
     }
-    public RealmResults<TripObject> getTripResults(int key){
-        return realm.where(TripObject.class).equalTo("key",key).findAll();
+    public RealmResults<TripObject> getTripResults(String key){
+        return realm.where(TripObject.class).equalTo("key", key).findAll();
     }
     public RealmResults<TripObject> getTripResults(){
         return realm.where(TripObject.class).findAll();

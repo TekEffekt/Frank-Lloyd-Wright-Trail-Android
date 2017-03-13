@@ -16,6 +16,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DistanceMatrixApi;
@@ -52,10 +53,9 @@ public class TripPlannerTimelineFragment extends Fragment {
     public int locationIndex;
     private RecyclerView timelineView;
     private static boolean isFinal;
-    private static int tripPosition;
+    private static String tripPosition;
     public HashMap<Date, ArrayList<FLWLocation>> hm = new HashMap<>();
-
-    public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, int position){
+    public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
         isFinal = finalTimeline;
         tripPosition = position;

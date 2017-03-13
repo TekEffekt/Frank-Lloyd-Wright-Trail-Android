@@ -48,6 +48,7 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull TourMenuAdapter.ViewHolder holder, final int position) {
         TripObject trip = RealmController.getInstance().getTripResults().get(position);
+        //holder.name.setText(trip.getName());
         holder.name.setText(trip.getName());
         holder.viewTrip.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -60,6 +61,7 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
             public void onClick(View v) {
                 realm.beginTransaction();
                 RealmController.getInstance().getTripResults().remove(position);
+                notifyDataSetChanged();
                 realm.commitTransaction();
             }
         });

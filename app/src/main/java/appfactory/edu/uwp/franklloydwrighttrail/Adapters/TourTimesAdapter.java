@@ -24,6 +24,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -42,6 +43,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private ArrayList<TourTimesAdapter.ViewHolder> views;
     private Context context;
     private Realm realm;
+    private String tripPosition;
     private int tripPosition;
 
     private Calendar currentTime;
@@ -55,7 +57,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private int month;
     private int day;
 
-    public TourTimesAdapter (TripObject locations, int tripPosition) {
+    public TourTimesAdapter (TripObject locations, String tripPosition) {
         this.tripPosition = tripPosition;
         this.locations = locations;
         this.views = new ArrayList<>();

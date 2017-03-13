@@ -30,6 +30,26 @@
                     tools:listitem="@layout/trip_location_item"
                     app:layoutManager="android.support.v7.widget.GridLayoutManager"
                     app:spanCount="2" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="100dp">
+                    <android.support.v7.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="20dp">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/other_location"
+                                android:layout_centerInParent="true"
+                                android:textSize="24dp"
+                                android:textColor="@color/colorPrimary"/>
+                        </RelativeLayout>
+                    </android.support.v7.widget.CardView>
+                </RelativeLayout>
             </LinearLayout>
 
             <!--
