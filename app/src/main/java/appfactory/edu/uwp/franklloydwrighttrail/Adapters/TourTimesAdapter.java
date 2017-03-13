@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -83,21 +85,26 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     @Override
     public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
-        holder.name.setText(location.getName());
 
-        //holder.website.setText(location.getWebsite());
-        holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_website)));
-        holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+        if (!location.getLatlong().equals(null)) {
+            holder.name.setText(location.getName());
+            //holder.website.setText(location.getWebsite());
+            holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_website)));
+            holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+        } else {
+            holder.name.setText(location.getGenericName());
+            holder.signupContainer.setVisibility(View.GONE);
+        }
 
         //Hide the tour when dropdown is pressed
         holder.dropdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.container.getVisibility() != View.GONE) {
-                    holder.container.setVisibility(View.GONE);
+                if (holder.timeContainer.getVisibility() != View.GONE) {
+                    holder.timeContainer.setVisibility(View.GONE);
                     holder.dropdown.setImageResource(R.drawable.ic_dropup);
                 } else {
-                    holder.container.setVisibility(View.VISIBLE);
+                    holder.timeContainer.setVisibility(View.VISIBLE);
                     holder.dropdown.setImageResource(R.drawable.ic_dropdown);
                 }
             }
@@ -251,6 +258,10 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Nullable
+        @Bind(R.id.container)
+        LinearLayout container;
+
+        @Nullable
         @Bind(R.id.tour_time_name)
         TextView name;
         @Nullable
@@ -262,7 +273,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         ImageView dropdown;
         @Nullable
         @Bind(R.id.tour_time_container)
-        RelativeLayout container;
+        RelativeLayout timeContainer;
 
         @Nullable
         @Bind(R.id.signup_container)

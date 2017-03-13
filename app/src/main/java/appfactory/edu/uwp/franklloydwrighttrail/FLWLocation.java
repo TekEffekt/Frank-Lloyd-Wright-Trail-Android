@@ -53,7 +53,7 @@ public class FLWLocation extends RealmObject {
         this.day = null;
     }
 
-    public FLWLocation(String genericName, int genericStart, int genericEnd, Date genericDate){
+    public FLWLocation(String genericName){
         this.name = -1;
         this.genericName = genericName;
         this.image = -1;
@@ -62,9 +62,9 @@ public class FLWLocation extends RealmObject {
         this.latitude = -1;
         this.longitude = -1;
         this.address = null;
-        this.startTourTime = genericStart;
-        this.endTourTime = genericEnd;
-        this.day = genericDate;
+        this.startTourTime = -1;
+        this.endTourTime = -1;
+        this.day = null;
     }
 
     public int getImage() { return image; }

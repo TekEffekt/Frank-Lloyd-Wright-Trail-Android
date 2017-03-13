@@ -137,14 +137,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                 View content = inflater.inflate(R.layout.generic_stop_item, null);
                 final EditText editName = (EditText) content.findViewById(R.id.stop_name);
 
-                final RelativeLayout editDate = (RelativeLayout) content.findViewById(R.id.date_container);
-                final RelativeLayout editStartTime = (RelativeLayout) content.findViewById(R.id.start_time_container);
-                final RelativeLayout editEndTime = (RelativeLayout) content.findViewById(R.id.end_time_container);
-
-                final TextView dateText = (TextView) content.findViewById(R.id.tour_date);
-                final TextView startTimeText = (TextView) content.findViewById(R.id.tour_start_time);
-                final TextView endTimeText = (TextView) content.findViewById(R.id.tour_end_time);
-
                 editName.setOnKeyListener(new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -161,99 +153,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                     }
                 });
 
-                editDate.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                                Date tourDate = new Date(year,month,dayOfMonth);
-                                genericDate = tourDate;
-                                String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
-                                dateText.setText(dateString);
-                            }
-                        }, year, month, day);
-                        datePicker.setTitle("Trip Tour Date");
-                        datePicker.show();
-                    }
-                });
-
-                editStartTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        timePicker = new TimePickerDialog(getContext(), TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Time textTime = new Time(hourOfDay,minute,0);
-                                int time = hourOfDay*60+minute;
-
-                                genericStart = time;
-
-                                String hourDay = "";
-                                String minuteDay = "";
-
-                                if(minute < 10) {
-                                    minuteDay = "0" + minute;
-                                } else {
-                                    minuteDay = minute + "";
-                                }
-                                if(hourOfDay > 12) {
-                                    hourOfDay -= 12;
-                                    hourDay = hourOfDay +"";
-                                    minuteDay = minuteDay + " PM";
-                                } else {
-                                    if (hourOfDay == 0){
-                                        hourOfDay = 12;
-                                    }
-                                    hourDay = hourOfDay +"";
-                                    minuteDay = minuteDay + " AM";
-                                }
-                                startTimeText.setText(hourDay + ":" + minuteDay);
-                            }
-                        }, hour, minute, false);
-                        timePicker.setTitle("Trip Tour Time");
-                        timePicker.show();
-                    }
-                });
-
-                editEndTime.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        timePicker = new TimePickerDialog(getContext(), TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
-                            @Override
-                            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                Time textTime = new Time(hourOfDay,minute,0);
-                                int time = hourOfDay*60+minute;
-
-                                genericEnd = time;
-
-                                String hourDay = "";
-                                String minuteDay = "";
-
-                                if(minute < 10) {
-                                    minuteDay = "0" + minute;
-                                } else {
-                                    minuteDay = minute + "";
-                                }
-                                if(hourOfDay > 12) {
-                                    hourOfDay -= 12;
-                                    hourDay = hourOfDay +"";
-                                    minuteDay = minuteDay + " PM";
-                                } else {
-                                    if (hourOfDay == 0){
-                                        hourOfDay = 12;
-                                    }
-                                    hourDay = hourOfDay +"";
-                                    minuteDay = minuteDay + " AM";
-                                }
-                                endTimeText.setText(hourDay + ":" + minuteDay);
-                            }
-                        }, hour, minute, false);
-                        timePicker.setTitle("Trip Tour Time");
-                        timePicker.show();
-                    }
-                });
-
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setView(content)
                         .setTitle("Other Stop")
@@ -261,7 +160,9 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 realm.beginTransaction();
-                                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(new FLWLocation(genericName, genericStart, genericEnd, genericDate)));
+                                trip.getTrips().add(new TripOrder(new FLWLocation(genericName)));
+                                trip.setTrips(trips);
+                                realm.copyToRealmOrUpdate(trip);
                                 realm.commitTransaction();
                                 dialog.dismiss();
                             }
@@ -313,7 +214,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private void onClick(int position) {
         checkSelection(position);
         realm.beginTransaction();
-        //RealmController.getInstance().getTripResults(tripPosition).get(0).setTrips(trips);
         trip.setTrips(trips);
         realm.copyToRealmOrUpdate(trip);
         realm.commitTransaction();

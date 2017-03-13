@@ -66,7 +66,9 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
         }
 
         final TripOrder trip = trips.getTrips().get(position);
-        holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
+        if (trip.getLocation().getImage() != -1) {
+            holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
+        }
         //Debug Code
 
         if (position != 0) {
@@ -196,7 +198,12 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             {
                 hour = hour - 23;
             }
-            holder.name.setText(trip.getLocation().getName());
+            if (trip.getLocation().getImage() != -1){
+                holder.name.setText(trip.getLocation().getName());
+            } else {
+                holder.name.setText(trip.getLocation().getGenericName());
+            }
+
             if(hour < 12 && min < 10)
             {
                 holder.time.setText(hour + ":" + "0" + min + " AM");
