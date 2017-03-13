@@ -53,6 +53,20 @@ public class FLWLocation extends RealmObject {
         this.day = null;
     }
 
+    public FLWLocation(String genericName, int genericStart, int genericEnd, Date genericDate){
+        this.name = -1;
+        this.genericName = genericName;
+        this.image = -1;
+        this.markerColor = -1;
+        this.latlong = null;
+        this.latitude = -1;
+        this.longitude = -1;
+        this.address = null;
+        this.startTourTime = genericStart;
+        this.endTourTime = genericEnd;
+        this.day = genericDate;
+    }
+
     public int getImage() { return image; }
 
     public void setImage(int image) { this.image = image; }

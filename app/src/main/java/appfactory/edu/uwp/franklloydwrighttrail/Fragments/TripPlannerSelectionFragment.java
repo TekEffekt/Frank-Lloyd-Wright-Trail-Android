@@ -34,7 +34,6 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
@@ -46,8 +45,6 @@ import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TripSelectionAdapter;
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
-
 /**
  * Created by sterl on 10/28/2016.
  */
@@ -79,6 +76,11 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private int year;
     private int month;
     private int day;
+
+    private String genericName;
+    private Date genericDate;
+    private int genericStart;
+    private int genericEnd;
 
     public static TripPlannerSelectionFragment newInstance(String position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
@@ -143,14 +145,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                 final TextView startTimeText = (TextView) content.findViewById(R.id.tour_start_time);
                 final TextView endTimeText = (TextView) content.findViewById(R.id.tour_end_time);
 
-                final int position = RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().size();
-
-                realm.beginTransaction();
-                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder());
-                realm.commitTransaction();
-
-                // Date and time stuff
-
                 editName.setOnKeyListener(new View.OnKeyListener() {
                     @Override
                     public boolean onKey(View v, int keyCode, KeyEvent event) {
@@ -159,9 +153,8 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
                                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                             }
-                            realm.beginTransaction();
-                            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setGenericName(editName.getText().toString());
-                            realm.commitTransaction();
+                            genericName = editName.getText().toString();
+
                             return true;
                         }
                         return false;
@@ -175,9 +168,7 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                                 Date tourDate = new Date(year,month,dayOfMonth);
-                                realm.beginTransaction();
-                                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setDay(tourDate);
-                                realm.commitTransaction();
+                                genericDate = tourDate;
                                 String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
                                 dateText.setText(dateString);
                             }
@@ -196,9 +187,7 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                                 Time textTime = new Time(hourOfDay,minute,0);
                                 int time = hourOfDay*60+minute;
 
-                                realm.beginTransaction();
-                                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setStartTourTime(time);
-                                realm.commitTransaction();
+                                genericStart = time;
 
                                 String hourDay = "";
                                 String minuteDay = "";
@@ -236,9 +225,7 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                                 Time textTime = new Time(hourOfDay,minute,0);
                                 int time = hourOfDay*60+minute;
 
-                                realm.beginTransaction();
-                                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setEndTourTime(time);
-                                realm.commitTransaction();
+                                genericEnd = time;
 
                                 String hourDay = "";
                                 String minuteDay = "";
@@ -273,6 +260,9 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                realm.beginTransaction();
+                                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(new FLWLocation(genericName, genericStart, genericEnd, genericDate)));
+                                realm.commitTransaction();
                                 dialog.dismiss();
                             }
                         })
@@ -280,9 +270,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 //Undo
-                                realm.beginTransaction();
-                                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(position);
-                                realm.commitTransaction();
                                 dialog.dismiss();
                             }
                         });
