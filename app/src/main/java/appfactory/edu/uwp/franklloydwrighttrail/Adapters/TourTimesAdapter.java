@@ -42,6 +42,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private ArrayList<TourTimesAdapter.ViewHolder> views;
     private Context context;
     private Realm realm;
+    private int tripPosition
 
     private Calendar currentTime;
 
@@ -54,7 +55,8 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private int month;
     private int day;
 
-    public TourTimesAdapter (TripObject locations) {
+    public TourTimesAdapter (TripObject locations, int tripPosition) {
+        this.tripPosition = tripPosition;
         this.locations = locations;
         this.views = new ArrayList<>();
 
@@ -153,7 +155,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Date tourDate = new Date(year,month,dayOfMonth);
 
-                //setTourDate(tourDate);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setDay(tourDate);
 
                 String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
                 holder.date.setText(dateString);
@@ -172,7 +174,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 int time = hourOfDay*60+minute;
 
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().getTrips().get(position).getLocation().setStartTourTime(time);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setStartTourTime(time);
                 realm.commitTransaction();
 
                 String hourDay = "";
@@ -210,7 +212,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 int time = hourOfDay*60+minute;
 
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().getTrips().get(position).getLocation().setEndTourTime(time);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setEndTourTime(time);
                 realm.commitTransaction();
 
                 String hourDay = "";
