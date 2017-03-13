@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.UUID;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DistanceMatrixApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
@@ -54,7 +55,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     private RecyclerView timelineView;
     private static boolean isFinal;
     private static String tripPosition;
-    public HashMap<Date, ArrayList<FLWLocation>> hm = new HashMap<>();
+
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
         isFinal = finalTimeline;
@@ -105,7 +106,6 @@ public class TripPlannerTimelineFragment extends Fragment {
             if(locations.get(i).getName() == location) {
                 return i;
             }
-
         }
         return -1;
     }
@@ -136,11 +136,11 @@ public class TripPlannerTimelineFragment extends Fragment {
                     flwLocations.add(trip.getTrips().get(j).getLocation());
                 }
             }
-                hm.put(date, flwLocations );
+                TripPlannerActivity.hm.put(date, flwLocations );
         }
         it = dates.iterator();
         while(it.hasNext()) {
-            final ArrayList<FLWLocation> flwLocations = hm.get(it.next());
+            final ArrayList<FLWLocation> flwLocations = TripPlannerActivity.hm.get(it.next());
             int i = 0;
             while (i < flwLocations.size() - 1) {
 
@@ -149,7 +149,8 @@ public class TripPlannerTimelineFragment extends Fragment {
                 if (flwLocations.get(i).getName() == R.string.user) {
                     i++;
                 }
-                else if (startTourTime != 0 && endTourTime != 0) {
+
+                else if (startTourTime != 0 && endTourTime != 0 && flwLocations.get(i).getLatlong() != null && flwLocations.get(i+1).getLatlong() != null) {
                         locationIndex = i;
                         if (i < flwLocations.size() - 1 && flwLocations.get(i + 1).getStartTourTime() != 0) {
                             DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
@@ -188,8 +189,24 @@ public class TripPlannerTimelineFragment extends Fragment {
                     }
 
                 }
+                else if(flwLocations.get(i).getLatlong() == null || flwLocations.get(i+1).getLatlong() == null)
+                {
+                    if (startTourTime >= endTourTime)  {
+                        i++;
+                    }
+                    else {
+                        toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
+                        toast.show();
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(positionLookup.get(flwLocations.get(i)) + 1);
+                        realm.commitTransaction();
 
-                Log.d("debug", "Adapter Size: " + adapter.getItemCount());
+                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+                        adapter.notifyDataSetChanged();
+                    i++;
+                        }
+
+                }
             }
         }
 

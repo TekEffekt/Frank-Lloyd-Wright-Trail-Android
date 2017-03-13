@@ -44,7 +44,6 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private Context context;
     private Realm realm;
     private String tripPosition;
-    private int tripPosition;
 
     private Calendar currentTime;
 
@@ -156,9 +155,9 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Date tourDate = new Date(year,month,dayOfMonth);
-
+                realm.beginTransaction();
                 RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setDay(tourDate);
-
+                realm.commitTransaction();
                 String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
                 holder.date.setText(dateString);
             }

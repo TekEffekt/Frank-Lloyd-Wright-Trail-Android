@@ -29,10 +29,13 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourMenuAdapter;
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimelineFragment;
@@ -62,7 +65,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private RecyclerView recycler;
     private TourMenuAdapter adapter;
     private LinearLayoutManager layoutManager;
-
+    public static HashMap<Date, ArrayList<FLWLocation>> hm = new HashMap<>();
     private Realm realm;
 
     private static int fragment;
