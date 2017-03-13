@@ -21,6 +21,7 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
@@ -58,13 +59,13 @@ public class TripPlannerTimesFragment extends Fragment {
 
     private TripObject trip;
     private Realm realm;
-    private static int tripPosition;
+    private static String tripPosition;
 
     private boolean startTimeChosen = false;
     private boolean endTimeChosen = false;
     private boolean timeValid = false;
 
-    public static TripPlannerTimesFragment newInstance(int position){
+    public static TripPlannerTimesFragment newInstance(String position){
         TripPlannerTimesFragment tripPlannerTimesFragment = new TripPlannerTimesFragment();
         tripPosition = position;
         return tripPlannerTimesFragment;

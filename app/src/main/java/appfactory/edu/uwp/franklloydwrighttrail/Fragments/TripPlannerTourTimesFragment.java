@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.UUID;
+
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
@@ -24,9 +26,9 @@ public class TripPlannerTourTimesFragment extends Fragment {
     private LinearLayoutManager layoutManager;
 
     private Realm realm;
-    private static int tripPosition;
+    private static String tripPosition;
 
-    public static TripPlannerTourTimesFragment newInstance(int position){
+    public static TripPlannerTourTimesFragment newInstance(String position){
         TripPlannerTourTimesFragment tripPlannerTourTimesFragment = new TripPlannerTourTimesFragment();
         tripPosition = position;
         return tripPlannerTourTimesFragment;

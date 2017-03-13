@@ -11,6 +11,8 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 
+import java.util.UUID;
+
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import io.realm.Realm;
@@ -41,9 +43,9 @@ public class TripPlannerOptionsFragment extends Fragment {
     private EditText timeDinner;
 
     private Realm realm;
-    private static int tripPosition;
+    private static String tripPosition;
 
-    public static TripPlannerOptionsFragment newInstance(int position){
+    public static TripPlannerOptionsFragment newInstance(String position){
         TripPlannerOptionsFragment tripPlannerOptionsFragment = new TripPlannerOptionsFragment();
         tripPosition = position;
         return tripPlannerOptionsFragment;

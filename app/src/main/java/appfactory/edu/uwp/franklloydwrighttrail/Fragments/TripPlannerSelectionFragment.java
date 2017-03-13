@@ -18,6 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.UUID;
+
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -44,11 +46,11 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private GestureDetectorCompat gestureDetector;
 
     private Realm realm;
-    private static int tripPosition;
+    private static String tripPosition;
 
     private CardView destinationCard;
 
-    public static TripPlannerSelectionFragment newInstance(int position){
+    public static TripPlannerSelectionFragment newInstance(String position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
         tripPosition = position;
         return selection;
