@@ -9,6 +9,7 @@ import io.realm.RealmObject;
 
 public class FLWLocation extends RealmObject {
     @StringRes private int name;
+    private String genericName;
 
     // These are exclusive to FLW Stops
     @DrawableRes private int image;
@@ -26,6 +27,7 @@ public class FLWLocation extends RealmObject {
 
     public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime, Date day) {
         this.name = name;
+        this.genericName = "";
         this.image = image;
         this.markerColor = markerColor;
         this.latlong = latlong;
@@ -39,6 +41,7 @@ public class FLWLocation extends RealmObject {
 
     public FLWLocation(){
         this.name = -1;
+        this.genericName = null;
         this.image = -1;
         this.markerColor = -1;
         this.latlong = null;
@@ -108,5 +111,13 @@ public class FLWLocation extends RealmObject {
 
     public void setDay(Date day) {
         this.day = day;
+    }
+
+    public String getGenericName() {
+        return genericName;
+    }
+
+    public void setGenericName(String genericName) {
+        this.genericName = genericName;
     }
 }
