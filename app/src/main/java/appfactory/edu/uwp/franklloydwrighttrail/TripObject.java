@@ -25,13 +25,25 @@ public class TripObject extends RealmObject{
     private int lunchTime;
     private int breakfastTime;
 
-    public TripObject (){
+    public TripObject(){
         trips = new RealmList<TripOrder>();
         startTime = 0;
         endTime = 0;
-        key = (int) (Math.random() * 10000);
+        //this.key = key;
 
         name = "Default Trip";
+
+        dinnerTime = 0;
+        lunchTime = 0;
+        breakfastTime = 0;
+    }
+    public TripObject (int key){
+        trips = new RealmList<TripOrder>();
+        startTime = 0;
+        endTime = 0;
+        this.key = key;
+
+        name = "Trip " + key;
 
         dinnerTime = 0;
         lunchTime = 0;

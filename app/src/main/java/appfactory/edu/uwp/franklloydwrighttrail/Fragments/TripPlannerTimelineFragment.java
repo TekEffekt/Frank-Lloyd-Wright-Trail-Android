@@ -67,13 +67,13 @@ public class TripPlannerTimelineFragment extends Fragment {
         setupTimeline();
 
         //if (RealmController.getInstance().hasTrip()){
-        if (RealmController.getInstance().getTripResults().get(tripPosition).getStartTime() != RealmController.getInstance().getTripResults().get(tripPosition).getEndTime()) {
-            setRealmAdapter(RealmController.with(this).getTripResults());
+        if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
+            setRealmAdapter(RealmController.with(this).getTripResults(tripPosition));
             initiateDataCalculation();
         }
 
         //Grab Trip Object
-        trip = RealmController.getInstance().getTripResults().get(tripPosition);
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         return view;
     }
 
@@ -106,7 +106,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     }
     public void createFinalTripPlan()
     {
-        trip = RealmController.getInstance().getTripResults().get(tripPosition);
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         int i = 0;
         long startTourTime = 0;
         long endTourTime = 0;
@@ -134,10 +134,10 @@ public class TripPlannerTimelineFragment extends Fragment {
                     toast.show();
 
                     realm.beginTransaction();
-                    RealmController.getInstance().getTripResults().get(tripPosition).getTrips().remove(i+1);
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(i+1);
                     realm.commitTransaction();
 
-                    trip = RealmController.getInstance().getTripResults().get(tripPosition);
+                    trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
                     adapter.notifyDataSetChanged();
                     Log.d("debug", "Size: " + trip.getTrips().size());
                     locationIndex = i;
@@ -150,9 +150,9 @@ public class TripPlannerTimelineFragment extends Fragment {
                             public void onResponse(Call<DistanceModel> call, Response<DistanceModel> response) {
                                 if(response.isSuccessful()) {
                                     realm.beginTransaction();
-                                    RealmController.getInstance().getTripResults().get(tripPosition).getTrips().get(locationIndex).setTimeValue(response.body().getRows().get(0).getElements().get(0).getDuration().getValue()/60 +1);
+                                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(locationIndex).setTimeValue(response.body().getRows().get(0).getElements().get(0).getDuration().getValue()/60 +1);
                                     realm.commitTransaction();
-                                    trip = RealmController.getInstance().getTripResults().get(tripPosition);
+                                    trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
                                     adapter.notifyDataSetChanged();
                                 } else {
 
@@ -175,7 +175,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     }
     public void createTripPlan(RealmList<TripOrder> tripOrder)
     {
-        trip = RealmController.getInstance().getTripResults().get(tripPosition);
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         int startTime = trip.getStartTime();
         int endTime = trip.getEndTime();
         int totalTime = endTime - startTime;
@@ -243,7 +243,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         {
         }
         // Fill the trip object with the new times
-        TripObject tObject = new TripObject();
+        TripObject tObject = new TripObject(tripPosition);
         tObject.setTrips(tripOrder);
         tObject.setBreakfastTime(trip.getBreakfastTime());
 
@@ -258,7 +258,7 @@ public class TripPlannerTimelineFragment extends Fragment {
             realm.copyToRealmOrUpdate(tObject);
             realm.commitTransaction();
         RealmController.getInstance().refresh();
-        trip = RealmController.getInstance().getTripResults().get(tripPosition);
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
 
 
     }
@@ -278,7 +278,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         int aLoc;
         int bLoc;
         String midLatLong = "optimize:true|";
-        trip = RealmController.getInstance().getTripResults().get(tripPosition);
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         locations = new RealmList<>();
 
         for ( TripOrder tp: trip.getTrips())

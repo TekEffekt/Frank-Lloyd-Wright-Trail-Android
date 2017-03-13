@@ -84,7 +84,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         setContentView(R.layout.activity_trip_menu);
 
         this.realm = RealmController.with(this).getRealm();
-        newTripPosition = RealmController.getInstance().getTripResults().size(); // ensures it's always one more than normal
+        newTripPosition = RealmController.getInstance().getTripResults(newTripPosition).size(); // ensures it's always one more than normal
         fragment = 0;
 
         setupNavMenu();
@@ -162,7 +162,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private void setupRecycler(){
         recycler =(RecyclerView) findViewById(R.id.recycler);
 
-        RealmResults realmResults = RealmController.getInstance().getTripResults();
+        RealmResults realmResults = RealmController.getInstance().getTripResults(newTripPosition);
         TripObject[] trips = Arrays.copyOf(realmResults.toArray(), realmResults.toArray().length, TripObject[].class);
 
         layoutManager = new LinearLayoutManager(this);

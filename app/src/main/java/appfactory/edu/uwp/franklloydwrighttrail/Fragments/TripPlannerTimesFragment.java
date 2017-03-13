@@ -105,7 +105,7 @@ public class TripPlannerTimesFragment extends Fragment {
                         imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                     }
                     realm.beginTransaction();
-                    RealmController.getInstance().getTripResults().get(tripPosition).setName(tripNameEdit.getText().toString());
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setName(tripNameEdit.getText().toString());
                     realm.commitTransaction();
                     return true;
                 }
@@ -125,7 +125,7 @@ public class TripPlannerTimesFragment extends Fragment {
                         String hourDay = "";
                         String minuteDay = "";
                         realm.beginTransaction();
-                        RealmController.getInstance().getTripResults().get(tripPosition).setStartTime(time);
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).setStartTime(time);
                         startTimeChosen = true;
                         realm.commitTransaction();
 
@@ -165,7 +165,7 @@ public class TripPlannerTimesFragment extends Fragment {
                         String hourDay = "";
                         String minuteDay = "";
                         realm.beginTransaction();
-                        RealmController.getInstance().getTripResults().get(tripPosition).setEndTime(time);
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).setEndTime(time);
                         endTimeChosen = true;
                         realm.commitTransaction();
 

@@ -74,10 +74,10 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelectionFragment.RecyclerViewGestureListener());
 
         realm = RealmController.getInstance().getRealm();
-        trip = new TripObject();
+        trip = new TripObject(tripPosition);
         trips = new RealmList<TripOrder>();
         realm.beginTransaction();
-        realm.copyToRealm(new TripObject());
+        realm.copyToRealmOrUpdate(new TripObject(tripPosition));
         realm.commitTransaction();
 
         locations = new LocationModel().getLocations();
@@ -119,7 +119,7 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private void onClick(int position) {
         checkSelection(position);
         realm.beginTransaction();
-        //RealmController.getInstance().getTripResults().get(tripPosition).setTrips(trips);
+        //RealmController.getInstance().getTripResults(tripPosition).get(0).setTrips(trips);
         trip.setTrips(trips);
         realm.copyToRealmOrUpdate(trip);
         realm.commitTransaction();
