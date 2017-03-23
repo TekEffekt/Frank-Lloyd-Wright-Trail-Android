@@ -86,14 +86,16 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
 
-        if (!location.getLatlong().equals(null)) {
+        if (!location.getLatlong().equals(null) && position != 0) {
             holder.name.setText(location.getName());
             //holder.website.setText(location.getWebsite());
             holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_website)));
             holder.website.setMovementMethod(LinkMovementMethod.getInstance());
-        } else {
+        } else if (position != 0) {
             holder.name.setText(location.getGenericName());
             holder.signupContainer.setVisibility(View.GONE);
+        } else {
+            holder.container.setVisibility(View.GONE);
         }
 
         //Hide the tour when dropdown is pressed

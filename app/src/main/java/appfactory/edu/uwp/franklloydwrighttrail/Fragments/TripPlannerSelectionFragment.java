@@ -7,13 +7,9 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.StringRes;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,17 +21,11 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.TimePicker;
 
-import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
-import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -159,8 +149,15 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                /*
                                 realm.beginTransaction();
                                 trip.getTrips().add(new TripOrder(new FLWLocation(genericName)));
+                                trip.setTrips(trips);
+                                realm.copyToRealmOrUpdate(trip);
+                                realm.commitTransaction();
+                                */
+                                trips.add(new TripOrder(new FLWLocation(genericName)));
+                                realm.beginTransaction();
                                 trip.setTrips(trips);
                                 realm.copyToRealmOrUpdate(trip);
                                 realm.commitTransaction();

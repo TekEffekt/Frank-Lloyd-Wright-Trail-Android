@@ -69,7 +69,6 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
         if (trip.getLocation().getImage() != -1) {
             holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
         }
-        //Debug Code
 
         if (position != 0) {
             holder.infoButton.setOnClickListener(new View.OnClickListener() {
