@@ -12,8 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.UUID;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DirectionsApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Apis.DistanceMatrixApi;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.DirectionsModel;
@@ -101,76 +106,108 @@ public class TripPlannerTimelineFragment extends Fragment {
             if(locations.get(i).getName() == location) {
                 return i;
             }
-
         }
         return -1;
     }
     public void createFinalTripPlan()
     {
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-        int i = 0;
+
         long startTourTime = 0;
         long endTourTime = 0;
         Toast toast;
 
-        while(i< trip.getTrips().size()-1)
+        HashSet<Date> dates = new HashSet<>();
+        final HashMap<FLWLocation, Integer> positionLookup = new HashMap<>();
+        for(int j = 0;j<trip.getTrips().size();j++)
         {
-
-            startTourTime = trip.getTrips().get(i+1).getLocation().getStartTourTime();
-            endTourTime = trip.getTrips().get(i).getLocation().getEndTourTime();
-            if(trip.getTrips().get(i).getLocation().getName() == R.string.user)
+            dates.add(trip.getTrips().get(j).getLocation().getDay());
+            positionLookup.put(trip.getTrips().get(j).getLocation(), j);
+        }
+        Iterator<Date> it = dates.iterator();
+        while(it.hasNext())
+        {
+            Date date = it.next();
+            ArrayList<FLWLocation> flwLocations = new ArrayList<>();
+            for(int j = 0;j<trip.getTrips().size();j++)
             {
-                i++;
-            }
-            else if(startTourTime != 0 && endTourTime != 0)
-            {
-                if(startTourTime >= (endTourTime + trip.getTrips().get(i).getTimeValue()))
+                if(trip.getTrips().get(j).getLocation().getDay().getDay() == date.getDay())
                 {
+                    flwLocations.add(trip.getTrips().get(j).getLocation());
+                }
+            }
+                TripPlannerActivity.hm.put(date, flwLocations );
+        }
+        it = dates.iterator();
+        while(it.hasNext()) {
+            final ArrayList<FLWLocation> flwLocations = TripPlannerActivity.hm.get(it.next());
+            int i = 0;
+            while (i < flwLocations.size() - 1) {
 
+                startTourTime = flwLocations.get(i+1).getStartTourTime();
+                endTourTime = flwLocations.get(i).getEndTourTime();
+                if (flwLocations.get(i).getName() == R.string.user) {
                     i++;
                 }
-                else
-                {
-                    toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
-                    toast.show();
 
-                    realm.beginTransaction();
-                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(i+1);
-                    realm.commitTransaction();
+                else if (startTourTime != 0 && endTourTime != 0 && flwLocations.get(i).getLatlong() != null && flwLocations.get(i+1).getLatlong() != null) {
+                        locationIndex = i;
+                        if (i < flwLocations.size() - 1 && flwLocations.get(i + 1).getStartTourTime() != 0) {
+                            DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
+                            Call<DistanceModel> call2 = distanceMatrixApi.timeDuration("imperial", flwLocations.get(i).getLatlong(), flwLocations.get(i + 1).getLatlong());
 
-                    trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-                    adapter.notifyDataSetChanged();
-                    Log.d("debug", "Size: " + trip.getTrips().size());
-                    locationIndex = i;
-                    if(i < trip.getTrips().size()-1 && trip.getTrips().get(i+1).getLocation().getStartTourTime() != 0){
-                        DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
-                        Call<DistanceModel> call2 = distanceMatrixApi.timeDuration("imperial", trip.getTrips().get(i).getLocation().getLatlong(), trip.getTrips().get(i+1).getLocation().getLatlong());
+                            call2.enqueue(new Callback<DistanceModel>() {
+                                @Override
+                                public void onResponse(Call<DistanceModel> call, Response<DistanceModel> response) {
+                                    if (response.isSuccessful()) {
+                                        realm.beginTransaction();
+                                        RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(positionLookup.get(flwLocations.get(locationIndex))).setTimeValue(response.body().getRows().get(0).getElements().get(0).getDuration().getValue() / 60 + 1);
+                                        realm.commitTransaction();
 
-                        call2.enqueue(new Callback<DistanceModel>() {
-                            @Override
-                            public void onResponse(Call<DistanceModel> call, Response<DistanceModel> response) {
-                                if(response.isSuccessful()) {
-                                    realm.beginTransaction();
-                                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(locationIndex).setTimeValue(response.body().getRows().get(0).getElements().get(0).getDuration().getValue()/60 +1);
-                                    realm.commitTransaction();
-                                    trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-                                    adapter.notifyDataSetChanged();
-                                } else {
+                                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+                                        adapter.notifyDataSetChanged();
+                                    } else {
 
+                                    }
                                 }
-                            }
-                            @Override
-                            public void onFailure(Call<DistanceModel> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<DistanceModel> call, Throwable t) {
+                                }
+                            });
+                        }
+                        if (startTourTime >= (endTourTime + trip.getTrips().get(positionLookup.get(flwLocations.get(i))).getTimeValue())) {
+                            i++;
+                        } else {
+                            toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
+                            toast.show();
+                            realm.beginTransaction();
+                            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(positionLookup.get(flwLocations.get(i)) + 1);
+                            realm.commitTransaction();
 
-                            }
-                        });
+                            trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+                            adapter.notifyDataSetChanged();
                     }
 
                 }
+                else if(flwLocations.get(i).getLatlong() == null || flwLocations.get(i+1).getLatlong() == null)
+                {
+                    if (startTourTime >= endTourTime)  {
+                        i++;
+                    }
+                    else {
+                        toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
+                        toast.show();
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(positionLookup.get(flwLocations.get(i)) + 1);
+                        realm.commitTransaction();
 
+                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+                        adapter.notifyDataSetChanged();
+                    i++;
+                        }
+
+                }
             }
-
-            Log.d("debug", "Adapter Size: " + adapter.getItemCount());
         }
 
     }
@@ -418,7 +455,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         int j=0;
         // Put the middle locations in an array
         for(int i=0;i<locations.size();i++) {
-            if(startLoc != i && endLoc != i) {
+            if(startLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
                 middleLatLong[j] = locations.get(i).getLatlong();
                 j++;
             }
