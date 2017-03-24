@@ -217,6 +217,10 @@ public class TripPlannerTimelineFragment extends Fragment {
         int startTime = trip.getStartTime();
         int endTime = trip.getEndTime();
         int totalTime = endTime - startTime;
+        for(int i = 0 ; i<trip.getTrips().size();i++)
+        {
+            Log.d("debug", "locations: "+ trip.getTrips().get(i).getLocation().getGenericName());
+        }
 
 
         int breakfast = trip.getBreakfastTime();
@@ -239,6 +243,7 @@ public class TripPlannerTimelineFragment extends Fragment {
             else
                 time += tripOrder.get(i).getTimeValue()+60;
         }
+        /*
         if(mealtime > totalTime)
         {
             toast = Toast.makeText(getContext(),"Meals take too much time.",Toast.LENGTH_SHORT);
@@ -249,6 +254,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
             time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
             tripOrder.remove(tripOrder.size()-1);
+
             if(mealtime+time> totalTime)
             {
                 time = time - tripOrder.get(tripOrder.size()-1).getTimeValue()-60;
@@ -280,6 +286,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         else
         {
         }
+        */
         // Fill the trip object with the new times
         TripObject tObject = new TripObject(tripPosition);
         tObject.setTrips(tripOrder);
@@ -318,6 +325,11 @@ public class TripPlannerTimelineFragment extends Fragment {
         String midLatLong = "optimize:true|";
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         locations = new RealmList<>();
+
+        for(int i = 0 ; i<trip.getTrips().size();i++)
+        {
+            Log.d("debug", "locations before: "+ trip.getTrips().get(i).getLocation().getGenericName());
+        }
 
         for ( TripOrder tp: trip.getTrips())
               {
