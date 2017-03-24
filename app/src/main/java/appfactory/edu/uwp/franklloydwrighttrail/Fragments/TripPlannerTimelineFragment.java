@@ -455,7 +455,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         int j=0;
         // Put the middle locations in an array
         for(int i=0;i<locations.size();i++) {
-            if(startLoc != i && endLoc != i) {
+            if(startLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
                 middleLatLong[j] = locations.get(i).getLatlong();
                 j++;
             }
