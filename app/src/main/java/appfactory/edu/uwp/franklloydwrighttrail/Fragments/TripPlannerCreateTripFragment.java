@@ -6,14 +6,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -23,20 +20,21 @@ import android.widget.TimePicker;
 import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.UUID;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Adapters.CurrentStopAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
+import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
- * Created by sterl on 10/28/2016.
+ * Created by sterl on 3/25/2017.
  */
 
-public class TripPlannerTimesFragment extends Fragment {
-    private Button cont;
+public class TripPlannerCreateTripFragment extends Fragment {
 
     private RelativeLayout startTimeLayout;
     private RelativeLayout endTimeLayout;
@@ -64,23 +62,33 @@ public class TripPlannerTimesFragment extends Fragment {
     private Realm realm;
     private static String tripPosition;
 
+    private RecyclerView editRecyclerView;
+    private TourTimesAdapter editAdapter;
+    private RecyclerView stopRecyclerView;
+    private CurrentStopAdapter stopAdapter;
+    private LinearLayoutManager stopLayoutManager;
+    private LinearLayoutManager editLayoutManager;
+
     private boolean startTimeChosen = false;
     private boolean endTimeChosen = false;
     private boolean timeValid = false;
 
-    public static TripPlannerTimesFragment newInstance(String position){
-        TripPlannerTimesFragment tripPlannerTimesFragment = new TripPlannerTimesFragment();
+    public static TripPlannerCreateTripFragment newInstance(String position){
+        TripPlannerCreateTripFragment fragment = new TripPlannerCreateTripFragment();
         tripPosition = position;
-        return tripPlannerTimesFragment;
+        return fragment;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.content_trip_times, container, false);
+        View view = inflater.inflate(R.layout.activity_edit_trip_planner_menu, container, false);
 
         //Grab Trip Object
         realm = RealmController.getInstance().getRealm();
-        trip = RealmController.getInstance().getTrip();
+        trip = new TripObject(tripPosition);
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(new TripObject(tripPosition));
+        realm.commitTransaction();
 
         tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
         startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
@@ -92,6 +100,36 @@ public class TripPlannerTimesFragment extends Fragment {
         startDateLabel = (TextView) view.findViewById(R.id.start_date);
         endDateLabel = (TextView) view.findViewById(R.id.end_date);
 
+
+        setupRecyclerViews(view);
+        setupTourTimeInput();
+
+        return view;
+    }
+
+    private void setupRecyclerViews(View view){
+        editRecyclerView = (RecyclerView) view.findViewById(R.id.tour_edit_recycler);
+        editAdapter = new TourTimesAdapter(RealmController.getInstance().getTripResults(tripPosition).get(0), tripPosition);
+        editRecyclerView.setAdapter(editAdapter);
+        stopRecyclerView = (RecyclerView) view.findViewById(R.id.add_stop_recycler);
+        stopAdapter = new CurrentStopAdapter(RealmController.getInstance().getTripResults(tripPosition).get(0), tripPosition);
+        stopRecyclerView.setAdapter(stopAdapter);
+
+        stopLayoutManager = new LinearLayoutManager(getContext());
+        stopLayoutManager.generateDefaultLayoutParams();
+        stopLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        stopLayoutManager.scrollToPosition(0);
+
+        editLayoutManager = new LinearLayoutManager(getContext());
+        editLayoutManager.generateDefaultLayoutParams();
+        editLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        editLayoutManager.scrollToPosition(0);
+
+        stopRecyclerView.setLayoutManager(stopLayoutManager);
+        editRecyclerView.setLayoutManager(editLayoutManager);
+    }
+
+    private void setupTourTimeInput(){
         currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
@@ -190,7 +228,7 @@ public class TripPlannerTimesFragment extends Fragment {
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " AM";
                         }
-                            endTimeLabel.setText(hourDay + ":" + minuteDay);
+                        endTimeLabel.setText(hourDay + ":" + minuteDay);
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -235,8 +273,6 @@ public class TripPlannerTimesFragment extends Fragment {
                 datePicker.show();
             }
         });
-
-        return view;
     }
 
     private boolean checkTimeValid(){

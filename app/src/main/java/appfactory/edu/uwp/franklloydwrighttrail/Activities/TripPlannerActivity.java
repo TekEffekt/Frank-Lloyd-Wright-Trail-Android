@@ -36,6 +36,7 @@ import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourMenuAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerCreateTripFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerOptionsFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerSelectionFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTimelineFragment;
@@ -52,12 +53,6 @@ import io.realm.RealmResults;
  */
 
 public class TripPlannerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
-
-    private FragmentPositionAdapter fragmentPositionAdapter;
-    private ViewPager viewPager;
-    private ImageView rightFragment;
-    private ImageView leftFragment;
-    private RelativeLayout fragmentNav;
     private DrawerLayout drawer;
     private RelativeLayout create;
     private NavigationView navigationView;
@@ -67,9 +62,6 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private LinearLayoutManager layoutManager;
     public static HashMap<Date, ArrayList<FLWLocation>> hm = new HashMap<>();
     private Realm realm;
-
-    private static int fragment;
-    private static final int TOTAL_FRAGMENTS = 4;
     private static String newTripPosition;
 
 
@@ -94,43 +86,15 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         this.realm = RealmController.with(this).getRealm();
         newTripPosition = UUID.randomUUID().toString(); // ensures it's random
-        fragment = 0;
+        create = (RelativeLayout) findViewById(R.id.create);
 
         setupNavMenu();
-        setupViewPager();
         setupRecycler();
 
         create.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 addTrip();
-            }
-        });
-
-        fragmentPositionAdapter = new FragmentPositionAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(fragmentPositionAdapter);
-
-        leftFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fragment--;
-                viewPager.setCurrentItem(previousFragmentIndex());
-            }
-        });
-
-        rightFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (fragment < TOTAL_FRAGMENTS){
-                    fragment++;
-                    viewPager.setCurrentItem(nextFragmentIndex());
-                } else {
-                    Intent intent = new TripPlannerActivity().newIntent(getBaseContext());
-                    startActivity(intent);
-                    fragment = 0;
-                    finish();
-                }
-
             }
         });
     }
@@ -147,25 +111,6 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    private void setupViewPager(){
-        create = (RelativeLayout) findViewById(R.id.create);
-        fragmentNav = (RelativeLayout) findViewById(R.id.fragment_position);
-        leftFragment = (ImageView) findViewById(R.id.left_fragment);
-        rightFragment = (ImageView) findViewById(R.id.right_fragment);
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
-        viewPager.setOffscreenPageLimit(1);
-
-        if (RealmController.getInstance().hasTrip()){
-            if (RealmController.getInstance().getTrip().getStartTime() != RealmController.getInstance().getTrip().getEndTime()){
-                create.setVisibility(View.GONE);
-            } else {
-                create.setVisibility(View.VISIBLE);
-            }
-        } else {
-            create.setVisibility(View.VISIBLE);
-        }
     }
 
     private void setupRecycler(){
@@ -205,25 +150,14 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
                 return true;
             }
         });
-
-        // Needs to be tested
-        // Sets New Trip option to disappear after fragment stuff happens
-        if (fragment != 0){
-            addTrip.setVisible(false);
-        } else {
-            addTrip.setVisible(true);
-        }
-
         return true;
     }
 
     private void addTrip(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(newTripPosition)).commit();
+        transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(newTripPosition)).commit();
 
-        fragmentNav.setVisibility(View.VISIBLE);
-        viewPager.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
 
@@ -254,58 +188,5 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         drawer.closeDrawer(GravityCompat.START);
         return false;
-    }
-
-    public void setFragmentIndex(int fragmentIndex){
-        fragment = fragmentIndex;
-    }
-
-    public int getFragmentIndex(){
-        return fragment;
-    }
-
-    public int nextFragmentIndex(){
-        if (fragment >= TOTAL_FRAGMENTS) {
-            fragment = TOTAL_FRAGMENTS;
-        }
-        return fragment;
-    }
-
-    public int previousFragmentIndex(){
-        if (fragment <= 0) {
-            fragment = 0;
-        }
-
-        return fragment;
-    }
-
-    public static class FragmentPositionAdapter extends FragmentStatePagerAdapter {
-
-        public FragmentPositionAdapter(FragmentManager fragmentManager){
-            super(fragmentManager);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            switch (position){
-                case 0:
-                    return TripPlannerSelectionFragment.newInstance(newTripPosition);
-                case 1:
-                    return TripPlannerTimesFragment.newInstance(newTripPosition);
-                case 2:
-                    return TripPlannerOptionsFragment.newInstance(newTripPosition);
-                case 3:
-                    return TripPlannerTimelineFragment.newInstance(false, newTripPosition);
-                case 4:
-                    return TripPlannerTourTimesFragment.newInstance(newTripPosition);
-                default:
-                    return null;
-            }
-        }
-
-        @Override
-        public int getCount() {
-            return TOTAL_FRAGMENTS + 1;
-        }
     }
 }

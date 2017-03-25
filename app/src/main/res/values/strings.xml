@@ -61,6 +61,8 @@
     <string name="name_entry">Enter Trip Name</string>
     <string name="other_location">Other Stop</string>
     <string name="stop_name">Stop Name</string>
+    <string name="trip_stop_caps">STOPS</string>
+    <string name="trip_add_stop">Add Stop</string>
     <string name="name_entry_stop">Enter Stop Name</string>
 
     <string name="scj_built">The SC Johnson Administration Building, designed\nby Frank Lloyd Wright in 1936</string>
