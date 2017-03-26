@@ -147,6 +147,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 addTrip();
+                item.setVisible(false);
                 return true;
             }
         });
@@ -188,5 +189,18 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         drawer.closeDrawer(GravityCompat.START);
         return false;
+    }
+
+    public void showTrip(String position){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(position)).commit();
+
+        create.setVisibility(View.GONE);
+        recycler.setVisibility(View.GONE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Trip Creation");
+        setSupportActionBar(toolbar);
     }
 }

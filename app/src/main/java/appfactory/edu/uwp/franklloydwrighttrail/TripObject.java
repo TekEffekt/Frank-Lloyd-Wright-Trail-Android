@@ -43,7 +43,7 @@ public class TripObject extends RealmObject{
         endTime = 0;
         this.key = key;
 
-        name = "Trip " + key.toString();
+        name = "Unnamed Trip";
 
         dinnerTime = 0;
         lunchTime = 0;

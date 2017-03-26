@@ -1,30 +1,24 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
+import android.widget.Button;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -48,7 +42,8 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private TripSelectionAdapter adapter;
     private GridLayoutManager layoutManager;
     private GestureDetectorCompat gestureDetector;
-    private LayoutInflater inflater;
+
+    private Button cont;
 
     private Realm realm;
     private static String tripPosition;
@@ -56,15 +51,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private CardView destinationCard;
 
     private Calendar currentTime;
-
-    private TimePickerDialog timePicker;
-    private int hour;
-    private int minute;
-
-    private DatePickerDialog datePicker;
-    private int year;
-    private int month;
-    private int day;
 
     public static TripPlannerSelectionFragment newInstance(String position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
@@ -80,6 +66,16 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         adapter = new TripSelectionAdapter((LocationModel.getLocations()));
         recyclerView.setAdapter(adapter);
 
+        cont = (Button) view.findViewById(R.id.cont);
+        cont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(tripPosition)).commit();
+            }
+        });
+
         layoutManager = new GridLayoutManager(getActivity(), 2);
         layoutManager.generateDefaultLayoutParams();
         layoutManager.setOrientation(GridLayoutManager.VERTICAL);
@@ -92,20 +88,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelectionFragment.RecyclerViewGestureListener());
 
         realm = RealmController.getInstance().getRealm();
-        trip = new TripObject(tripPosition);
-        trips = new RealmList<TripOrder>();
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(new TripObject(tripPosition));
-        realm.commitTransaction();
-
-        // Initialize Times
-        currentTime = Calendar.getInstance();
-        hour = currentTime.get(Calendar.HOUR_OF_DAY);
-        minute = currentTime.get(Calendar.MINUTE);
-        year = currentTime.get(Calendar.YEAR);
-        month = currentTime.get(Calendar.MONTH);
-        day = currentTime.get(Calendar.DAY_OF_MONTH);
-
         locations = new LocationModel().getLocations();
 
         return view;
@@ -144,29 +126,30 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
 
     private void onClick(int position) {
         checkSelection(position);
-        realm.beginTransaction();
-        trip.setTrips(trips);
-        realm.copyToRealmOrUpdate(trip);
-        realm.commitTransaction();
     }
 
     private void checkSelection(int selection) {
         boolean existed = false;
-        System.out.println(trips.toString());
-        if (trips.size() != 0) {
-            for (int i = 0; i < trips.size(); i++) {
-                if (trips.get(i).getLocation() == locations.get(selection)) {
-                    trips.remove(i);
+        if (RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().size() != 0) {
+            for (int i = 0; i < RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().size(); i++) {
+                if (RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(i).getLocation() == locations.get(selection)) {
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(i);
+                    realm.commitTransaction();
                     existed = true;
                     showSelection(selection,existed);
                 }
             }
             if (!existed) {
-                trips.add(new TripOrder(locations.get(selection)));
+                realm.beginTransaction();
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(locations.get(selection)));
+                realm.commitTransaction();
                 showSelection(selection,existed);
             }
         } else {
-            trips.add(new TripOrder(locations.get(selection)));
+            realm.beginTransaction();
+            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(locations.get(selection)));
+            realm.commitTransaction();
             showSelection(selection,existed);
         }
     }

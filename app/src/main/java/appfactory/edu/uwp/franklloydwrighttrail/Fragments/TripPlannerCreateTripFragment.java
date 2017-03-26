@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -56,7 +58,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private ImageView addTripButton;
     private LayoutInflater inflater;
     private LayoutInflater genericInflater;
-    private String genericName;
+    private String genericName = "Other Stop";
 
     private TimePickerDialog timePicker;
     private Calendar currentTime;
@@ -95,13 +97,18 @@ public class TripPlannerCreateTripFragment extends Fragment {
 
         //Grab Trip Object
         realm = RealmController.getInstance().getRealm();
-        trip = new TripObject(tripPosition);
-        realm.beginTransaction();
-        realm.copyToRealmOrUpdate(new TripObject(tripPosition));
-        realm.commitTransaction();
+        if (RealmController.getInstance().getTripResults(tripPosition).isEmpty()){
+            trip = new TripObject(tripPosition);
+            realm.beginTransaction();
+            realm.copyToRealmOrUpdate(trip);
+            realm.commitTransaction();
+        } else {
+            TripObject temp = RealmController.getInstance().getTripResults(tripPosition).get(0);
+            trip = temp;
+        }
 
-        setupUI(view);
         setupRecyclerViews(view);
+        setupUI(view);
         setupTourTimeInput();
 
         return view;
@@ -121,6 +128,9 @@ public class TripPlannerCreateTripFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int which) {
                                 if(which == 0){
                                     //FLW Stop
+                                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                                    transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(tripPosition)).commit();
                                 } else {
                                     //Generic Stop
                                     genericInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -149,13 +159,13 @@ public class TripPlannerCreateTripFragment extends Fragment {
                                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                                 @Override
                                                 public void onClick(DialogInterface dialog, int which) {
-                                                    RealmList<TripOrder> trips = trip.getTrips();
-                                                    trips.add(new TripOrder(new FLWLocation(genericName)));
+                                                    genericName = editName.getText().toString();
                                                     realm.beginTransaction();
-                                                    trip.setTrips(trips);
-                                                    realm.copyToRealmOrUpdate(trip);
+                                                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(new FLWLocation(genericName)));
                                                     realm.commitTransaction();
                                                     stopAdapter.notifyDataSetChanged();
+                                                    editAdapter.notifyDataSetChanged();
+                                                    genericName = "Other Stop";
                                                     dialog.dismiss();
                                                 }
                                             })
@@ -179,6 +189,9 @@ public class TripPlannerCreateTripFragment extends Fragment {
         });
 
         tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
+        if (!trip.getName().equals("Unnamed Trip")){
+            tripNameEdit.setHint(trip.getName());
+        }
         startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
         startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);

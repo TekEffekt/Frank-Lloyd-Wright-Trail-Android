@@ -15,6 +15,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
+import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerCreateTripFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
@@ -37,6 +38,7 @@ public class CurrentStopAdapter extends RecyclerView.Adapter<CurrentStopAdapter.
         this.tripPosition = tripPosition;
         this.locations = locations;
         this.views = new ArrayList<>();
+        realm = RealmController.getInstance().getRealm();
     }
 
     @NonNull
