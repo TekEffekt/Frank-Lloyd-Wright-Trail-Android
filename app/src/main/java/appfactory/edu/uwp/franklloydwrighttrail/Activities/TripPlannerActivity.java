@@ -63,6 +63,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     public static HashMap<Date, ArrayList<FLWLocation>> hm = new HashMap<>();
     private Realm realm;
     private static String newTripPosition;
+    private boolean viewingFragment = false;
 
 
     public static Intent newIntent(Context packageContext) {
@@ -74,6 +75,17 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+        } else if (viewingFragment) {
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            FragmentTransaction transaction = fragmentManager.beginTransaction();
+            transaction.hide(fragmentManager.getFragments().get(0)).commit();
+
+            recycler.setVisibility(View.VISIBLE);
+
+            Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+            toolbar.setTitle("Trip Planner");
+            setSupportActionBar(toolbar);
+            viewingFragment = false;
         } else {
             super.onBackPressed();
         }
@@ -204,5 +216,20 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Trip Creation");
         setSupportActionBar(toolbar);
+        viewingFragment = true;
+    }
+
+    public void showTimeline(boolean isFinal, String position){
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, TripPlannerTimelineFragment.newInstance(isFinal, position)).commit();
+
+        create.setVisibility(View.GONE);
+        recycler.setVisibility(View.GONE);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Trip Creation");
+        setSupportActionBar(toolbar);
+        viewingFragment = true;
     }
 }

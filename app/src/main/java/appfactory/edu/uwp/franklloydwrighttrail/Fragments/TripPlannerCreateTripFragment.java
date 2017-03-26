@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -27,6 +28,7 @@ import java.sql.Time;
 import java.util.Calendar;
 import java.util.Date;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.CurrentStopAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
@@ -54,6 +56,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private TextView endDateLabel;
 
     private EditText tripNameEdit;
+    private Button cont;
 
     private ImageView addTripButton;
     private LayoutInflater inflater;
@@ -188,6 +191,14 @@ public class TripPlannerCreateTripFragment extends Fragment {
             }
         });
 
+        cont = (Button) view.findViewById(R.id.to_timeline_cont);
+        cont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TripPlannerActivity)getContext()).showTimeline(true,tripPosition);
+            }
+        });
+
         tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
         if (!trip.getName().equals("Unnamed Trip")){
             tripNameEdit.setHint(trip.getName());
@@ -206,19 +217,20 @@ public class TripPlannerCreateTripFragment extends Fragment {
         editRecyclerView = (RecyclerView) view.findViewById(R.id.tour_edit_recycler);
         editAdapter = new TourTimesAdapter(RealmController.getInstance().getTripResults(tripPosition).get(0), tripPosition);
         editRecyclerView.setAdapter(editAdapter);
+
         stopRecyclerView = (RecyclerView) view.findViewById(R.id.add_stop_recycler);
         stopAdapter = new CurrentStopAdapter(RealmController.getInstance().getTripResults(tripPosition).get(0), tripPosition);
         stopRecyclerView.setAdapter(stopAdapter);
-
-        stopLayoutManager = new LinearLayoutManager(getContext());
-        stopLayoutManager.generateDefaultLayoutParams();
-        stopLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        stopLayoutManager.scrollToPosition(0);
 
         editLayoutManager = new LinearLayoutManager(getContext());
         editLayoutManager.generateDefaultLayoutParams();
         editLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         editLayoutManager.scrollToPosition(0);
+
+        stopLayoutManager = new LinearLayoutManager(getContext());
+        stopLayoutManager.generateDefaultLayoutParams();
+        stopLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        stopLayoutManager.scrollToPosition(0);
 
         stopRecyclerView.setLayoutManager(stopLayoutManager);
         editRecyclerView.setLayoutManager(editLayoutManager);

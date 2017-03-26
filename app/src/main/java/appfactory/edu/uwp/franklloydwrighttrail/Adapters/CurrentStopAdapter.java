@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -54,10 +55,12 @@ public class CurrentStopAdapter extends RecyclerView.Adapter<CurrentStopAdapter.
     public void onBindViewHolder(@NonNull CurrentStopAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
 
-        if (location.getName()!= -1) {
+        if (location.getName()!= -1 && location.getName() != R.string.user) {
             holder.name.setText(location.getName());
-        } else {
+        } else if (location.getName() != R.string.user) {
             holder.name.setText(location.getGenericName());
+        } else {
+            holder.container.setVisibility(View.GONE);
         }
 
         holder.remove.setOnClickListener(new View.OnClickListener() {
@@ -87,6 +90,10 @@ public class CurrentStopAdapter extends RecyclerView.Adapter<CurrentStopAdapter.
         @Nullable
         @Bind(R.id.remove_stop_button)
         ImageView remove;
+
+        @Nullable
+        @Bind(R.id.tour_stop_container)
+        RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

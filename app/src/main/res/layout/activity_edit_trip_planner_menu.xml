@@ -270,8 +270,18 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/tour_edit_recycler"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     tools:listitem="@layout/tour_times_item" />
+
+                <Button
+                    android:id="@+id/to_timeline_cont"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@color/red"
+                    android:textSize="20dp"
+                    android:text="@string/cont"
+                    android:textColor="@color/white"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -86,14 +87,16 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
 
-        if (location.getName() != -1) {
+        if (location.getName() != -1 && location.getName() != R.string.user) {
             holder.name.setText(location.getName());
             //holder.website.setText(location.getWebsite());
             holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_website)));
             holder.website.setMovementMethod(LinkMovementMethod.getInstance());
-        } else {
+        } else if (location.getName() != R.string.user) {
             holder.name.setText(location.getGenericName());
             holder.signupContainer.setVisibility(View.GONE);
+        } else {
+            holder.container.setVisibility(View.GONE);
         }
 
         //Hide the tour when dropdown is pressed

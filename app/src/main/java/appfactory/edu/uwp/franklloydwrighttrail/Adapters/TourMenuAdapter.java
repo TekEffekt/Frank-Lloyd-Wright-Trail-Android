@@ -1,6 +1,7 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -55,10 +57,10 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
         final TripObject trip = RealmController.getInstance().getTripResults().get(position);
         //holder.name.setText(trip.getName());
         holder.name.setText(trip.getName());
-        holder.viewTrip.setOnClickListener(new View.OnClickListener() {
+        holder.edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TripPlannerActivity)context).showTrip(trip.getKey());
+                ((TripPlannerActivity) context).showTrip(trip.getKey());
             }
         });
         holder.remove.setOnClickListener(new View.OnClickListener() {
@@ -68,6 +70,12 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
                 RealmController.getInstance().getTripResults().remove(position);
                 notifyDataSetChanged();
                 realm.commitTransaction();
+            }
+        });
+        holder.viewTrip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TripPlannerActivity) context).showTimeline(true, trip.getKey());
             }
         });
     }
@@ -90,8 +98,16 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
         ImageView remove;
 
         @Nullable
+        @Bind(R.id.edit_trip)
+        ImageView edit;
+
+        @Nullable
         @Bind(R.id.right_arrow_view)
         ImageView viewTrip;
+
+        @Nullable
+        @Bind(R.id.trip_menu_item_container)
+        RelativeLayout container;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
