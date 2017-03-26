@@ -130,8 +130,10 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         if (trips.length > 0){
             recycler.setVisibility(View.VISIBLE);
+            create.setVisibility(View.GONE);
         } else {
             recycler.setVisibility(View.GONE);
+            create.setVisibility(View.VISIBLE);
         }
 
         adapter.notifyDataSetChanged();
