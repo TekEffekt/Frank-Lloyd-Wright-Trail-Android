@@ -54,7 +54,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private static String tripPosition;
 
     private CardView destinationCard;
-    private CardView genericStop;
 
     private Calendar currentTime;
 
@@ -66,11 +65,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
     private int year;
     private int month;
     private int day;
-
-    private String genericName;
-    private Date genericDate;
-    private int genericStart;
-    private int genericEnd;
 
     public static TripPlannerSelectionFragment newInstance(String position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
@@ -103,7 +97,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(new TripObject(tripPosition));
         realm.commitTransaction();
-        genericStopSetup(view);
 
         // Initialize Times
         currentTime = Calendar.getInstance();
@@ -116,65 +109,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         locations = new LocationModel().getLocations();
 
         return view;
-    }
-
-    private void genericStopSetup(View view){
-        genericStop = (CardView) view.findViewById(R.id.other_stop);
-        genericStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                View content = inflater.inflate(R.layout.generic_stop_item, null);
-                final EditText editName = (EditText) content.findViewById(R.id.stop_name);
-
-                editName.setOnKeyListener(new View.OnKeyListener() {
-                    @Override
-                    public boolean onKey(View v, int keyCode, KeyEvent event) {
-                        if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                            if (v != null) {
-                                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
-                                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                            }
-                            genericName = editName.getText().toString();
-
-                            return true;
-                        }
-                        return false;
-                    }
-                });
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setView(content)
-                        .setTitle("Other Stop")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                /*
-                                realm.beginTransaction();
-                                trip.getTrips().add(new TripOrder(new FLWLocation(genericName)));
-                                trip.setTrips(trips);
-                                realm.copyToRealmOrUpdate(trip);
-                                realm.commitTransaction();
-                                */
-                                trips.add(new TripOrder(new FLWLocation(genericName)));
-                                realm.beginTransaction();
-                                trip.setTrips(trips);
-                                realm.copyToRealmOrUpdate(trip);
-                                realm.commitTransaction();
-                                dialog.dismiss();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Undo
-                                dialog.dismiss();
-                            }
-                        });
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
     }
 
     @Override

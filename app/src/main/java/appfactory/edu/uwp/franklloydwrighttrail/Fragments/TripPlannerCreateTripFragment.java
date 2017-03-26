@@ -2,8 +2,11 @@ package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -13,6 +16,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -23,6 +27,7 @@ import java.util.Date;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.CurrentStopAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
@@ -47,6 +52,11 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private TextView endDateLabel;
 
     private EditText tripNameEdit;
+
+    private ImageView addTripButton;
+    private LayoutInflater inflater;
+    private LayoutInflater genericInflater;
+    private String genericName;
 
     private TimePickerDialog timePicker;
     private Calendar currentTime;
@@ -90,6 +100,84 @@ public class TripPlannerCreateTripFragment extends Fragment {
         realm.copyToRealmOrUpdate(new TripObject(tripPosition));
         realm.commitTransaction();
 
+        setupUI(view);
+        setupRecyclerViews(view);
+        setupTourTimeInput();
+
+        return view;
+    }
+
+    private void setupUI(View view){
+        addTripButton = (ImageView) view.findViewById(R.id.add_stop_button);
+        addTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                String[] items = {"Frank Lloyd Wright Location","Other Stop"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Choose Stop Type")
+                        .setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if(which == 0){
+                                    //FLW Stop
+                                } else {
+                                    //Generic Stop
+                                    genericInflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                                    View content = genericInflater.inflate(R.layout.generic_stop_item, null);
+                                    final EditText editName = (EditText) content.findViewById(R.id.stop_name);
+
+                                    editName.setOnKeyListener(new View.OnKeyListener() {
+                                        @Override
+                                        public boolean onKey(View v, int keyCode, KeyEvent event) {
+                                            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                                                if (v != null) {
+                                                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                                                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                                                }
+                                                genericName = editName.getText().toString();
+
+                                                return true;
+                                            }
+                                            return false;
+                                        }
+                                    });
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setView(content)
+                                            .setTitle("Other Stop")
+                                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    RealmList<TripOrder> trips = trip.getTrips();
+                                                    trips.add(new TripOrder(new FLWLocation(genericName)));
+                                                    realm.beginTransaction();
+                                                    trip.setTrips(trips);
+                                                    realm.copyToRealmOrUpdate(trip);
+                                                    realm.commitTransaction();
+                                                    stopAdapter.notifyDataSetChanged();
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //Undo
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .setCancelable(true);
+                                    AlertDialog genericDialog = builder.create();
+                                    genericDialog.show();
+                                }
+                            }
+                        });
+                builder.setCancelable(true);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
         tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
         startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
@@ -99,12 +187,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
         endTimeLabel = (TextView) view.findViewById(R.id.end_time);
         startDateLabel = (TextView) view.findViewById(R.id.start_date);
         endDateLabel = (TextView) view.findViewById(R.id.end_date);
-
-
-        setupRecyclerViews(view);
-        setupTourTimeInput();
-
-        return view;
     }
 
     private void setupRecyclerViews(View view){

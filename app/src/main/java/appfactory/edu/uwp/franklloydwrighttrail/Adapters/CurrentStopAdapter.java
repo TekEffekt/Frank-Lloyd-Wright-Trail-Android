@@ -44,7 +44,7 @@ public class CurrentStopAdapter extends RecyclerView.Adapter<CurrentStopAdapter.
     public CurrentStopAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         context = parent.getContext();
-        views.add(new CurrentStopAdapter.ViewHolder(inflater.inflate(R.layout.trip_menu_item, parent, false)));
+        views.add(new CurrentStopAdapter.ViewHolder(inflater.inflate(R.layout.tour_stop_item, parent, false)));
         return views.get(views.size() - 1);
     }
 
@@ -52,7 +52,7 @@ public class CurrentStopAdapter extends RecyclerView.Adapter<CurrentStopAdapter.
     public void onBindViewHolder(@NonNull CurrentStopAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
 
-        if (!location.getLatlong().equals(null)) {
+        if (location.getName()!= -1) {
             holder.name.setText(location.getName());
         } else {
             holder.name.setText(location.getGenericName());
