@@ -52,6 +52,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="20dp"
                     android:textSize="16dp"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"
                     android:layout_centerVertical="true"
                     android:textColor="@color/red"
                     android:hint="@string/name_entry"/>

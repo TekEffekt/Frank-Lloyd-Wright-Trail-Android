@@ -75,7 +75,9 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (viewingFragment) {
+        }
+        /*
+        else if (viewingFragment) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.hide(fragmentManager.getFragments().get(0)).commit();
@@ -86,7 +88,9 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
             toolbar.setTitle("Trip Planner");
             setSupportActionBar(toolbar);
             viewingFragment = false;
-        } else {
+        }
+        */
+        else {
             super.onBackPressed();
         }
     }

@@ -125,7 +125,7 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             {
                 tLine = trips.getStartTime()+temp+tLine;
                 hour = tLine/60;
-                min = tLine%60;
+                min = tLine%60 + 1;
                 temp = trip.getTimeValue();
 
             }
