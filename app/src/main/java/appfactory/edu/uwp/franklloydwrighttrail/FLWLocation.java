@@ -19,13 +19,13 @@ public class FLWLocation extends RealmObject {
     private double longitude;
     private String address;
 
-    private Date day;
+    private String day;
 
     // These also double as Generic Stop End and Start times
     private long startTourTime;
     private long endTourTime;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime, Date day) {
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime, String day) {
         this.name = name;
         this.genericName = "";
         this.image = image;
@@ -119,11 +119,11 @@ public class FLWLocation extends RealmObject {
         this.endTourTime = endTourTime;
     }
 
-    public Date getDay() {
+    public String getDay() {
         return day;
     }
 
-    public void setDay(Date day) {
+    public void setDay(String day) {
         this.day = day;
     }
 

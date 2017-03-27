@@ -73,9 +73,18 @@ public class TripPlannerTimelineFragment extends Fragment {
         setupTimeline();
 
         //if (RealmController.getInstance().hasTrip()){
+
         if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
             setRealmAdapter(RealmController.with(this).getTripResults(tripPosition));
-            initiateDataCalculation();
+            if(isFinal)
+            {
+                createFinalTripPlan();
+            }
+            else
+            {
+                initiateDataCalculation();
+            }
+
         }
 
         //Grab Trip Object
@@ -117,21 +126,21 @@ public class TripPlannerTimelineFragment extends Fragment {
         long endTourTime = 0;
         Toast toast;
 
-        HashSet<Date> dates = new HashSet<>();
+        HashSet<String> dates = new HashSet<>();
         final HashMap<FLWLocation, Integer> positionLookup = new HashMap<>();
         for(int j = 0;j<trip.getTrips().size();j++)
         {
             dates.add(trip.getTrips().get(j).getLocation().getDay());
             positionLookup.put(trip.getTrips().get(j).getLocation(), j);
         }
-        Iterator<Date> it = dates.iterator();
+        Iterator<String> it = dates.iterator();
         while(it.hasNext())
         {
-            Date date = it.next();
+            String date = it.next();
             ArrayList<FLWLocation> flwLocations = new ArrayList<>();
             for(int j = 0;j<trip.getTrips().size();j++)
             {
-                if(trip.getTrips().get(j).getLocation().getDay().getDay() == date.getDay())
+                if(trip.getTrips().get(j).getLocation().getDay().equals(date))
                 {
                     flwLocations.add(trip.getTrips().get(j).getLocation());
                 }

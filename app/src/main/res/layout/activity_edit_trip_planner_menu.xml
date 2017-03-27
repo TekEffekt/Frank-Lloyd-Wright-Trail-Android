@@ -58,7 +58,9 @@
                     android:layout_marginRight="20dp"
                     android:hint="@string/name_entry"
                     android:textColor="@color/red"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    android:inputType="text"
+                    android:imeOptions="actionDone"/>
             </RelativeLayout>
 
             <RelativeLayout

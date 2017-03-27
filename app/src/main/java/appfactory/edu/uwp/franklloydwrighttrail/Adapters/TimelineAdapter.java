@@ -129,63 +129,7 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
                 temp = trip.getTimeValue();
 
             }
-            else if(position == 2)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 3)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 4)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 5)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 6)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 7)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 8)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 9)
+            else if(position > 1)
             {
                 tLine = 60+temp+tLine;
                 hour = tLine/60;

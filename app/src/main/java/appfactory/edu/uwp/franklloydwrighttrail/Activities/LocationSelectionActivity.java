@@ -160,7 +160,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .schemaVersion(0)
                 .deleteRealmIfMigrationNeeded()
                 .build();
-        //Realm.deleteRealm(realmConfiguration);
+        Realm.deleteRealm(realmConfiguration);
         Realm.setDefaultConfiguration(realmConfiguration);
 
         this.realm = RealmController.with(this).getRealm();

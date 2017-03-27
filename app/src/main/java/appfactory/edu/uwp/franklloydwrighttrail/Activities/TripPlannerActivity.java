@@ -60,7 +60,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private RecyclerView recycler;
     private TourMenuAdapter adapter;
     private LinearLayoutManager layoutManager;
-    public static HashMap<Date, ArrayList<FLWLocation>> hm = new HashMap<>();
+    public static HashMap<String, ArrayList<FLWLocation>> hm = new HashMap<>();
     private Realm realm;
     private static String newTripPosition;
     private boolean viewingFragment = false;
