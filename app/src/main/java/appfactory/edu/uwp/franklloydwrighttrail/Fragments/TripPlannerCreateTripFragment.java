@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -362,6 +363,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
                 timePicker.show();
+
             }
         });
 
