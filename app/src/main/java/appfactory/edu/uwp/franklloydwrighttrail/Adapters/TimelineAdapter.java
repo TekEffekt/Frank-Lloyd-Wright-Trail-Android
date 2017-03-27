@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,11 +43,12 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
     int tLine = 0;
     int temp =0;
     int counter =0;
+    private TripOrder trip;
 
-    public TimelineAdapter (Context context){
+    public TimelineAdapter (Context context, String tripPosition){
         this.context = context;
         this.views = new ArrayList<>();
-        trips = RealmController.getInstance().getTrip();
+        trips = RealmController.getInstance().getTripResults(tripPosition).get(0);
     }
 
     @NonNull
@@ -65,7 +67,7 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             holder.tripLengthContainer.setVisibility(View.GONE);
         }
 
-        final TripOrder trip = trips.getTrips().get(position);
+        trip = trips.getTrips().get(position);
         if (trip.getLocation().getImage() != -1) {
             holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
         }
@@ -99,6 +101,10 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             holder.picture.setVisibility(View.GONE);
             holder.homeIcon.setVisibility(View.VISIBLE);
         }
+        for(int i = 0;i<trips.getTrips().size();i++)
+        {
+            Log.d("debug", "In Realm: "+ trips.getTrips().get(i).getLocation().getGenericName());
+        }
 
         if (trip.getTimeText() == null){
             holder.name.setText(trip.getLocation().getName());
@@ -124,73 +130,17 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
             else if(position == 1)
             {
                 tLine = trips.getStartTime()+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
+                hour = (int)trips.getTrips().get(position).getLocation().getStartTourTime()/60;
+                min = (int)trips.getTrips().get(position).getLocation().getStartTourTime()%60 + 1;
+                temp = trips.getTrips().get(position).getTimeValue();
 
             }
-            else if(position == 2)
+            else if(position > 1)
             {
                 tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 3)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 4)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 5)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 6)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 7)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 8)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
-
-            }
-            else if(position == 9)
-            {
-                tLine = 60+temp+tLine;
-                hour = tLine/60;
-                min = tLine%60;
-                temp = trip.getTimeValue();
+                hour = (int)trips.getTrips().get(position).getLocation().getStartTourTime()/60;
+                min = (int)trips.getTrips().get(position).getLocation().getStartTourTime()%60 + 1;
+                temp = trips.getTrips().get(position).getTimeValue();
 
             }
             if(hour > 23)
@@ -227,7 +177,7 @@ public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
                 holder.time.setText(hour + ":" + min + " AM");
             }
 
-            holder.tripLength.setText(trip.getTimeText());
+            holder.tripLength.setText(trips.getTrips().get(position).getTimeText());
         }
 
     }

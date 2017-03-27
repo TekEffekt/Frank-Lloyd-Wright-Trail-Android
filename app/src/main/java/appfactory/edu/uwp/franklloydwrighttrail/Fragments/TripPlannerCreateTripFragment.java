@@ -11,10 +11,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -23,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import java.sql.Time;
 import java.util.Calendar;
@@ -141,15 +144,16 @@ public class TripPlannerCreateTripFragment extends Fragment {
                                     final EditText editName = (EditText) content.findViewById(R.id.stop_name);
 
                                     editName.setOnKeyListener(new View.OnKeyListener() {
+
                                         @Override
                                         public boolean onKey(View v, int keyCode, KeyEvent event) {
+                                            Log.d("debug", "What Key is Pressed: "+ keyCode);
                                             if (keyCode == KeyEvent.KEYCODE_ENTER) {
                                                 if (v != null) {
                                                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
                                                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                                                 }
                                                 genericName = editName.getText().toString();
-
                                                 return true;
                                             }
                                             return false;
@@ -245,9 +249,12 @@ public class TripPlannerCreateTripFragment extends Fragment {
         day = currentTime.get(Calendar.DAY_OF_MONTH);
 
         // Name
+        /*
         tripNameEdit.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+
+                Log.d("debug", "What Key is Pressed: "+ keyCode);
                 if (keyCode == KeyEvent.KEYCODE_ENTER) {
                     if (v != null) {
                         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
@@ -261,7 +268,23 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 return false;
             }
         });
+        */
+        tripNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int i, KeyEvent keyEvent) {
+                Log.d("debug", "What Key is Pressed: "+ i);
+                if(i == EditorInfo.IME_ACTION_DONE){
 
+                    InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setName(tripNameEdit.getText().toString());
+                    realm.commitTransaction();
+                    return true;
+                }
+                return false;
+            }
+        });
 
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -340,6 +363,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
                 timePicker.show();
+
             }
         });
 
