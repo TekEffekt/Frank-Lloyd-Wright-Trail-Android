@@ -3,12 +3,16 @@ package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,7 +32,6 @@ import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TimelineAdapter;
-import appfactory.edu.uwp.franklloydwrighttrail.Models.TimelineRealmModelAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import appfactory.edu.uwp.franklloydwrighttrail.UserLocation;
@@ -56,6 +59,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     private static boolean isFinal;
     private static String tripPosition;
     private ArrayList<FLWLocation> flwLocations;
+    private Button contTimes;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
@@ -76,22 +80,26 @@ public class TripPlannerTimelineFragment extends Fragment {
         //if (RealmController.getInstance().hasTrip()){
 
         if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
-            setRealmAdapter(RealmController.with(this).getTripResults(tripPosition));
-
                 initiateDataCalculation();
+        }
 
+        contTimes = (Button) view.findViewById(R.id.to_times_cont);
+        contTimes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = ((TripPlannerActivity)getContext()).getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, TripPlannerTourTimesFragment.newInstance(tripPosition)).commit();
+            }
+        });
 
+        if (isFinal){
+            contTimes.setVisibility(View.GONE);
         }
 
         //Grab Trip Object
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         return view;
-    }
-
-    private void setRealmAdapter(RealmResults<TripObject> trip){
-        TimelineRealmModelAdapter realmAdapter = new TimelineRealmModelAdapter(this.getContext(), trip, true);
-        adapter.setRealmAdapter(realmAdapter);
-        adapter.notifyDataSetChanged();
     }
 
     private void setupTimeline(){
@@ -299,7 +307,6 @@ public class TripPlannerTimelineFragment extends Fragment {
             realm.beginTransaction();
             realm.copyToRealmOrUpdate(tObject);
             realm.commitTransaction();
-        RealmController.getInstance().refresh();
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
 
         for(int i = 0 ; i<trip.getTrips().size()-1;i++)

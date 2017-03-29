@@ -25,6 +25,8 @@ import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 
 /**
  * Created by sterl on 3/8/2017.
@@ -67,7 +69,9 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
             @Override
             public void onClick(View v) {
                 realm.beginTransaction();
-                RealmController.getInstance().getTripResults().remove(position);
+                // use realm.delete
+                RealmResults<TripObject> results = RealmController.getInstance().getTripResults(trip.getKey());
+                results.deleteAllFromRealm();
                 notifyDataSetChanged();
                 realm.commitTransaction();
             }

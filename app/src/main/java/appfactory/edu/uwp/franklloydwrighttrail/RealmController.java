@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import java.util.UUID;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -14,11 +15,11 @@ import io.realm.RealmResults;
  */
 
 public class RealmController {
-    private  static RealmController instance;
+    private static RealmController instance;
     private final Realm realm;
 
     public RealmController(Application application) {
-        realm = Realm.getInstance(application.getApplicationContext());
+        realm = Realm.getInstance(new RealmConfiguration.Builder().build());
     }
 
     public static RealmController with(Fragment fragment){
@@ -43,13 +44,9 @@ public class RealmController {
         return realm;
     }
 
-    public void refresh() {
-        realm.refresh();
-    }
-
     public void clearAll() {
         realm.beginTransaction();;
-        realm.clear(TripObject.class);
+        realm.deleteAll();
         realm.commitTransaction();
     }
 
@@ -77,9 +74,9 @@ public class RealmController {
     public RealmResults<TripObject> getTripResults(){
         return realm.where(TripObject.class).findAll();
     }
-    public boolean hasUserLocation() {return !realm.allObjects(UserLocation.class).isEmpty();}
+    public boolean hasUserLocation() {return !realm.where(UserLocation.class).findAll().isEmpty();}
     public boolean hasTrip() {
-        return !realm.allObjects(TripObject.class).isEmpty();
+        return !realm.where(TripObject.class).findAll().isEmpty();
     }
 
 }

@@ -81,6 +81,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private GridLayoutManager layoutManager;
     private NavigationView navigationView;
 
+    private RealmConfiguration realmConfiguration;
+
     private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
     private LocationRequest mLocationRequest;
     public static Location myLocation;
@@ -155,11 +157,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     private void initializeRealm() {
 
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-                .name(Realm.DEFAULT_REALM_NAME)
-                .schemaVersion(0)
-                .deleteRealmIfMigrationNeeded()
-                .build();
+        realmConfiguration = new RealmConfiguration.Builder().build();
         //Realm.deleteRealm(realmConfiguration);
         Realm.setDefaultConfiguration(realmConfiguration);
 

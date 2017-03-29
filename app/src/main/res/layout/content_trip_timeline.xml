@@ -6,11 +6,30 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/trip_timeline"
-        android:layout_height="match_parent"
+    <ScrollView
         android:layout_width="match_parent"
-        tools:listitem="@layout/timeline_item"/>
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/trip_timeline"
+                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                tools:listitem="@layout/timeline_item"/>
+
+            <Button
+                android:id="@+id/to_times_cont"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:background="@color/red"
+                android:textSize="20dp"
+                android:text="@string/cont"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+    </ScrollView>
 </RelativeLayout>

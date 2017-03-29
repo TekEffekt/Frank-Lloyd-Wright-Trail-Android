@@ -80,12 +80,9 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private Realm realm;
     private static String tripPosition;
 
-    private RecyclerView editRecyclerView;
-    private TourTimesAdapter editAdapter;
     private RecyclerView stopRecyclerView;
     private CurrentStopAdapter stopAdapter;
     private LinearLayoutManager stopLayoutManager;
-    private LinearLayoutManager editLayoutManager;
 
     private boolean startTimeChosen = false;
     private boolean endTimeChosen = false;
@@ -171,7 +168,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
                                                     RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(new FLWLocation(genericName)));
                                                     realm.commitTransaction();
                                                     stopAdapter.notifyDataSetChanged();
-                                                    editAdapter.notifyDataSetChanged();
                                                     genericName = "Other Stop";
                                                     dialog.dismiss();
                                                 }
@@ -199,7 +195,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TripPlannerActivity)getContext()).showTimeline(true,tripPosition);
+                ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
             }
         });
 
@@ -218,18 +214,9 @@ public class TripPlannerCreateTripFragment extends Fragment {
     }
 
     private void setupRecyclerViews(View view){
-        editRecyclerView = (RecyclerView) view.findViewById(R.id.tour_edit_recycler);
-        editAdapter = new TourTimesAdapter(RealmController.getInstance().getTripResults(tripPosition).get(0), tripPosition);
-        editRecyclerView.setAdapter(editAdapter);
-
         stopRecyclerView = (RecyclerView) view.findViewById(R.id.add_stop_recycler);
         stopAdapter = new CurrentStopAdapter(RealmController.getInstance().getTripResults(tripPosition).get(0), tripPosition);
         stopRecyclerView.setAdapter(stopAdapter);
-
-        editLayoutManager = new LinearLayoutManager(getContext());
-        editLayoutManager.generateDefaultLayoutParams();
-        editLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        editLayoutManager.scrollToPosition(0);
 
         stopLayoutManager = new LinearLayoutManager(getContext());
         stopLayoutManager.generateDefaultLayoutParams();
@@ -237,7 +224,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
         stopLayoutManager.scrollToPosition(0);
 
         stopRecyclerView.setLayoutManager(stopLayoutManager);
-        editRecyclerView.setLayoutManager(editLayoutManager);
     }
 
     private void setupTourTimeInput(){

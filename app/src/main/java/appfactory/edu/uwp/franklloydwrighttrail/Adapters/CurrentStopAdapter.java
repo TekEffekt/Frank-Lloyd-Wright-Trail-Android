@@ -67,7 +67,7 @@ public class CurrentStopAdapter extends RecyclerView.Adapter<CurrentStopAdapter.
             @Override
             public void onClick(View v) {
                 realm.beginTransaction();
-                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(position);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().deleteFromRealm(position);
                 notifyDataSetChanged();
                 realm.commitTransaction();
             }

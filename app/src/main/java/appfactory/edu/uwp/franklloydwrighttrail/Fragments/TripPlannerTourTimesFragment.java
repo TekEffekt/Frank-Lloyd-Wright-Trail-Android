@@ -2,14 +2,18 @@ package appfactory.edu.uwp.franklloydwrighttrail.Fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import java.util.UUID;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
@@ -27,6 +31,7 @@ public class TripPlannerTourTimesFragment extends Fragment {
 
     private Realm realm;
     private static String tripPosition;
+    private Button cont;
 
     public static TripPlannerTourTimesFragment newInstance(String position){
         TripPlannerTourTimesFragment tripPlannerTourTimesFragment = new TripPlannerTourTimesFragment();
@@ -48,6 +53,13 @@ public class TripPlannerTourTimesFragment extends Fragment {
         layoutManager.scrollToPosition(0);
         recyclerView.setLayoutManager(layoutManager);
 
+        cont = (Button) view.findViewById(R.id.tour_time_cont);
+        cont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TripPlannerActivity)getContext()).showTimeline(true,tripPosition);
+            }
+        });
         realm = RealmController.getInstance().getRealm();
 
         return view;

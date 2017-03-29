@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
  * Created by sterl on 11/3/2016.
  */
 
-public class TimelineAdapter extends TimelineRealmAdapter<TripObject> {
+public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.TimelineViewHolder> {
     private ArrayList<TimelineAdapter.TimelineViewHolder> views;
     private Context context;
     private TripObject trips;
