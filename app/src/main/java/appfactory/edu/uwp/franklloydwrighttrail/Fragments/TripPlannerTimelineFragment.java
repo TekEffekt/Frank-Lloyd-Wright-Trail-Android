@@ -73,14 +73,13 @@ public class TripPlannerTimelineFragment extends Fragment {
         View view = inflater.inflate(R.layout.content_trip_timeline, container, false);
         realm = RealmController.with(this).getRealm();
 
-        // Creates Timeline if there is a trip
-        timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
-        setupTimeline();
-
         //if (RealmController.getInstance().hasTrip()){
 
         if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
                 initiateDataCalculation();
+                // Creates Timeline if there is a trip
+                timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
+                setupTimeline();
         }
 
         contTimes = (Button) view.findViewById(R.id.to_times_cont);
@@ -524,7 +523,9 @@ public class TripPlannerTimelineFragment extends Fragment {
                         }
                     }
                     //createTripPlan(mTripOrder);
-                    createFinalTripPlan();
+                    if(isFinal) {
+                        createFinalTripPlan();
+                    }
                     adapter.notifyDataSetChanged();
                 }
             }

@@ -157,11 +157,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     private void initializeRealm() {
 
+        realm.init(this);
         realmConfiguration = new RealmConfiguration.Builder().build();
         //Realm.deleteRealm(realmConfiguration);
-        Realm.setDefaultConfiguration(realmConfiguration);
-
-        this.realm = RealmController.with(this).getRealm();
+        this.realm = Realm.getInstance(new RealmConfiguration.Builder().build());
     }
 
     @Override
