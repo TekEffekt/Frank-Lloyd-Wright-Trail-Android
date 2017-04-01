@@ -55,7 +55,12 @@ public class TripObject extends RealmObject{
     }
 
     public void setTrips(RealmList<TripOrder> trips) {
-        this.trips = trips;
+        this.trips = new RealmList<>();
+        for(int i = 0;i<trips.size();i++)
+        {
+            this.trips.add(trips.get(i));
+        }
+
     }
 
     public String getKey() {return key;}

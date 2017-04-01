@@ -16,10 +16,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
@@ -58,7 +61,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     private RecyclerView timelineView;
     private static boolean isFinal;
     private static String tripPosition;
-    private ArrayList<FLWLocation> flwLocations;
+    private ArrayList<TripOrder> flwLocations;
     private Button contTimes;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
@@ -76,10 +79,18 @@ public class TripPlannerTimelineFragment extends Fragment {
         //if (RealmController.getInstance().hasTrip()){
 
         if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
+            if(isFinal)
+            {
+                createFinalTripPlan();
+            }
+            else
+            {
                 initiateDataCalculation();
+            }
                 // Creates Timeline if there is a trip
                 timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
-                setupTimeline();
+
+            setupTimeline();
         }
 
         contTimes = (Button) view.findViewById(R.id.to_times_cont);
@@ -93,6 +104,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         });
 
         if (isFinal){
+
             contTimes.setVisibility(View.GONE);
         }
 
@@ -108,7 +120,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         layoutManager.scrollToPosition(0);
         timelineView.setLayoutManager(layoutManager);
 
-        adapter = new TimelineAdapter(getActivity(), tripPosition);
+        adapter = new TimelineAdapter(getActivity(), tripPosition,isFinal);
         timelineView.setAdapter(adapter);
     }
 
@@ -128,115 +140,385 @@ public class TripPlannerTimelineFragment extends Fragment {
         long startTourTime = 0;
         long endTourTime = 0;
         Toast toast;
+        ArrayList<TripOrder> aTemp = new ArrayList<>();
 
-        HashSet<String> dates = new HashSet<>();
-        final HashMap<FLWLocation, Integer> positionLookup = new HashMap<>();
+        final HashMap<TripOrder, Integer> positionLookup = new HashMap<>();
         for(int j = 0;j<trip.getTrips().size();j++)
         {
-            dates.add(trip.getTrips().get(j).getLocation().getDay());
-            positionLookup.put(trip.getTrips().get(j).getLocation(), j);
+            TripPlannerActivity.dates.add(trip.getTrips().get(j).getLocation().getDay());
+            positionLookup.put(trip.getTrips().get(j), j);
         }
-        Iterator<String> it = dates.iterator();
+        Iterator<String> it = TripPlannerActivity.dates.iterator();
+        it.next();
         while(it.hasNext())
         {
 
             String date = it.next();
-            ArrayList<FLWLocation> flwLocations = new ArrayList<>();
+            Log.d("debug", "date: "+ date);
+            ArrayList<TripOrder> flwLocations = new ArrayList<>();
+
             for(int j = 0;j<trip.getTrips().size();j++)
             {
-                if(trip.getTrips().get(j).getLocation().getDay().equals(date))
+                if(trip.getTrips().get(j).getLocation().getName() != R.string.user)
                 {
-                    if(flwLocations.size() > 1)
+                    Log.d("debug", "day: "+ trip.getTrips().get(j).getLocation().getDay());
+                    if(trip.getTrips().get(j).getLocation().getDay().equals(date))
                     {
-                        for(int k = 0; k< flwLocations.size()-1;k++)
-                        {
-                            if(trip.getTrips().get(j).getLocation().getStartTourTime() > flwLocations.get(k).getStartTourTime())
-                            {
-                                flwLocations.add(trip.getTrips().get(j).getLocation());
-                            }
-                            else
-                            {
-                                flwLocations.add(0, trip.getTrips().get(j).getLocation());
-                            }
-                        }
+                        flwLocations.add(trip.getTrips().get(j));
+                        aTemp.add(trip.getTrips().get(j));
+                    }
+                }
+                else
+                {
+                    if(!aTemp.contains(trip.getTrips().get(j)))
+                    {
+                        flwLocations.add(trip.getTrips().get(j));
+                        aTemp.add(trip.getTrips().get(j));
+                    }
+
+                }
+            }
+            TripOrder temp;
+
+            for(int i=0;i<flwLocations.size();i++)
+            {
+                for(int j=i;j>0;j--)
+                {
+                    if(flwLocations.get(j).getStartTourTime() < flwLocations.get(j-1).getStartTourTime())
+                    {
+                        temp = flwLocations.get(j);
+                        flwLocations.set(j,flwLocations.get(j-1));
+                        flwLocations.set(j-1,temp);
                     }
                 }
             }
+
                 TripPlannerActivity.hm.put(date, flwLocations );
         }
-        it = dates.iterator();
+
+        Log.d("debug", "size: "+ aTemp.size());
+        Log.d("debug", "Realm size: "+ trip.getTrips().size());
+        realm.beginTransaction();
+        for(int i=0;i<aTemp.size();i++)
+        {
+            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().set(i,aTemp.get(i));
+        }
+        realm.commitTransaction();
+
+
+
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        for(int i = 0;i<trip.getTrips().size();i++)
+        {
+            positionLookup.put(trip.getTrips().get(i), i);
+        }
+        it = TripPlannerActivity.dates.iterator();
+        it.next();
         while(it.hasNext()) {
             flwLocations = TripPlannerActivity.hm.get(it.next());
-            int i = 0;
-            while (i < flwLocations.size() - 1) {
-                startTourTime = flwLocations.get(i+1).getStartTourTime();
-                endTourTime = flwLocations.get(i).getEndTourTime();
-                if (flwLocations.get(i).getName() == R.string.user) {
-                    i++;
-                }
+                if(flwLocations.size() > 1)
+                {
 
-                else if (startTourTime != 0 && endTourTime != 0 && flwLocations.get(i).getLatlong() != null && flwLocations.get(i+1).getLatlong() != null) {
-                        locationIndex = i;
-                        if (i < flwLocations.size() - 2 && flwLocations.get(i + 1).getStartTourTime() != 0) {
-                            DistanceMatrixApi distanceMatrixApi = DistanceMatrixApi.retrofit.create(DistanceMatrixApi.class);
-                            Call<DistanceModel> call2 = distanceMatrixApi.timeDuration("imperial", flwLocations.get(i).getLatlong(), flwLocations.get(i + 1).getLatlong());
+                    mTripOrder = new RealmList<>();
+                    Log.d("debug", "locations: " + flwLocations.size());
+                    for(int i=0;i<flwLocations.size();i++)
+                    {
+                        Log.d("debug", "locations: "+flwLocations.get(i).getLocation().getLatlong());
+                    }
+                    String[] middleLatLong = new String[flwLocations.size() - 2];
+                    String midLatLong = "";
+                    int j = 0;
+                    // Put the middle locations in an array
+                    for (int i = 0; i < flwLocations.size(); i++) {
+                        if ( i != 0 && i != flwLocations.size()-1 && flwLocations.get(i).getLocation().getLatlong() != null) {
+                            Log.d("debug", "latlong: "+flwLocations.get(i).getLocation().getLatlong());
+                            middleLatLong[j] = flwLocations.get(i).getLocation().getLatlong();
+                            j++;
+                        }
+                    }
+                    // Create the middle locations string for the api
+                    for (int i = 0; i < middleLatLong.length; i++) {
+                        Log.d("debug", "mid: " + middleLatLong[i]);
+                        if (i != middleLatLong.length - 1) {
+                            midLatLong += middleLatLong[i] + "|";
+                        } else {
+                            midLatLong += middleLatLong[i];
+                        }
+                    }
 
-                            call2.enqueue(new Callback<DistanceModel>() {
-                                @Override
-                                public void onResponse(Call<DistanceModel> call, Response<DistanceModel> response) {
-                                    if (response.isSuccessful()) {
-                                        realm.beginTransaction();
-                                        RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(positionLookup.get(flwLocations.get(locationIndex))).setTimeValue(response.body().getRows().get(0).getElements().get(0).getDuration().getValue() / 60 + 1);
-                                        RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(positionLookup.get(flwLocations.get(locationIndex))).setTimeText(response.body().getRows().get(0).getElements().get(0).getDuration().getText());
-                                        realm.commitTransaction();
+                    // Call the Directions api to get the order and travel times for each site
+                    DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+                    Call<DirectionsModel> call2 = directionsApi.directions(flwLocations.get(0).getLocation().getLatlong(), flwLocations.get(flwLocations.size()-1).getLocation().getLatlong(), midLatLong);
 
-                                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-                                        adapter.notifyDataSetChanged();
+                    call2.enqueue(new Callback<DirectionsModel>() {
+                        @Override
+                        public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                            if (response.isSuccessful()) {
+                                int j = 0;
+                                ArrayList<Integer> waypointOrder = new ArrayList<>();
+                                // Grab the order of the middle sites
+                                for (int k = 0; k < response.body().getRoutes().get(0).getWaypointOrder().size(); k++) {
+                                    waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k) + 1);
+                                }
+                                for (int i = 0; i <= response.body().getRoutes().get(0).getLegs().size(); i++) {
+                                    // Get travel time for the start location
+                                    if (i == 0) {
+                                        TripOrder trip = new TripOrder(flwLocations.get(0).getLocation(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                                        trip.setTimeValue(trip.getTimeValue() / 60);
+                                        if (!mTripOrder.contains(trip))
+                                            mTripOrder.add(trip);
+                                    }
+                                    // Get travel time for the end location
+                                    else if (i == response.body().getRoutes().get(0).getLegs().size()) {
+                                        TripOrder trip = new TripOrder(flwLocations.get(flwLocations.size()-1).getLocation(), "", 0);
+                                        trip.setTimeValue(trip.getTimeValue() / 60);
+                                        if (!mTripOrder.contains(trip))
+                                            mTripOrder.add(trip);
+                                    }
+                                    // Get the travel time for the middle locations
+                                    else {
+                                        TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                                        trip.setTimeValue(trip.getTimeValue() / 60);
+                                        if (!mTripOrder.contains(trip))
+                                            mTripOrder.add(trip);
+                                        j++;
                                     }
                                 }
-                                @Override
-                                public void onFailure(Call<DistanceModel> call, Throwable t) {
-                                }
-                            });
-
-                        }
-                        if (startTourTime >= (endTourTime + trip.getTrips().get(positionLookup.get(flwLocations.get(i))).getTimeValue())) {
-                            i++;
-                        } else {
-                            toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
-                            toast.show();
-                            realm.beginTransaction();
-                            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(positionLookup.get(flwLocations.get(i))+1);
-                            realm.commitTransaction();
-
-                            trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-                            adapter.notifyDataSetChanged();
-                            i++;
-                    }
-
-                }
-                else if(flwLocations.get(i).getLatlong() == null || flwLocations.get(i+1).getLatlong() == null)
-                {
-                    if (startTourTime >= endTourTime)  {
-                        i++;
-                    }
-                    else {
-                        toast = Toast.makeText(getContext(), "Unable to make it to the next location in time. Removed a location from list", Toast.LENGTH_LONG);
-                        toast.show();
-                        realm.beginTransaction();
-                        RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(positionLookup.get(flwLocations.get(i)) + 1);
-                        realm.commitTransaction();
-
-                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-                        adapter.notifyDataSetChanged();
-                        i++;
+                                /*
+                                realm.beginTransaction();
+                                trip.setTrips(mTripOrder);
+                                realm.copyToRealmOrUpdate(trip);
+                                realm.commitTransaction();
+                                trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+                                  */
+                                adapter.notifyDataSetChanged();
+                            }
                         }
 
+                        @Override
+                        public void onFailure(Call<DirectionsModel> call, Throwable t) {
+
+                        }
+                    });
                 }
-                i++;
-            }
         }
 
+    }
+
+
+    //Z's Code
+    private void initiateDataCalculation(){
+        if(!isFinal) {
+            FLWLocation aLatLong;
+            FLWLocation bLatLong;
+            final FLWLocation startLocation = new FLWLocation();
+            final FLWLocation endLocation;
+            String startLatLong;
+            String endLatLong;
+            int startLoc;
+            int endLoc;
+            int index;
+            int aLoc;
+            int bLoc;
+            String midLatLong = "optimize:true|";
+            trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+            locations = new RealmList<>();
+
+            for (TripOrder tp : trip.getTrips()) {
+                if (!locations.contains(tp.getLocation()))
+                    locations.add(tp.getLocation());
+
+
+            }
+            // Get the users location from realm
+            UserLocation ul = RealmController.getInstance().getUserLocation();
+            Location myLocation = new Location("user");
+            myLocation.setLatitude(ul.getLatitude());
+            myLocation.setLongitude(ul.getLongitude());
+            startLocation.setLatitude(ul.getLatitude());
+            startLocation.setLongitude(ul.getLongitude());
+            startLocation.setLatlong(ul.getLatitude() + "," + ul.getLongitude());
+            startLocation.setName(R.string.user);
+            startLatLong = startLocation.getLatlong();
+            startLocation.setImage(android.R.color.transparent);
+            if (findLocation(R.string.user, locations) != -1) {
+                locations.remove(findLocation(R.string.user, locations));
+                locations.add(0, startLocation);
+            } else {
+                locations.add(0, startLocation);
+            }
+
+            if (findLocation(R.string.user, locations) == -1) {
+                if (location == null) {
+                    location = new Location("default");
+                    location.setLatitude(42.7152375);
+                    location.setLongitude(-87.7906969);
+                }
+                myLocation = location;
+                // Sets start location to the users location
+                startLocation.setLatitude(myLocation.getLatitude());
+                startLocation.setLongitude(myLocation.getLongitude());
+                startLocation.setLatlong(myLocation.getLatitude() + "," + myLocation.getLongitude());
+                startLocation.setName(R.string.user);
+                startLatLong = startLocation.getLatlong();
+                startLocation.setImage(android.R.color.transparent);
+                locations.add(0, startLocation);
+
+
+            }
+
+            startLoc = findLocation(R.string.user, locations);
+            startLocation.setLatitude(locations.get(startLoc).getLatitude());
+            startLocation.setLongitude(locations.get(startLoc).getLongitude());
+            startLocation.setLatlong(startLocation.getLatitude() + "," + startLocation.getLongitude());
+            startLocation.setName(locations.get(startLoc).getName());
+            startLocation.setImage(locations.get(startLoc).getImage());
+            startLatLong = startLocation.getLatlong();
+
+
+            // Find one end point
+            index = findLocation(R.string.scjohnson, locations);
+
+            if (index == -1) {
+                index = findLocation(R.string.wingspread, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.built_homes, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.meeting_house, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.monona_terrace, locations);
+                            if (index == -1) {
+                                index = findLocation(R.string.visitor_center, locations);
+                                if (index == -1)
+                                    index = findLocation(R.string.valley_school, locations);
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            aLatLong = locations.get(index);
+            aLoc = index;
+            index = findLocation(R.string.german_warehouse, locations);
+            // Find the second end point
+            if (index == -1) {
+                index = findLocation(R.string.valley_school, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.visitor_center, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.meeting_house, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.monona_terrace, locations);
+                            if (index == -1) {
+                                index = findLocation(R.string.built_homes, locations);
+                                if (index == -1) {
+                                    index = findLocation(R.string.wingspread, locations);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            bLatLong = locations.get(index);
+            bLoc = index;
+
+            Location locationA = new Location("point A");
+            locationA.setLatitude(aLatLong.getLatitude());
+            locationA.setLongitude(aLatLong.getLongitude());
+            Location locationB = new Location("point B");
+            locationB.setLatitude(bLatLong.getLatitude());
+            locationB.setLongitude(bLatLong.getLongitude());
+            // Check which end point is closer to the user location
+            if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
+
+                endLocation = bLatLong;
+                endLatLong = bLatLong.getLatlong();
+                endLoc = bLoc;
+            } else {
+
+                endLocation = aLatLong;
+                endLatLong = aLatLong.getLatlong();
+                endLoc = aLoc;
+            }
+            locations.remove(endLoc);
+            locations.add(endLocation);
+
+            endLoc = findLocation(endLocation.getName(), locations);
+            String[] middleLatLong = new String[locations.size() - 2];
+            int j = 0;
+            // Put the middle locations in an array
+            for (int i = 0; i < locations.size(); i++) {
+                if (startLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
+                    middleLatLong[j] = locations.get(i).getLatlong();
+                    j++;
+                }
+            }
+            // Create the middle locations string for the api
+            for (int i = 0; i < middleLatLong.length; i++) {
+                if (i != middleLatLong.length - 1) {
+                    midLatLong += middleLatLong[i] + "|";
+                } else {
+                    midLatLong += middleLatLong[i];
+                }
+            }
+            mTripOrder = new RealmList<>();
+            // Call the Directions api to get the order and travel times for each site
+            DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+            Call<DirectionsModel> call2 = directionsApi.directions(startLatLong, endLatLong, midLatLong);
+
+            call2.enqueue(new Callback<DirectionsModel>() {
+                @Override
+                public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                    if (response.isSuccessful()) {
+                        int j = 0;
+                        ArrayList<Integer> waypointOrder = new ArrayList<>();
+                        // Grab the order of the middle sites
+                        for (int k = 0; k < response.body().getRoutes().get(0).getWaypointOrder().size(); k++) {
+                            waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k) + 1);
+                        }
+                        for (int i = 0; i <= response.body().getRoutes().get(0).getLegs().size(); i++) {
+                            // Get travel time for the start location
+                            if (i == 0) {
+                                TripOrder trip = new TripOrder(startLocation, response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                                trip.setTimeValue(trip.getTimeValue() / 60);
+                                if (!mTripOrder.contains(trip))
+                                    mTripOrder.add(trip);
+                            }
+                            // Get travel time for the end location
+                            else if (i == response.body().getRoutes().get(0).getLegs().size()) {
+                                TripOrder trip = new TripOrder(endLocation, "", 0);
+                                trip.setTimeValue(trip.getTimeValue() / 60);
+                                if (!mTripOrder.contains(trip))
+                                    mTripOrder.add(trip);
+                            }
+                            // Get the travel time for the middle locations
+                            else {
+                                TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                                trip.setTimeValue(trip.getTimeValue() / 60);
+                                if (!mTripOrder.contains(trip))
+                                    mTripOrder.add(trip);
+                                j++;
+                            }
+                        }
+                        realm.beginTransaction();
+                        trip.setTrips(mTripOrder);
+                        realm.copyToRealmOrUpdate(trip);
+                        realm.commitTransaction();
+                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+
+
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<DirectionsModel> call, Throwable t) {
+
+                }
+            });
+        }
     }
     public void createTripPlan(RealmList<TripOrder> tripOrder)
     {
@@ -289,7 +571,8 @@ public class TripPlannerTimelineFragment extends Fragment {
         else
         {
         }
-        */
+
+
         // Fill the trip object with the new times
         TripObject tObject = new TripObject(tripPosition);
         tObject.setTrips(tripOrder);
@@ -302,237 +585,11 @@ public class TripPlannerTimelineFragment extends Fragment {
                 tObject.getTrips().add(trip.getTrips().get(i));
             }
         }
+        */
         // Update realm with the new times
-            realm.beginTransaction();
-            realm.copyToRealmOrUpdate(tObject);
-            realm.commitTransaction();
-        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-
-        for(int i = 0 ; i<trip.getTrips().size()-1;i++)
-        {
-            Log.d("debug", "locations: "+ trip.getTrips().get(i).getLocation().getGenericName());
-        }
-
-    }
-
-    //Z's Code
-    private void initiateDataCalculation(){
-
-        FLWLocation aLatLong;
-        FLWLocation bLatLong;
-        final FLWLocation startLocation = new FLWLocation();
-        final FLWLocation endLocation;
-        String startLatLong;
-        String endLatLong;
-        int startLoc;
-        int endLoc;
-        int index;
-        int aLoc;
-        int bLoc;
-        String midLatLong = "optimize:true|";
-        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-        locations = new RealmList<>();
-
-        for(int i = 0 ; i<trip.getTrips().size();i++)
-        {
-            Log.d("debug", "locations before: "+ trip.getTrips().get(i).getLocation().getGenericName());
-        }
-
-        for ( TripOrder tp: trip.getTrips())
-              {
-                  locations.add(tp.getLocation());
-
-
-        }
-        // Get the users location from realm
-        UserLocation ul = RealmController.getInstance().getUserLocation();
-        Location myLocation = new Location("user");
-        myLocation.setLatitude(ul.getLatitude());
-        myLocation.setLongitude(ul.getLongitude());
-        startLocation.setLatitude(ul.getLatitude());
-        startLocation.setLongitude(ul.getLongitude());
-        startLocation.setLatlong(ul.getLatitude()+","+ul.getLongitude());
-        startLocation.setName(R.string.user);
-        startLatLong = startLocation.getLatlong();
-        startLocation.setImage(android.R.color.transparent);
-        if(findLocation(R.string.user,locations) != -1)
-        {
-            locations.remove(0);
-            locations.add(0,startLocation);
-        }
-        else
-        {
-            locations.add(0,startLocation);
-        }
-
-        if(findLocation(R.string.user,locations) == -1)
-        {
-            if (location == null) {
-                location = new Location("default");
-                location.setLatitude(42.7152375);
-                location.setLongitude(-87.7906969);
-            }
-             myLocation = location;
-            // Sets start location to the users location
-            startLocation.setLatitude(myLocation.getLatitude());
-            startLocation.setLongitude(myLocation.getLongitude());
-            startLocation.setLatlong(myLocation.getLatitude()+","+myLocation.getLongitude());
-            startLocation.setName(R.string.user);
-            startLatLong = startLocation.getLatlong();
-            startLocation.setImage(android.R.color.transparent);
-            locations.add(0,startLocation);
-
-
-        }
-
-        startLoc = findLocation(R.string.user,locations);
-        startLocation.setLatitude(locations.get(startLoc).getLatitude());
-        startLocation.setLongitude(locations.get(startLoc).getLongitude());
-        startLocation.setLatlong(startLocation.getLatitude() + ","+ startLocation.getLongitude());
-        startLocation.setName(locations.get(startLoc).getName());
-        startLocation.setImage(locations.get(startLoc).getImage());
-        startLatLong = startLocation.getLatlong();
 
 
 
 
-        // Find one end point
-        index = findLocation(R.string.scjohnson,locations);
-
-        if(index == -1)
-        {
-            index = findLocation(R.string.wingspread,locations);
-            if(index == -1)
-            {
-                index = findLocation(R.string.built_homes,locations);
-                if(index == -1)
-                {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1)
-                    {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1)
-                        {
-                            index = findLocation(R.string.visitor_center, locations);
-                            if(index == -1)
-                                index = findLocation(R.string.valley_school,locations);
-
-                        }
-                    }
-                }
-            }
-        }
-
-        aLatLong = locations.get(index);
-        aLoc = index;
-        index = findLocation(R.string.german_warehouse, locations);
-        // Find the second end point
-        if(index == -1) {
-            index = findLocation(R.string.valley_school,locations);
-            if(index == -1) {
-                index = findLocation(R.string.visitor_center, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.built_homes,locations);
-                            if(index == -1) {
-                                index = findLocation(R.string.wingspread, locations);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        bLatLong = locations.get(index);
-        bLoc = index;
-
-        Location locationA = new Location("point A");
-        locationA.setLatitude(aLatLong.getLatitude());
-        locationA.setLongitude(aLatLong.getLongitude());
-        Location locationB = new Location("point B");
-        locationB.setLatitude(bLatLong.getLatitude());
-        locationB.setLongitude(bLatLong.getLongitude());
-        // Check which end point is closer to the user location
-        if(myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
-
-            endLocation = bLatLong;
-            endLatLong = bLatLong.getLatlong();
-            endLoc = bLoc;
-        } else {
-
-            endLocation = aLatLong;
-            endLatLong = aLatLong.getLatlong();
-            endLoc = aLoc;
-        }
-        locations.remove(endLoc);
-        locations.add(endLocation);
-        endLoc = findLocation(endLocation.getName(),locations);
-        String [] middleLatLong = new String[locations.size()-2];
-        int j=0;
-        // Put the middle locations in an array
-        for(int i=0;i<locations.size();i++) {
-            if(startLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
-                middleLatLong[j] = locations.get(i).getLatlong();
-                j++;
-            }
-        }
-        // Create the middle locations string for the api
-        for(int i=0;i<middleLatLong.length;i++) {
-            if(i!= middleLatLong.length-1) {
-                midLatLong += middleLatLong[i] + "|";
-            } else {
-                midLatLong += middleLatLong[i];
-            }
-        }
-        // Call the Directions api to get the order and travel times for each site
-        DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-        Call<DirectionsModel> call2 = directionsApi.directions(startLatLong,endLatLong,midLatLong);
-
-        call2.enqueue(new Callback<DirectionsModel>() {
-            @Override
-            public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                if(response.isSuccessful()) {
-                    int j=0;
-                    ArrayList<Integer> waypointOrder = new ArrayList<>();
-                    // Grab the order of the middle sites
-                    for(int k=0;k<response.body().getRoutes().get(0).getWaypointOrder().size();k++) {
-                        waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k)+1);
-                    }
-                    for(int i=0;i<=response.body().getRoutes().get(0).getLegs().size();i++) {
-                        // Get travel time for the start location
-                        if(i==0) {
-                            TripOrder trip = new TripOrder(startLocation,response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                            trip.setTimeValue(trip.getTimeValue()/60);
-                            mTripOrder.add(trip);
-                        }
-                        // Get travel time for the end location
-                        else if(i==response.body().getRoutes().get(0).getLegs().size()) {
-                            TripOrder trip = new TripOrder(endLocation,"",0);
-                            trip.setTimeValue(trip.getTimeValue()/60);
-                            mTripOrder.add(trip);
-                        }
-                        // Get the travel time for the middle locations
-                        else {
-                            TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                            trip.setTimeValue(trip.getTimeValue()/60);
-                            mTripOrder.add(trip);
-                            j++;
-                        }
-                    }
-                    //createTripPlan(mTripOrder);
-                    if(isFinal) {
-                        createFinalTripPlan();
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void onFailure(Call<DirectionsModel> call, Throwable t) {
-
-            }
-        });
     }
 }

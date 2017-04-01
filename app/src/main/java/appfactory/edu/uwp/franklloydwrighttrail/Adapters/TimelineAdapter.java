@@ -22,15 +22,19 @@ import android.widget.TextView;
 import com.vipul.hp_hp.timelineview.TimelineView;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelectionActivity;
+import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 /**
  * Created by sterl on 11/3/2016.
@@ -40,15 +44,37 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     private ArrayList<TimelineAdapter.TimelineViewHolder> views;
     private Context context;
     private TripObject trips;
+    private ArrayList<FLWLocation> sorted;
     int tLine = 0;
     int temp =0;
     int counter =0;
+    ArrayList<TripOrder> aTrip = new ArrayList<>();
     private TripOrder trip;
+    private boolean isFinal;
 
-    public TimelineAdapter (Context context, String tripPosition){
+    public TimelineAdapter (Context context, String tripPosition, boolean isFinal){
         this.context = context;
         this.views = new ArrayList<>();
         trips = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        this.isFinal = isFinal;
+        if(isFinal)
+        {
+            Iterator<String> it = TripPlannerActivity.dates.iterator();
+
+            ArrayList<TripOrder> temp = new ArrayList<>();
+            it.next();
+            while(it.hasNext())
+            {
+                temp = TripPlannerActivity.hm.get(it.next());
+                for(int i = 0;i<temp.size();i++)
+                {
+                    aTrip.add(temp.get(i));
+                    Log.d("debug", "temp: " + temp.get(i).getLocation().getLatlong());
+                }
+            }
+            Log.d("debug", "aTrip: " + aTrip.size());
+        }
+
     }
 
     @NonNull
@@ -66,8 +92,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         if (trips.getTrips().size() - 1 == position){
             holder.tripLengthContainer.setVisibility(View.GONE);
         }
+        if(!isFinal)
+        {
+            trip = trips.getTrips().get(position);
+        }
+        else
+        {
+            trip = aTrip.get(position);
+        }
 
-        trip = trips.getTrips().get(position);
+
         if (trip.getLocation().getImage() != -1) {
             holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
         }
@@ -101,84 +135,110 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             holder.picture.setVisibility(View.GONE);
             holder.homeIcon.setVisibility(View.VISIBLE);
         }
-        for(int i = 0;i<trips.getTrips().size();i++)
-        {
-            Log.d("debug", "In Realm: "+ trips.getTrips().get(i).getLocation().getGenericName());
-        }
-
-        if (trip.getTimeText() == null){
-            holder.name.setText(trip.getLocation().getName());
-            holder.time.setText(trip.getTimeText());
-            holder.tripLength.setText(trip.getTimeValue());
-
-        } else {
-            int hour =0;
-            int min =0;
-
-            if(position == 0)
-            {
-                if(counter == 1)
+        Log.d("debug", "Time text: " + trip.getTimeText());
+            if (trip.getTimeText() == null){
+                if(trip.getLocation().getGenericName() != null)
                 {
-                    counter = 0;
-                    tLine = 0;
+                    holder.name.setText(trip.getLocation().getGenericName());
                 }
-                hour = trips.getStartTime()/60;
-                min = trips.getStartTime()%60;
-                temp = trip.getTimeValue();
-                counter++;
-            }
-            else if(position == 1)
-            {
-                tLine = trips.getStartTime()+temp+tLine;
-                hour = (int)trips.getTrips().get(position).getLocation().getStartTourTime()/60;
-                min = (int)trips.getTrips().get(position).getLocation().getStartTourTime()%60 + 1;
-                temp = trips.getTrips().get(position).getTimeValue();
+                else
+                {
+                    holder.name.setText(trip.getLocation().getName());
+                    holder.time.setText(trip.getTimeText());
+                    holder.tripLength.setText(trip.getTimeValue());
+                }
 
-            }
-            else if(position > 1)
-            {
-                tLine = 60+temp+tLine;
-                hour = (int)trips.getTrips().get(position).getLocation().getStartTourTime()/60;
-                min = (int)trips.getTrips().get(position).getLocation().getStartTourTime()%60 + 1;
-                temp = trips.getTrips().get(position).getTimeValue();
-
-            }
-            if(hour > 23)
-            {
-                hour = hour - 23;
-            }
-            if (trip.getLocation().getImage() != -1){
-                holder.name.setText(trip.getLocation().getName());
             } else {
-                holder.name.setText(trip.getLocation().getGenericName());
-            }
+                int hour =0;
+                int min =0;
 
-            if(hour < 12 && min < 10)
-            {
-                holder.time.setText(hour + ":" + "0" + min + " AM");
-            }
-            else if (hour == 12 && min < 10) {
-                holder.time.setText(hour + ":" + "0" +min + " PM");
-            }
-            else if (hour == 12) {
-                int tempHour = hour - 12;
-                holder.time.setText(hour + ":" + min + " PM");
-            }
-            else if (hour > 12 && min < 10) {
-                int tempHour = hour - 12;
-                holder.time.setText(tempHour + ":" + "0" +min + " PM");
-            }
-            else if (hour > 12) {
-                int tempHour = hour - 12;
-                holder.time.setText(tempHour + ":" + min + " PM");
-            }
-            else
-            {
-                holder.time.setText(hour + ":" + min + " AM");
-            }
+                if(position == 0)
+                {
+                    if(counter == 1)
+                    {
+                        counter = 0;
+                        tLine = 0;
+                    }
+                    hour = trips.getStartTime()/60;
+                    min = trips.getStartTime()%60;
+                    temp = trip.getTimeValue();
+                    counter++;
+                }
+                else if(position == 1)
+                {
+                    if(isFinal) {
 
-            holder.tripLength.setText(trips.getTrips().get(position).getTimeText());
-        }
+                        hour = (int) trip.getStartTourTime() / 60;
+                        min = (int) trip.getStartTourTime() % 60;
+                    }
+                    else
+                    {
+                        tLine = trips.getStartTime() + temp + tLine;
+                        hour = tLine/60;
+                        min = tLine%60;
+                        temp = trip.getTimeValue();
+                    }
+                }
+                else if(position > 1)
+                {
+                    if(isFinal) {
+                        hour = (int) trip.getStartTourTime() / 60;
+                        min = (int) trip.getStartTourTime() % 60;
+                    }
+                    else
+                    {
+                        tLine = 60 + temp + tLine;
+                        hour = tLine/60;
+                        min = tLine%60;
+                        temp = trip.getTimeValue();
+                    }
+                }
+                if(hour > 23)
+                {
+                    hour = hour - 23;
+                }
+                if (trip.getLocation().getImage() != -1){
+                    holder.name.setText(trip.getLocation().getName());
+                } else {
+                    holder.name.setText(trip.getLocation().getGenericName());
+                }
+
+                if(hour < 12 && min < 10)
+                {
+                    holder.time.setText(hour + ":" + "0" + min + " AM");
+                }
+                else if (hour == 12 && min < 10) {
+                    holder.time.setText(hour + ":" + "0" +min + " PM");
+                }
+                else if (hour == 12) {
+                    int tempHour = hour - 12;
+                    holder.time.setText(hour + ":" + min + " PM");
+                }
+                else if (hour > 12 && min < 10) {
+                    int tempHour = hour - 12;
+                    holder.time.setText(tempHour + ":" + "0" +min + " PM");
+                }
+                else if (hour > 12) {
+                    int tempHour = hour - 12;
+                    holder.time.setText(tempHour + ":" + min + " PM");
+                }
+                else
+                {
+                    holder.time.setText(hour + ":" + min + " AM");
+                }
+
+                if(isFinal && position !=0 && position < getItemCount()-2 && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay()))
+                {
+                    holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
+                    holder.carIcon.setVisibility(View.GONE);
+                }
+                else
+                {
+                    holder.carIcon.setVisibility(View.VISIBLE);
+                    holder.tripLength.setText(trip.getTimeText());
+                }
+
+            }
 
     }
 
@@ -212,6 +272,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         ImageButton locationButton;
         @Nullable @Bind(R.id.home_icon)
         ImageView homeIcon;
+        @Nullable @Bind(R.id.trip_length_car_image)
+        ImageView carIcon;
 
         public TimelineViewHolder(@NonNull View itemView, int viewType) {
             super(itemView);

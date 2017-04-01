@@ -1,13 +1,14 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 
 import java.util.Date;
 
 import io.realm.RealmObject;
 
-public class FLWLocation extends RealmObject {
+public class FLWLocation extends RealmObject{
     @StringRes private int name;
     private String genericName;
 
@@ -21,11 +22,9 @@ public class FLWLocation extends RealmObject {
 
     private String day;
 
-    // These also double as Generic Stop End and Start times
-    private long startTourTime;
-    private long endTourTime;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime, String day) {
+
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, String day) {
         this.name = name;
         this.genericName = "";
         this.image = image;
@@ -34,8 +33,7 @@ public class FLWLocation extends RealmObject {
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
-        this.startTourTime = startTourTime;
-        this.endTourTime = endTourTime;
+
         this.day = day;
     }
 
@@ -48,8 +46,6 @@ public class FLWLocation extends RealmObject {
         this.latitude = -1;
         this.longitude = -1;
         this.address = null;
-        this.startTourTime = -1;
-        this.endTourTime = -1;
         this.day = null;
     }
 
@@ -62,8 +58,6 @@ public class FLWLocation extends RealmObject {
         this.latitude = -1;
         this.longitude = -1;
         this.address = null;
-        this.startTourTime = -1;
-        this.endTourTime = -1;
         this.day = null;
     }
 
@@ -103,22 +97,6 @@ public class FLWLocation extends RealmObject {
 
     public void setAddress(String address) { this.address = address;}
 
-    public long getStartTourTime() {
-        return startTourTime;
-    }
-
-    public void setStartTourTime(long startTourTime) {
-        this.startTourTime = startTourTime;
-    }
-
-    public long getEndTourTime() {
-        return endTourTime;
-    }
-
-    public void setEndTourTime(long endTourTime) {
-        this.endTourTime = endTourTime;
-    }
-
     public String getDay() {
         return day;
     }
@@ -134,4 +112,19 @@ public class FLWLocation extends RealmObject {
     public void setGenericName(String genericName) {
         this.genericName = genericName;
     }
+
+    @Override
+    public boolean equals(Object location)
+    {
+        if(location instanceof FLWLocation)
+        {
+            if(this.getName() == ((FLWLocation) location).getName() && this.getGenericName() == ((FLWLocation)location).getGenericName())
+                return true;
+            return false;
+        }
+        return false;
+
+    }
+
+
 }

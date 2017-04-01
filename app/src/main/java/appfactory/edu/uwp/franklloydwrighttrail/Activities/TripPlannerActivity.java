@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,6 +47,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.Fragments.TripPlannerTourTimesFr
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
+import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import io.realm.Realm;
 import io.realm.RealmResults;
 
@@ -60,7 +63,8 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private RecyclerView recycler;
     private TourMenuAdapter adapter;
     private LinearLayoutManager layoutManager;
-    public static HashMap<String, ArrayList<FLWLocation>> hm = new HashMap<>();
+    public static HashMap<String, ArrayList<TripOrder>> hm = new HashMap<>();
+    public static LinkedHashSet<String> dates = new LinkedHashSet<>();
     private Realm realm;
     private static String newTripPosition;
     private boolean viewingFragment = false;
