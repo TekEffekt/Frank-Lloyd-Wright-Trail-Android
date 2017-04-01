@@ -13,6 +13,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -183,9 +184,9 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Time textTime = new Time(hourOfDay,minute,0);
                 int time = hourOfDay*60+minute;
-
+                Log.d("debug", "Time: "+ time);
                 realm.beginTransaction();
-                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setStartTourTime(time);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).setStartTourTime(time);
                 realm.commitTransaction();
 
                 String hourDay = "";
@@ -223,7 +224,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 int time = hourOfDay*60+minute;
 
                 realm.beginTransaction();
-                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setEndTourTime(time);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).setEndTourTime(time);
                 realm.commitTransaction();
 
                 String hourDay = "";

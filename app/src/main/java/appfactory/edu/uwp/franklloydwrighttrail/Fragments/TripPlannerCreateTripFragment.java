@@ -258,7 +258,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
         tripNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int i, KeyEvent keyEvent) {
-                Log.d("debug", "What Key is Pressed: "+ i);
                 if(i == EditorInfo.IME_ACTION_DONE){
 
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
