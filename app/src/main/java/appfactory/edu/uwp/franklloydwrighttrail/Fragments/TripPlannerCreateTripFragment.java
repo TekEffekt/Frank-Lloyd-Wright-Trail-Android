@@ -122,6 +122,11 @@ public class TripPlannerCreateTripFragment extends Fragment {
         addTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Redirects to FLW stops exclusively
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(tripPosition)).commit();
+                /*)
                 inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 String[] items = {"Frank Lloyd Wright Location","Other Stop"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -188,6 +193,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 builder.setCancelable(true);
                 AlertDialog dialog = builder.create();
                 dialog.show();
+                */
             }
         });
 
@@ -207,10 +213,23 @@ public class TripPlannerCreateTripFragment extends Fragment {
         endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
         startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
         endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
+
         startTimeLabel = (TextView) view.findViewById(R.id.start_time);
+        if (trip.getStartTime() != 0){
+            startTimeLabel.setText(timeToString(trip.getStartTime()));
+        }
         endTimeLabel = (TextView) view.findViewById(R.id.end_time);
+        if (trip.getEndTime() != 0){
+            endTimeLabel.setText(timeToString(trip.getEndTime()));
+        }
         startDateLabel = (TextView) view.findViewById(R.id.start_date);
+        //if (!trip.){
+        //    startDateLabel.setText(trip.);
+        //}
         endDateLabel = (TextView) view.findViewById(R.id.end_date);
+        //if (trip.getEndTime() != 0){
+        //    endDateLabel.setText(trip.);
+        //}
     }
 
     private void setupRecyclerViews(View view){
@@ -285,25 +304,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
                         RealmController.getInstance().getTripResults(tripPosition).get(0).setStartTime(time);
                         startTimeChosen = true;
                         realm.commitTransaction();
-
-
-                        if(minute < 10) {
-                            minuteDay = "0" + minute;
-                        } else {
-                            minuteDay = minute + "";
-                        }
-                        if(hourOfDay > 12) {
-                            hourOfDay -= 12;
-                            hourDay = hourOfDay +"";
-                            minuteDay = minuteDay + " PM";
-                        } else {
-                            if (hourOfDay == 0){
-                                hourOfDay = 12;
-                            }
-                            hourDay = hourOfDay +"";
-                            minuteDay = minuteDay + " AM";
-                        }
-                        startTimeLabel.setText(hourDay + ":" + minuteDay);
+                        startTimeLabel.setText(timeToString(minute,hourOfDay));
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -319,31 +320,11 @@ public class TripPlannerCreateTripFragment extends Fragment {
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
                         int time = hourOfDay*60+minute;
-                        String hourDay = "";
-                        String minuteDay = "";
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults(tripPosition).get(0).setEndTime(time);
                         endTimeChosen = true;
                         realm.commitTransaction();
-
-                        if(minute < 10) {
-                            minuteDay = "0" + minute;
-                        } else {
-                            minuteDay = minute + "";
-                        }
-
-                        if(hourOfDay > 12) {
-                            hourOfDay -= 12;
-                            hourDay = hourOfDay +"";
-                            minuteDay = minuteDay + " PM";
-                        } else {
-                            if (hourOfDay == 0){
-                                hourOfDay = 12;
-                            }
-                            hourDay = hourOfDay +"";
-                            minuteDay = minuteDay + " AM";
-                        }
-                        endTimeLabel.setText(hourDay + ":" + minuteDay);
+                        endTimeLabel.setText(timeToString(minute,hourOfDay));
                     }
                 }, hour, minute, false);
                 timePicker.setTitle("Choose Start Time");
@@ -433,4 +414,55 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 return "Month";
         }
     }
+
+    private String timeToString(int minute, int hourOfDay){
+        String minuteDay = "";
+        String hourDay = "";
+        if(minute < 10) {
+            minuteDay = "0" + minute;
+        } else {
+            minuteDay = minute + "";
+        }
+        if(hourOfDay >= 12) {
+            if (hourOfDay != 12) {
+                hourOfDay -= 12;
+            }
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " PM";
+        } else {
+            if (hourOfDay == 0){
+                hourOfDay = 12;
+            }
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " AM";
+        }
+        return hourDay + ":" + minuteDay;
+    }
+
+    private String timeToString(int time){
+        int minute = time % 60;
+        int hourOfDay = (time - minute) / 60;
+        String minuteDay = "";
+        String hourDay = "";
+        if(minute < 10) {
+            minuteDay = "0" + minute;
+        } else {
+            minuteDay = minute + "";
+        }
+        if(hourOfDay >= 12) {
+            if (hourOfDay != 12) {
+                hourOfDay -= 12;
+            }
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " PM";
+        } else {
+            if (hourOfDay == 0){
+                hourOfDay = 12;
+            }
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " AM";
+        }
+        return hourDay + ":" + minuteDay;
+    }
+
 }
