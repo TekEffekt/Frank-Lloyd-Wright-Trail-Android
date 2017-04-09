@@ -40,7 +40,7 @@ public class ImageOneFragment extends Fragment {
 
                 break;
             case "Monona Terrace":
-                imageOne.setImageResource(R.drawable.mononaterrace);
+                imageOne.setImageResource(R.drawable.mt1);
 
                 break;
             case "Meeting House":
@@ -48,21 +48,20 @@ public class ImageOneFragment extends Fragment {
 
                 break;
             case "FLW Visitor Center":
-                imageOne.setImageResource(R.drawable.visitorcenter1);
+                imageOne.setImageResource(R.drawable.vc1);
 
                 break;
             case "German Warehouse":
-                imageOne.setImageResource(R.drawable.germanwarehouse1);
+                imageOne.setImageResource(R.drawable.gw1);
 
                 break;
 
             case "American System-Built Homes":
-
-                imageOne.setImageResource(R.drawable.built_homes);
+                imageOne.setImageResource(R.drawable.bh1);
                 break;
             case "Wyoming Valley School":
 
-                imageOne.setImageResource(R.drawable.valley_school);
+                imageOne.setImageResource(R.drawable.wvs1);
                 break;
 
 
