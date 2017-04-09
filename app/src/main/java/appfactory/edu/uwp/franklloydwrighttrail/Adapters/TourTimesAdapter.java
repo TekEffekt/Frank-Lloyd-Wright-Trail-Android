@@ -91,7 +91,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         if (location.getName() != -1 && location.getName() != R.string.user) {
             holder.name.setText(location.getName());
             //holder.website.setText(location.getWebsite());
-            holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_website)));
+            holder.website.setText(Html.fromHtml(context.getResources().getString(location.getWebsite())));
             holder.website.setMovementMethod(LinkMovementMethod.getInstance());
         } else if (location.getName() != R.string.user) {
             holder.name.setText(location.getGenericName());

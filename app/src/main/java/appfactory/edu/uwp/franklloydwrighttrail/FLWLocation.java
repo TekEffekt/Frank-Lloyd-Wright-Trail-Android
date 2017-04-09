@@ -19,12 +19,13 @@ public class FLWLocation extends RealmObject{
     private double latitude;
     private double longitude;
     private String address;
+    @StringRes private int website;
 
     private String day;
 
 
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, String day) {
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, String day, @StringRes int website) {
         this.name = name;
         this.genericName = "";
         this.image = image;
@@ -33,6 +34,7 @@ public class FLWLocation extends RealmObject{
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
+        this.website = website;
 
         this.day = day;
     }
@@ -47,6 +49,7 @@ public class FLWLocation extends RealmObject{
         this.longitude = -1;
         this.address = null;
         this.day = null;
+        this.website = -1;
     }
 
     public FLWLocation(String genericName){
@@ -127,4 +130,11 @@ public class FLWLocation extends RealmObject{
     }
 
 
+    public int getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(int website) {
+        this.website = website;
+    }
 }
