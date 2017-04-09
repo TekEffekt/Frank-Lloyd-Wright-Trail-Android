@@ -50,8 +50,8 @@ public class TripPlannerCreateTripFragment extends Fragment {
 
     private RelativeLayout startTimeLayout;
     private RelativeLayout endTimeLayout;
-    private RelativeLayout startDateLayout;
-    private RelativeLayout endDateLayout;
+    //private RelativeLayout startDateLayout;
+    //private RelativeLayout endDateLayout;
 
     private TextView startTimeLabel;
     private TextView endTimeLabel;
@@ -84,6 +84,11 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private CurrentStopAdapter stopAdapter;
     private LinearLayoutManager stopLayoutManager;
 
+    private ImageView nameHint;
+    private ImageView stopsHint;
+    private ImageView startHint;
+    private ImageView endHint;
+
     private boolean startTimeChosen = false;
     private boolean endTimeChosen = false;
     private boolean timeValid = false;
@@ -113,6 +118,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         setupRecyclerViews(view);
         setupUI(view);
         setupTourTimeInput();
+        setupHints(view);
 
         return view;
     }
@@ -211,8 +217,9 @@ public class TripPlannerCreateTripFragment extends Fragment {
         }
         startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
         endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
-        startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
-        endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
+
+        //startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
+        //endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
 
         startTimeLabel = (TextView) view.findViewById(R.id.start_time);
         if (trip.getStartTime() != 0){
@@ -227,7 +234,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         //    startDateLabel.setText(trip.);
         //}
         endDateLabel = (TextView) view.findViewById(R.id.end_date);
-        //if (trip.getEndTime() != 0){
+        //if (trip.getEndDate() != 0){
         //    endDateLabel.setText(trip.);
         //}
     }
@@ -333,6 +340,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
             }
         });
 
+        /*
         startDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -368,6 +376,106 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 }, year, month, day);
                 datePicker.setTitle("Trip Tour Date");
                 datePicker.show();
+            }
+        });
+        */
+    }
+
+    private void setupHints(View view){
+        nameHint = (ImageView) view.findViewById(R.id.name_hint);
+        stopsHint = (ImageView) view.findViewById(R.id.stops_hint);
+        startHint = (ImageView) view.findViewById(R.id.start_hint);
+        endHint = (ImageView) view.findViewById(R.id.end_hint);
+
+        nameHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View content = inflater.inflate(R.layout.hint_dialog, null);
+
+                TextView hintText = (TextView) content.findViewById(R.id.hint_text);
+                hintText.setText(R.string.name_hint);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(content)
+                        .setTitle("Trip Help")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        stopsHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View content = inflater.inflate(R.layout.hint_dialog, null);
+
+                TextView hintText = (TextView) content.findViewById(R.id.hint_text);
+                hintText.setText(R.string.stops_hint);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(content)
+                        .setTitle("Trip Help")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        startHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View content = inflater.inflate(R.layout.hint_dialog, null);
+
+                TextView hintText = (TextView) content.findViewById(R.id.hint_text);
+                hintText.setText(R.string.start_hint);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(content)
+                        .setTitle("Trip Help")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
+        endHint.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View content = inflater.inflate(R.layout.hint_dialog, null);
+
+                TextView hintText = (TextView) content.findViewById(R.id.hint_text);
+                hintText.setText(R.string.end_hint);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(content)
+                        .setTitle("Trip Help")
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
     }

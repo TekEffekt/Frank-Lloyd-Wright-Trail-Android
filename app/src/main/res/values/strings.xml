@@ -100,6 +100,11 @@
     <string name="built_homes_website">&lt;a href="http://www.wrightinmilwaukee.com/">www.wrightinmilwaukee.com&lt;/a></string>
     <string name="built_homes_phone">&lt;a href="tel:+16082870339">(608) 287&#8211;0339&lt;/a></string>
 
+    <string name="name_hint">This is used to identify which trip is currently being scheduled. Name trip accordingly to scheduled plans.</string>
+    <string name="stops_hint">This is where current stops are viewed. Click the "Add Stop" button to view stop options.</string>
+    <string name="start_hint">This is when the trip typically starts. Set this to when the trip should start for a guideline.</string>
+    <string name="end_hint">This is when the trip should typically end. Set this to when the trip should end as a guideline.</string>
+
     <string name="new_trip_intro">Click the new trip button or tap the screen to start</string>
     <string name="recycler_view_instruction">Click on a marker above or double tap a location below to learn more</string>
 </resources>
