@@ -8,14 +8,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -24,6 +28,7 @@ import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -42,8 +47,9 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private ArrayList<TourTimesAdapter.ViewHolder> views;
     private Context context;
     private Realm realm;
+    private String tripPosition;
 
-    private Calendar calendar;
+    private Calendar currentTime;
 
     private TimePickerDialog timePicker;
     private int hour;
@@ -54,17 +60,18 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     private int month;
     private int day;
 
-    public TourTimesAdapter (TripObject locations) {
+    public TourTimesAdapter (TripObject locations, String tripPosition) {
+        this.tripPosition = tripPosition;
         this.locations = locations;
         this.views = new ArrayList<>();
 
         // Initialize Times
-        calendar = Calendar.getInstance();
-        year = calendar.getTime().getYear();
-        month = calendar.getTime().getMonth();
-        day = calendar.getTime().getDay();
-        hour = calendar.getTime().getHours();
-        minute = calendar.getTime().getMinutes();
+        currentTime = Calendar.getInstance();
+        hour = currentTime.get(Calendar.HOUR_OF_DAY);
+        minute = currentTime.get(Calendar.MINUTE);
+        year = currentTime.get(Calendar.YEAR);
+        month = currentTime.get(Calendar.MONTH);
+        day = currentTime.get(Calendar.DAY_OF_MONTH);
     }
 
     @NonNull
@@ -80,21 +87,28 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
     @Override
     public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, final int position) {
         FLWLocation location = locations.getTrips().get(position).getLocation();
-        holder.name.setText(location.getName());
 
-        //holder.website.setText(location.getWebsite());
-        holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_website)));
-        holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+        if (location.getName() != -1 && location.getName() != R.string.user) {
+            holder.name.setText(location.getName());
+            //holder.website.setText(location.getWebsite());
+            holder.website.setText(Html.fromHtml(context.getResources().getString(location.getWebsite())));
+            holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+        } else if (location.getName() != R.string.user) {
+            holder.name.setText(location.getGenericName());
+            holder.signupContainer.setVisibility(View.GONE);
+        } else {
+            holder.container.setVisibility(View.GONE);
+        }
 
         //Hide the tour when dropdown is pressed
         holder.dropdown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.container.getVisibility() != View.GONE) {
-                    holder.container.setVisibility(View.GONE);
+                if (holder.timeContainer.getVisibility() != View.GONE) {
+                    holder.timeContainer.setVisibility(View.GONE);
                     holder.dropdown.setImageResource(R.drawable.ic_dropup);
                 } else {
-                    holder.container.setVisibility(View.VISIBLE);
+                    holder.timeContainer.setVisibility(View.VISIBLE);
                     holder.dropdown.setImageResource(R.drawable.ic_dropdown);
                 }
             }
@@ -152,11 +166,11 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Date tourDate = new Date(year,month,dayOfMonth);
-
-                //setTourDate(tourDate);
-
                 String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
                 holder.date.setText(dateString);
+                realm.beginTransaction();
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setDay(dateString);
+                realm.commitTransaction();
             }
         }, year, month, day);
         datePicker.setTitle("Trip Tour Date");
@@ -170,9 +184,9 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Time textTime = new Time(hourOfDay,minute,0);
                 int time = hourOfDay*60+minute;
-
+                Log.d("debug", "Time: "+ time);
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().getTrips().get(position).getLocation().setStartTourTime(time);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).setStartTourTime(time);
                 realm.commitTransaction();
 
                 String hourDay = "";
@@ -201,7 +215,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         timePicker.show();
     }
 
-    // This method enables the user to input a new start tour time
+    // This method enables the user to input a new end tour time
     private void getTourEndTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
         timePicker = new TimePickerDialog(context, TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
             @Override
@@ -210,7 +224,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 int time = hourOfDay*60+minute;
 
                 realm.beginTransaction();
-                RealmController.getInstance().getTrip().getTrips().get(position).getLocation().setEndTourTime(time);
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).setEndTourTime(time);
                 realm.commitTransaction();
 
                 String hourDay = "";
@@ -248,6 +262,10 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @Nullable
+        @Bind(R.id.container)
+        LinearLayout container;
+
+        @Nullable
         @Bind(R.id.tour_time_name)
         TextView name;
         @Nullable
@@ -259,7 +277,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         ImageView dropdown;
         @Nullable
         @Bind(R.id.tour_time_container)
-        RelativeLayout container;
+        RelativeLayout timeContainer;
 
         @Nullable
         @Bind(R.id.signup_container)

@@ -1,5 +1,6 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Apis;
 
+import appfactory.edu.uwp.franklloydwrighttrail.Models.DistanceModel;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -16,7 +17,7 @@ public interface DistanceMatrixApi {
     public final String BASE_URL = "https://maps.googleapis.com/maps/api/distancematrix/";
 //json?units=imperial&origins={latlong}&destinations={latlong2}
     @GET("https://maps.googleapis.com/maps/api/distancematrix/json")
-    Call<Example> timeDuration(
+    Call<DistanceModel> timeDuration(
             @Query("units") String unit,
             @Query("origins") String latlong,
             @Query("destinations") String latlong2
@@ -24,7 +25,7 @@ public interface DistanceMatrixApi {
 
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
-
-    public static final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).client(httpClient.addInterceptor(logging.setLevel(HttpLoggingInterceptor.Level.BODY)).build()).build();
+    //.client(httpClient.addInterceptor(logging.setLevel(HttpLoggingInterceptor.Level.BODY)).build())
+    public static final Retrofit retrofit = new Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build();
 
 }

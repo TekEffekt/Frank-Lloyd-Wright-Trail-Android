@@ -22,16 +22,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.TripPlannerTimeline"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".Fragments.TripPlannerSelectionFragment"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".Fragments.TripPlannerTimesFragment"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name=".Fragments.TripPlannerOptionsFragment"
+            android:name=".Activities.TripPlannerActivity"
+            android:label="@string/trip_planner"
             android:theme="@style/AppTheme.NoActionBar"/>
         <meta-data
             android:name="android.support.PARENT_ACTIVITY"

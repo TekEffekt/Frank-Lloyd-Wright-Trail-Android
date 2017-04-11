@@ -32,7 +32,7 @@ public class ImageTwoFragment extends Fragment {
         switch(DescriptonActivity.value)
         {
             case "SC Johnson Administration Building and Research Tower":
-                imageTwo.setImageResource(R.drawable.scjworkroom1);
+                imageTwo.setImageResource(R.drawable.scj2);
 
                 break;
             case "Wingspread":
