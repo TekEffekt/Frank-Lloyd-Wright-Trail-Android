@@ -186,6 +186,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 Date tourDate = new Date(year,month,dayOfMonth);
                 String dateString = (getMonth(month) + " " + dayOfMonth + ", " + year);
                 holder.date.setText(dateString);
+                Log.d("Tour Times", "Realm Setting date");
                 realm.beginTransaction();
                 RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).getLocation().setDay(dateString);
                 realm.commitTransaction();

@@ -105,7 +105,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_menu);
 
-        this.realm = RealmController.with(this).getRealm();
+        this.realm = Realm.getDefaultInstance();
         newTripPosition = UUID.randomUUID().toString(); // ensures it's random
         create = (RelativeLayout) findViewById(R.id.create);
 

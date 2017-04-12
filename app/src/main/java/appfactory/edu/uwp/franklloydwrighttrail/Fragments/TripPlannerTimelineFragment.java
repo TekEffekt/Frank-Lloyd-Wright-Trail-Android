@@ -66,6 +66,9 @@ public class TripPlannerTimelineFragment extends Fragment {
     private RealmList<TripOrder> flwLocations;
     private Button contTimes;
     private Button previous;
+    public boolean redo;
+    public HashMap<TripOrder, Integer> positionLookup;
+    String date;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
