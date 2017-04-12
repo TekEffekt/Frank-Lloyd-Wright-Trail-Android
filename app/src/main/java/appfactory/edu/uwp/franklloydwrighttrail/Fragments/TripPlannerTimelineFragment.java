@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,12 +57,13 @@ public class TripPlannerTimelineFragment extends Fragment {
     public Location location;
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
     RealmList<TripOrder> mTripOrder = new RealmList<>();
+    RealmList<TripOrder> newTripOrder = new RealmList<>();
     private Realm realm;
     public int locationIndex;
     private RecyclerView timelineView;
     private static boolean isFinal;
     private static String tripPosition;
-    private ArrayList<TripOrder> flwLocations;
+    private RealmList<TripOrder> flwLocations;
     private Button contTimes;
     private Button previous;
 
@@ -157,35 +159,37 @@ public class TripPlannerTimelineFragment extends Fragment {
     {
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
 
-        long startTourTime = 0;
-        long endTourTime = 0;
-        Toast toast;
         ArrayList<TripOrder> aTemp = new ArrayList<>();
 
-        final HashMap<TripOrder, Integer> positionLookup = new HashMap<>();
+         positionLookup = new HashMap<>();
+        TripPlannerActivity.dates = new LinkedHashSet<>();
+        TripPlannerActivity.hm = new HashMap<>();
         for(int j = 0;j<trip.getTrips().size();j++)
         {
             TripPlannerActivity.dates.add(trip.getTrips().get(j).getLocation().getDay());
             positionLookup.put(trip.getTrips().get(j), j);
         }
         Iterator<String> it = TripPlannerActivity.dates.iterator();
-        it.next();
+        if(it.hasNext())
+            it.next();
+        redo = false;
         while(it.hasNext())
         {
 
-            String date = it.next();
-            Log.d("debug", "date: "+ date);
-            ArrayList<TripOrder> flwLocations = new ArrayList<>();
+            date = it.next();
+
+            RealmList<TripOrder> flwLocations = new RealmList<>();
 
             for(int j = 0;j<trip.getTrips().size();j++)
             {
                 if(trip.getTrips().get(j).getLocation().getName() != R.string.user)
                 {
-                    Log.d("debug", "day: "+ trip.getTrips().get(j).getLocation().getDay());
+
                     if(trip.getTrips().get(j).getLocation().getDay().equals(date))
                     {
                         flwLocations.add(trip.getTrips().get(j));
                         aTemp.add(trip.getTrips().get(j));
+                        Log.d("debug", "locations: " + getString(trip.getTrips().get(j).getLocation().getName()));
                     }
                 }
                 else
@@ -194,6 +198,7 @@ public class TripPlannerTimelineFragment extends Fragment {
                     {
                         flwLocations.add(trip.getTrips().get(j));
                         aTemp.add(trip.getTrips().get(j));
+                        Log.d("debug", "locations: " + getString(trip.getTrips().get(j).getLocation().getName()));
                     }
 
                 }
@@ -216,8 +221,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                 TripPlannerActivity.hm.put(date, flwLocations );
         }
 
-        Log.d("debug", "size: "+ aTemp.size());
-        Log.d("debug", "Realm size: "+ trip.getTrips().size());
         realm.beginTransaction();
         for(int i=0;i<aTemp.size();i++)
         {
@@ -233,32 +236,25 @@ public class TripPlannerTimelineFragment extends Fragment {
             positionLookup.put(trip.getTrips().get(i), i);
         }
         it = TripPlannerActivity.dates.iterator();
-        it.next();
+        if(it.hasNext())
+            it.next();
         while(it.hasNext()) {
-            flwLocations = TripPlannerActivity.hm.get(it.next());
-                if(flwLocations.size() > 1)
+            date = it.next();
+            flwLocations = TripPlannerActivity.hm.get(date);
+                if(flwLocations.size() > 2)
                 {
-
-                    mTripOrder = new RealmList<>();
-                    Log.d("debug", "locations: " + flwLocations.size());
-                    for(int i=0;i<flwLocations.size();i++)
-                    {
-                        Log.d("debug", "locations: "+flwLocations.get(i).getLocation().getLatlong());
-                    }
                     String[] middleLatLong = new String[flwLocations.size() - 2];
                     String midLatLong = "";
                     int j = 0;
                     // Put the middle locations in an array
                     for (int i = 0; i < flwLocations.size(); i++) {
                         if ( i != 0 && i != flwLocations.size()-1 && flwLocations.get(i).getLocation().getLatlong() != null) {
-                            Log.d("debug", "latlong: "+flwLocations.get(i).getLocation().getLatlong());
                             middleLatLong[j] = flwLocations.get(i).getLocation().getLatlong();
                             j++;
                         }
                     }
                     // Create the middle locations string for the api
                     for (int i = 0; i < middleLatLong.length; i++) {
-                        Log.d("debug", "mid: " + middleLatLong[i]);
                         if (i != middleLatLong.length - 1) {
                             midLatLong += middleLatLong[i] + "|";
                         } else {
@@ -273,45 +269,66 @@ public class TripPlannerTimelineFragment extends Fragment {
                     call2.enqueue(new Callback<DirectionsModel>() {
                         @Override
                         public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                            Toast toast;
                             if (response.isSuccessful()) {
                                 int j = 0;
-                                ArrayList<Integer> waypointOrder = new ArrayList<>();
+                                realm.beginTransaction();
                                 // Grab the order of the middle sites
-                                for (int k = 0; k < response.body().getRoutes().get(0).getWaypointOrder().size(); k++) {
-                                    waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k) + 1);
-                                }
-                                for (int i = 0; i <= response.body().getRoutes().get(0).getLegs().size(); i++) {
+                                for (int i = 0; i < response.body().getRoutes().get(0).getLegs().size(); i++) {
                                     // Get travel time for the start location
                                     if (i == 0) {
-                                        TripOrder trip = new TripOrder(flwLocations.get(0).getLocation(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                                        trip.setTimeValue(trip.getTimeValue() / 60);
-                                        if (!mTripOrder.contains(trip))
-                                            mTripOrder.add(trip);
+                                        flwLocations.get(0).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
+                                        flwLocations.get(0).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
+                                        Log.d("debug", "start times: "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
                                     }
                                     // Get travel time for the end location
-                                    else if (i == response.body().getRoutes().get(0).getLegs().size()) {
-                                        TripOrder trip = new TripOrder(flwLocations.get(flwLocations.size()-1).getLocation(), "", 0);
-                                        trip.setTimeValue(trip.getTimeValue() / 60);
-                                        if (!mTripOrder.contains(trip))
-                                            mTripOrder.add(trip);
+                                    else if (i == response.body().getRoutes().get(0).getLegs().size()-1) {
+                                        flwLocations.get(flwLocations.size()-1).setTimeText("");
+                                        flwLocations.get(flwLocations.size()-1).setTimeValue(0);
+
                                     }
                                     // Get the travel time for the middle locations
                                     else {
-                                        TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                                        trip.setTimeValue(trip.getTimeValue() / 60);
-                                        if (!mTripOrder.contains(trip))
-                                            mTripOrder.add(trip);
+                                        flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
+                                        flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
+                                        Log.d("debug", "middle times: "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
                                         j++;
                                     }
                                 }
-                                /*
-                                realm.beginTransaction();
-                                trip.setTrips(mTripOrder);
-                                realm.copyToRealmOrUpdate(trip);
+                                for(int i = 0;i<flwLocations.size()-1;i++)
+                                {
+                                    if(flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime()))
+                                    {
+                                        Log.d("debug", "times: "+ flwLocations.get(i+1).getStartTourTime()+"first time "+ flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime());
+                                        String name = getString(flwLocations.get(i+1).getLocation().getName());
+                                        //flwLocations.remove(i+1);
+                                        flwLocations.remove(i+1);
+                                        flwLocations.get(i).setTimeValue(0);
+                                        flwLocations.get(i).setTimeText("");
+                                        TripPlannerActivity.hm.put(date, flwLocations);
+                                        toast = Toast.makeText(getContext(),"Removed " + name +" travel time to long.",Toast.LENGTH_LONG);
+                                        toast.show();
+                                        redo = true;
+
+
+                                        trip.getTrips().remove(i+1);
+                                        realm.copyToRealmOrUpdate(trip);
+
+
+                                        i--;
+                                    }
+                                }
                                 realm.commitTransaction();
-                                trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-                                  */
+                                for(int i=0;i<flwLocations.size();i++)
+                                {
+                                    newTripOrder.add(flwLocations.get(i));
+                                }
                                 adapter.notifyDataSetChanged();
+                                Log.d("debug", "redo: "+ redo);
+                                if(redo)
+                                {
+                                    createFinalTripPlan();
+                                }
                             }
                         }
 
@@ -322,6 +339,11 @@ public class TripPlannerTimelineFragment extends Fragment {
                     });
                 }
         }
+
+
+        //trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+
+
 
     }
 

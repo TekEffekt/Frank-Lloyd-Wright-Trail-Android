@@ -49,6 +49,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
 import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.RealmResults;
 
 /**
@@ -63,7 +64,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private RecyclerView recycler;
     private TourMenuAdapter adapter;
     private LinearLayoutManager layoutManager;
-    public static HashMap<String, ArrayList<TripOrder>> hm = new HashMap<>();
+    public static HashMap<String, RealmList<TripOrder>> hm = new HashMap<>();
     public static LinkedHashSet<String> dates = new LinkedHashSet<>();
     private Realm realm;
     private static String newTripPosition;
