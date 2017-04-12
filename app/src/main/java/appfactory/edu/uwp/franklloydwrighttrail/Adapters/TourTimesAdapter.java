@@ -117,15 +117,19 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         if (location.getDay() != null){
             holder.date.setText(location.getDay());
         }
+
         if (locations.getTrips().get(position).getStartTourTime() != -1){
             long time = locations.getTrips().get(position).getStartTourTime();
-            int minute = (int) time % 60;
-            int hour = ((int) time - minute) / 60;
-            holder.startTime.setText(timeToString(hour, minute));
+            int min = (int) time % 60;
+            int hourOfDay = ((int) time - minute) / 60;
+            holder.startTime.setText(timeToString(hourOfDay, min));
         }
+
         if (locations.getTrips().get(position).getEndTourTime() != -1){
             long time = locations.getTrips().get(position).getEndTourTime();
-            holder.startTime.setText(timeToString(hour, minute));
+            int min = (int) time % 60;
+            int hourOfDay = ((int) time - minute) / 60;
+            holder.endTime.setText(timeToString(hourOfDay, min));
         }
 
         // Gather tour date

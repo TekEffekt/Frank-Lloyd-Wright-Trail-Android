@@ -11,13 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.TripPlannerActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TourTimesAdapter;
+import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
 import appfactory.edu.uwp.franklloydwrighttrail.RealmController;
+import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
+import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import io.realm.Realm;
+import io.realm.RealmList;
 
 /**
  * Created by sterl on 2/19/2017.
@@ -58,7 +63,9 @@ public class TripPlannerTourTimesFragment extends Fragment {
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TripPlannerActivity)getContext()).showTimeline(true,tripPosition);
+                //if (checkIfFilledOut()) {
+                    ((TripPlannerActivity) getContext()).showTimeline(true, tripPosition);
+                //}
             }
         });
         previous = (Button) view.findViewById(R.id.previous);
@@ -71,5 +78,18 @@ public class TripPlannerTourTimesFragment extends Fragment {
         realm = RealmController.getInstance().getRealm();
 
         return view;
+    }
+
+    private boolean checkIfFilledOut(){
+        TripObject trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        boolean complete = true;
+        RealmList<TripOrder> trips = trip.getTrips();
+        for(int i = 0; i < trips.size(); i++){
+            TripOrder location = trips.get(i);
+            if(location.getStartTourTime()== -1 || location.getEndTourTime() == -1 || location.getLocation().getDay() == null){
+                complete = false;
+            }
+        }
+        return complete;
     }
 }
