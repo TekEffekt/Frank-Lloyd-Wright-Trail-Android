@@ -34,6 +34,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.TripObject;
 import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 import io.realm.RealmList;
 
 /**
@@ -48,7 +49,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     int tLine = 0;
     int temp =0;
     int counter =0;
-    ArrayList<TripOrder> aTrip = new ArrayList<>();
+    RealmList<TripOrder> aTrip = new RealmList<>();
     private TripOrder trip;
     private boolean isFinal;
 
@@ -61,18 +62,20 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         {
             Iterator<String> it = TripPlannerActivity.dates.iterator();
 
-            ArrayList<TripOrder> temp = new ArrayList<>();
+            RealmList<TripOrder> temp;
+            if(it.hasNext())
             it.next();
+
             while(it.hasNext())
             {
                 temp = TripPlannerActivity.hm.get(it.next());
                 for(int i = 0;i<temp.size();i++)
                 {
                     aTrip.add(temp.get(i));
-                    Log.d("debug", "temp: " + temp.get(i).getLocation().getLatlong());
+
                 }
             }
-            Log.d("debug", "aTrip: " + aTrip.size());
+
         }
 
     }
@@ -88,6 +91,25 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     @Override
     public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
+        if(isFinal)
+        {
+            Iterator<String> it = TripPlannerActivity.dates.iterator();
+
+            RealmList<TripOrder> temp;
+            if(it.hasNext())
+            it.next();
+            aTrip = new RealmList<>();
+            while(it.hasNext())
+            {
+                temp = TripPlannerActivity.hm.get(it.next());
+                for(int i = 0;i<temp.size();i++)
+                {
+                    aTrip.add(temp.get(i));
+
+                }
+            }
+
+        }
         //hides if last
         if (trips.getTrips().size() - 1 == position){
             holder.tripLengthContainer.setVisibility(View.GONE);
@@ -245,7 +267,19 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     @Override
     public int getItemCount() {
-        return trips.getTrips().size();
+        if(!isFinal)
+            return trips.getTrips().size();
+        else {
+            Iterator<String> it = TripPlannerActivity.dates.iterator();
+            it.next();
+            int count = 0;
+            while (it.hasNext())
+            {
+                count += TripPlannerActivity.hm.get(it.next()).size();
+
+            }
+            return count;
+        }
     }
 
     @Override
