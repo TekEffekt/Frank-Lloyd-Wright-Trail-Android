@@ -91,10 +91,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private ImageView startHint;
     private ImageView endHint;
 
-    private boolean startTimeChosen = false;
-    private boolean endTimeChosen = false;
-    private boolean timeValid = false;
-
     public static TripPlannerCreateTripFragment newInstance(String position){
         TripPlannerCreateTripFragment fragment = new TripPlannerCreateTripFragment();
         tripPosition = position;
@@ -209,10 +205,12 @@ public class TripPlannerCreateTripFragment extends Fragment {
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                realm.beginTransaction();
-                RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
-                realm.commitTransaction();
-                ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
+                if (checkTimeValid()){
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
+                    realm.commitTransaction();
+                    ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
+                }
             }
         });
 
@@ -322,7 +320,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
                         String minuteDay = "";
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults(tripPosition).get(0).setStartTime(time);
-                        startTimeChosen = true;
                         realm.commitTransaction();
                         startTimeLabel.setText(timeToString(minute,hourOfDay));
                     }
@@ -342,7 +339,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
                         int time = hourOfDay*60+minute;
                         realm.beginTransaction();
                         RealmController.getInstance().getTripResults(tripPosition).get(0).setEndTime(time);
-                        endTimeChosen = true;
                         realm.commitTransaction();
                         endTimeLabel.setText(timeToString(minute,hourOfDay));
                     }
@@ -494,11 +490,17 @@ public class TripPlannerCreateTripFragment extends Fragment {
     }
 
     private boolean checkTimeValid(){
-        if (trip.getStartTime() != 0 && trip.getEndTime() != 0) {
-            if (trip.getStartTime() > trip.getEndTime()) {
-                return false;
+        if (!RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().isEmpty()) {
+            int start = RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime();
+            int end = RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime();
+            if (start != 0 && end != 0) {
+                if (start > end) {
+                    return false;
+                } else {
+                    return true;
+                }
             } else {
-                return true;
+                return false;
             }
         } else {
             return false;
