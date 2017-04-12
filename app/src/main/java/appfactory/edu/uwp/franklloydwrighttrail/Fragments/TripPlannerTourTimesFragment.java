@@ -32,6 +32,7 @@ public class TripPlannerTourTimesFragment extends Fragment {
     private Realm realm;
     private static String tripPosition;
     private Button cont;
+    private Button previous;
 
     public static TripPlannerTourTimesFragment newInstance(String position){
         TripPlannerTourTimesFragment tripPlannerTourTimesFragment = new TripPlannerTourTimesFragment();
@@ -58,6 +59,13 @@ public class TripPlannerTourTimesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 ((TripPlannerActivity)getContext()).showTimeline(true,tripPosition);
+            }
+        });
+        previous = (Button) view.findViewById(R.id.previous);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
             }
         });
         realm = RealmController.getInstance().getRealm();

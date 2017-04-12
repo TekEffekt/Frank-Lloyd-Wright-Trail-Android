@@ -114,6 +114,20 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             }
         });
 
+        if (location.getDay() != null){
+            holder.date.setText(location.getDay());
+        }
+        if (locations.getTrips().get(position).getStartTourTime() != -1){
+            long time = locations.getTrips().get(position).getStartTourTime();
+            int minute = (int) time % 60;
+            int hour = ((int) time - minute) / 60;
+            holder.startTime.setText(timeToString(hour, minute));
+        }
+        if (locations.getTrips().get(position).getEndTourTime() != -1){
+            long time = locations.getTrips().get(position).getEndTourTime();
+            holder.startTime.setText(timeToString(hour, minute));
+        }
+
         // Gather tour date
         holder.date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +176,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
 
     // This method enables the user to input a new tour date
     private void getTourDate(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
-        datePicker = new DatePickerDialog(context, DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+        datePicker = new DatePickerDialog(context, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                 Date tourDate = new Date(year,month,dayOfMonth);
@@ -179,7 +193,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
 
     // This method enables the user to input a new start tour time
     private void getTourStartTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
-        timePicker = new TimePickerDialog(context, TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+        timePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Time textTime = new Time(hourOfDay,minute,0);
@@ -189,35 +203,39 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(position).setStartTourTime(time);
                 realm.commitTransaction();
 
-                String hourDay = "";
-                String minuteDay = "";
-
-                if(minute < 10) {
-                    minuteDay = "0" + minute;
-                } else {
-                    minuteDay = minute + "";
-                }
-                if(hourOfDay > 12) {
-                    hourOfDay -= 12;
-                    hourDay = hourOfDay +"";
-                    minuteDay = minuteDay + " PM";
-                } else {
-                    if (hourOfDay == 0){
-                        hourOfDay = 12;
-                    }
-                    hourDay = hourOfDay +"";
-                    minuteDay = minuteDay + " AM";
-                }
-                holder.startTime.setText(hourDay + ":" + minuteDay);
+                holder.startTime.setText(timeToString(hourOfDay, minute));
             }
         }, hour, minute, false);
         timePicker.setTitle("Trip Tour Time");
         timePicker.show();
     }
 
+    private String timeToString(int hourOfDay, int minute){
+        String hourDay = "";
+        String minuteDay = "";
+
+        if(minute < 10) {
+            minuteDay = "0" + minute;
+        } else {
+            minuteDay = minute + "";
+        }
+        if(hourOfDay > 12) {
+            hourOfDay -= 12;
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " PM";
+        } else {
+            if (hourOfDay == 0){
+                hourOfDay = 12;
+            }
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " AM";
+        }
+        return hourDay + ":" + minuteDay;
+    }
+
     // This method enables the user to input a new end tour time
     private void getTourEndTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
-        timePicker = new TimePickerDialog(context, TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+        timePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 Time textTime = new Time(hourOfDay,minute,0);

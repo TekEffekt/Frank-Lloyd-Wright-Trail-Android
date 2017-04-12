@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -60,6 +61,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
 
     private EditText tripNameEdit;
     private Button cont;
+    private Button previous;
 
     private ImageView addTripButton;
     private LayoutInflater inflater;
@@ -207,7 +209,18 @@ public class TripPlannerCreateTripFragment extends Fragment {
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                realm.beginTransaction();
+                RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
+                realm.commitTransaction();
                 ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
+            }
+        });
+
+        previous = (Button) view.findViewById(R.id.previous);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TripPlannerActivity)getContext()).goBackToMenu();
             }
         });
 

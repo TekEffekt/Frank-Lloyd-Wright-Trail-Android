@@ -26,6 +26,8 @@ public class TripObject extends RealmObject{
     private int lunchTime;
     private int breakfastTime;
 
+    private boolean isFinal;
+
     public TripObject(){
         trips = new RealmList<TripOrder>();
         startTime = 0;
@@ -36,6 +38,8 @@ public class TripObject extends RealmObject{
         dinnerTime = 0;
         lunchTime = 0;
         breakfastTime = 0;
+
+        isFinal = false;
     }
     public TripObject (String key){
         trips = new RealmList<TripOrder>();
@@ -48,6 +52,8 @@ public class TripObject extends RealmObject{
         dinnerTime = 0;
         lunchTime = 0;
         breakfastTime = 0;
+
+        isFinal = false;
     };
 
     public RealmList<TripOrder> getTrips() {
@@ -113,5 +119,13 @@ public class TripObject extends RealmObject{
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isFinal() {
+        return isFinal;
+    }
+
+    public void setFinal(boolean aFinal) {
+        isFinal = aFinal;
     }
 }

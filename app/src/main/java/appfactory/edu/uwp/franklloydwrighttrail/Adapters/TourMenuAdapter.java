@@ -79,7 +79,11 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
         holder.viewTrip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ((TripPlannerActivity) context).showTimeline(true, trip.getKey());
+                if(trip.isFinal()) {
+                    ((TripPlannerActivity) context).showTimeline(true, trip.getKey());
+                } else {
+                    ((TripPlannerActivity) context).showTrip(trip.getKey());
+                }
             }
         });
     }

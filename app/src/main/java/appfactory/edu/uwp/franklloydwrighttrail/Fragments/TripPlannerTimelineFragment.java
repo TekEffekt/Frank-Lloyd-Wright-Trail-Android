@@ -63,6 +63,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     private static String tripPosition;
     private ArrayList<TripOrder> flwLocations;
     private Button contTimes;
+    private Button previous;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
@@ -100,6 +101,25 @@ public class TripPlannerTimelineFragment extends Fragment {
                 FragmentManager fragmentManager = ((TripPlannerActivity)getContext()).getSupportFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
                 transaction.replace(R.id.content_frame, TripPlannerTourTimesFragment.newInstance(tripPosition)).commit();
+            }
+        });
+
+        previous = (Button) view.findViewById(R.id.previous);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(isFinal) {
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(false);
+                    realm.commitTransaction();
+                    FragmentManager fragmentManager = ((TripPlannerActivity) getContext()).getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.content_frame, TripPlannerTourTimesFragment.newInstance(tripPosition)).commit();
+                } else {
+                    FragmentManager fragmentManager = ((TripPlannerActivity)getContext()).getSupportFragmentManager();
+                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+                    transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(tripPosition)).commit();
+                }
             }
         });
 

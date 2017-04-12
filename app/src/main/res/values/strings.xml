@@ -31,6 +31,7 @@
     <string name="choose_times">Choose Times</string>
     <string name="trip_options">Trip Options</string>
     <string name="cont">Continue</string>
+    <string name="back">Go Back</string>
     <string name="start">Start</string>
     <string name="end">End</string>
     <string name="length">Length</string>
