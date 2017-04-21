@@ -323,7 +323,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(getContext(),TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -344,7 +344,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         endTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(getContext(), TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -365,7 +365,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         startDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                datePicker = new DatePickerDialog(getContext() new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Date tourDate = new Date(year,month,dayOfMonth);
@@ -384,7 +384,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         endDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Date tourDate = new Date(year,month,dayOfMonth);
