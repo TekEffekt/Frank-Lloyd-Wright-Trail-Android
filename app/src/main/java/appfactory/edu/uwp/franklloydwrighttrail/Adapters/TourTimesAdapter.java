@@ -146,6 +146,12 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 getTourDate(holder, position);
             }
         });
+        holder.dateContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getTourDate(holder, position);
+            }
+        });
 
         // Gather tour time
         holder.startTime.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +168,13 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
             }
         });
 
+        holder.startTimeContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getTourStartTime(holder, position);
+            }
+        });
+
         // Gather tour time
         holder.endTime.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +184,13 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         });
 
         holder.endTimeArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getTourEndTime(holder, position);
+            }
+        });
+
+        holder.endTimeContainer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getTourEndTime(holder, position);
@@ -306,6 +326,9 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         RelativeLayout signupContainer;
 
         @Nullable
+        @Bind(R.id.date_container)
+        RelativeLayout dateContainer;
+        @Nullable
         @Bind(R.id.tour_date)
         TextView date;
         @Nullable
@@ -313,12 +336,19 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         ImageView dateArrow;
 
         @Nullable
+        @Bind(R.id.start_time_container)
+        RelativeLayout startTimeContainer;
+        @Nullable
         @Bind(R.id.tour_start_time)
         TextView startTime;
         @Nullable
         @Bind(R.id.right_arrow_start_time)
         ImageView startTimeArrow;
 
+
+        @Nullable
+        @Bind(R.id.end_time_container)
+        RelativeLayout endTimeContainer;
         @Nullable
         @Bind(R.id.tour_end_time)
         TextView endTime;

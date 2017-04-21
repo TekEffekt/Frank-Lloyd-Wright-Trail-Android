@@ -204,10 +204,10 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
                 break;
             case R.id.nav_trip_planner:
                 break;
-            case R.id.nav_settings:
+            /*case R.id.nav_settings:
                 break;
             case R.id.nav_about:
-                break;
+                break; */
         }
 
         drawer.closeDrawer(GravityCompat.START);

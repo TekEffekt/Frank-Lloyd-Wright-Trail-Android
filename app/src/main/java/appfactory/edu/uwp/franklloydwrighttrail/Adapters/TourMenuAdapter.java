@@ -86,6 +86,16 @@ public class TourMenuAdapter extends RecyclerView.Adapter<TourMenuAdapter.ViewHo
                 }
             }
         });
+        holder.container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(trip.isFinal()) {
+                    ((TripPlannerActivity) context).showTimeline(true, trip.getKey());
+                } else {
+                    ((TripPlannerActivity) context).showTrip(trip.getKey());
+                }
+            }
+        });
     }
 
     public TripObject getItem(int position) {
