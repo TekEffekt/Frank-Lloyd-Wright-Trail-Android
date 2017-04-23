@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/menu_item_add_trip"
-        android:icon="@drawable/ic_add"
-        app:showAsAction="ifRoom"/>
+        android:icon="@drawable/ic_add_light"
+        app:showAsAction="ifRoom"
+        android:title="Add Trip" />
 
 </menu>

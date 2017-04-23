@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
@@ -60,6 +61,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private DrawerLayout drawer;
     private RelativeLayout create;
     private NavigationView navigationView;
+    private FrameLayout fragmentView;
 
     private RecyclerView recycler;
     private TourMenuAdapter adapter;
@@ -89,10 +91,12 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
     public void goBackToMenu(){
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.remove(fragmentManager.getFragments().get(0)).commit();
+        fragmentManager.popBackStackImmediate();
+        //FragmentTransaction transaction = fragmentManager.beginTransaction();
+        //transaction.remove(fragmentManager.getFragments().get(0)).commit();
 
         recycler.setVisibility(View.VISIBLE);
+        fragmentView.setVisibility(View.GONE);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Trip Planner");
@@ -108,6 +112,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         this.realm = RealmController.with(this).getRealm();
         newTripPosition = UUID.randomUUID().toString(); // ensures it's random
         create = (RelativeLayout) findViewById(R.id.create);
+        fragmentView = (FrameLayout) findViewById(R.id.content_frame);
 
         setupNavMenu();
         setupRecycler();
@@ -182,6 +187,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(newTripPosition)).commit();
 
+        fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
 
@@ -219,6 +225,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(position)).commit();
 
+        fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
 
@@ -233,6 +240,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_frame, TripPlannerTimelineFragment.newInstance(isFinal, position)).commit();
 
+        fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
 
