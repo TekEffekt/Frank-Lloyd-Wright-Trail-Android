@@ -50,8 +50,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
 
     private CardView destinationCard;
 
-    private Calendar currentTime;
-
     public static TripPlannerSelectionFragment newInstance(String position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
         tripPosition = position;
@@ -159,37 +157,6 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
             destinationCard.setCardBackgroundColor(Color.WHITE);
         } else {
             destinationCard.setCardBackgroundColor(Color.LTGRAY);
-        }
-    }
-
-    private String getMonth(int month){
-        switch (month){
-            case 0:
-                return "January";
-            case 1:
-                return "February";
-            case 2:
-                return "March";
-            case 3:
-                return "April";
-            case 4:
-                return "May";
-            case 5:
-                return "June";
-            case 6:
-                return "July";
-            case 7:
-                return "August";
-            case 8:
-                return "September";
-            case 9:
-                return "October";
-            case 10:
-                return "November";
-            case 11:
-                return "December";
-            default:
-                return "Month";
         }
     }
 }

@@ -1,8 +1,10 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +45,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.LocationSelectionAdapter;
@@ -250,8 +262,31 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             mMap.setMyLocationEnabled(true);
         }
 
+        List<LatLng> polyLineFromJson = getFromFile(this, "flw-polyline.json", new TypeToken<LatLng>(){});
+        mMap.addPolyline(new PolylineOptions().addAll(polyLineFromJson).color(Color.parseColor("#a6192e")).width(15));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPlace, 7));
         mMap.setOnMarkerClickListener(this);
+    }
+
+    private <T> ArrayList<T> getFromFile(Context context, String file, TypeToken<T> token) {
+        Gson gson = new GsonBuilder().create();
+        ArrayList<T> returnList = new ArrayList<>();
+        try {
+            JsonReader reader = new JsonReader(
+                    new InputStreamReader(context.getAssets().open(file), "UTF-8"));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                T object = gson.fromJson(reader, token.getType());
+                returnList.add(object);
+            }
+            reader.endArray();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Map", "JSON read error: " + e.getMessage());
+        }
+        Log.d("Map Coordinates", returnList.toString());
+        return returnList;
     }
 
     @Override
