@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -13,6 +14,7 @@ import appfactory.edu.uwp.franklloydwrighttrail.R;
 
 public class ImageThreeFragment extends Fragment {
     public static ImageView imageThree;
+    public static TextView credits;
 
     public ImageThreeFragment() {
         // Required empty public constructor
@@ -28,6 +30,7 @@ public class ImageThreeFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_image_three, container, false);
         imageThree = (ImageView) view.findViewById(R.id.imageThree);
+        credits = (TextView) view.findViewById(R.id.credits);
 
         switch(DescriptonActivity.value)
         {
@@ -41,6 +44,7 @@ public class ImageThreeFragment extends Fragment {
                 break;
             case "Monona Terrace":
                 imageThree.setImageResource(R.drawable.mt3);
+                credits.setText("Photo: Sarah Wykhuis");
 
                 break;
             case "Meeting House":
