@@ -147,6 +147,8 @@ public class TripPlannerCreateTripFragment extends Fragment {
                     RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
                     realm.commitTransaction();
                     ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
+                } else {
+                    Toast.makeText(getContext(), "Trip setup is not complete.", Toast.LENGTH_SHORT).show();
                 }
             }
         });

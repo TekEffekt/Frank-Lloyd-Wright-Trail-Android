@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -63,9 +64,11 @@ public class TripPlannerTourTimesFragment extends Fragment {
         cont.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //if (checkIfFilledOut()) {
+                if (checkIfFilledOut()) {
                     ((TripPlannerActivity) getContext()).showTimeline(true, tripPosition);
-                //}
+                } else {
+                    Toast.makeText(getContext(), "Tour times are not filled out completely.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         previous = (Button) view.findViewById(R.id.previous);
@@ -84,7 +87,7 @@ public class TripPlannerTourTimesFragment extends Fragment {
         TripObject trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         boolean complete = true;
         RealmList<TripOrder> trips = trip.getTrips();
-        for(int i = 0; i < trips.size(); i++){
+        for(int i = 1; i < trips.size(); i++){
             TripOrder location = trips.get(i);
             if(location.getStartTourTime()== -1 || location.getEndTourTime() == -1 || location.getLocation().getDay() == null){
                 complete = false;
