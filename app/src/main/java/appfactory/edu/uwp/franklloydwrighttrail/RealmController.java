@@ -18,25 +18,28 @@ public class RealmController {
     private static RealmController instance;
     private final Realm realm;
 
-    public RealmController(Application application) {
-        realm = Realm.getInstance(new RealmConfiguration.Builder().build());
+    public RealmController() {
+        realm = Realm.getDefaultInstance();
     }
 
     public static RealmController with(Fragment fragment){
         if (instance == null) {
-            instance = new RealmController(fragment.getActivity().getApplication());
+            instance = new RealmController();
         }
         return instance;
     }
 
     public static RealmController with(Activity activity) {
         if (instance == null) {
-            instance = new RealmController(activity.getApplication());
+            instance = new RealmController();
         }
         return instance;
     }
 
     public static RealmController getInstance() {
+        if (instance == null) {
+            instance = new RealmController();
+        }
         return instance;
     }
 
