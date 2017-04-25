@@ -68,7 +68,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     private Button previous;
     public boolean redo;
     public HashMap<TripOrder, Integer> positionLookup;
-    String date;
+    private String date;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();

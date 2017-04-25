@@ -196,10 +196,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 break;
             //case R.id.nav_scrapbook:
             //    break;
-            case R.id.nav_settings:
-                break;
-            case R.id.nav_about:
-                break;
+            //case R.id.nav_settings:
+            //    break;
+            //case R.id.nav_about:
+            //    break;
         }
 
         drawer.closeDrawer(GravityCompat.START);

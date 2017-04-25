@@ -22,6 +22,7 @@
         </menu>
     </item>
 
+    <!--
     <item android:title="Menu">
         <menu>
             <group android:checkableBehavior="single">
@@ -36,5 +37,6 @@
             </group>
         </menu>
     </item>
+    -->
 
 </menu>

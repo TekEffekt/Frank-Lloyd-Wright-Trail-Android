@@ -85,6 +85,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private RecyclerView stopRecyclerView;
     private CurrentStopAdapter stopAdapter;
     private LinearLayoutManager stopLayoutManager;
+    private RelativeLayout addStopContainer;
 
     private ImageView nameHint;
     private ImageView stopsHint;
@@ -126,10 +127,73 @@ public class TripPlannerCreateTripFragment extends Fragment {
         addTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Redirects to FLW stops exclusively
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction transaction = fragmentManager.beginTransaction();
-                transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(tripPosition)).commit();
+                addStopAction();
+            }
+        });
+        addStopContainer = (RelativeLayout) view.findViewById(R.id.trip_stop_container);
+        addStopContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addStopAction();
+            }
+        });
+
+        cont = (Button) view.findViewById(R.id.to_timeline_cont);
+        cont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (checkTimeValid()){
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
+                    realm.commitTransaction();
+                    ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
+                } else {
+                    Toast.makeText(getContext(), "Trip setup is not complete.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        previous = (Button) view.findViewById(R.id.previous);
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ((TripPlannerActivity)getContext()).goBackToMenu();
+            }
+        });
+
+        tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
+        if (!trip.getName().equals("Unnamed Trip")){
+            tripNameEdit.setHint(trip.getName());
+        }
+        startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
+        endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
+
+        //startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
+        //endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
+
+        startTimeLabel = (TextView) view.findViewById(R.id.start_time);
+        if (trip.getStartTime() != 0){
+            startTimeLabel.setText(timeToString(trip.getStartTime()));
+        }
+        endTimeLabel = (TextView) view.findViewById(R.id.end_time);
+        if (trip.getEndTime() != 0){
+            endTimeLabel.setText(timeToString(trip.getEndTime()));
+        }
+        startDateLabel = (TextView) view.findViewById(R.id.start_date);
+        //if (!trip.){
+        //    startDateLabel.setText(trip.);
+        //}
+        endDateLabel = (TextView) view.findViewById(R.id.end_date);
+        //if (trip.getEndDate() != 0){
+        //    endDateLabel.setText(trip.);
+        //}
+    }
+
+    private void addStopAction(){
+        // Redirects to FLW stops exclusively
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.content_frame, TripPlannerSelectionFragment.newInstance(tripPosition)).commit();
                 /*)
                 inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 String[] items = {"Frank Lloyd Wright Location","Other Stop"};
@@ -198,56 +262,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 AlertDialog dialog = builder.create();
                 dialog.show();
                 */
-            }
-        });
-
-        cont = (Button) view.findViewById(R.id.to_timeline_cont);
-        cont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (checkTimeValid()){
-                    realm.beginTransaction();
-                    RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
-                    realm.commitTransaction();
-                    ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
-                }
-            }
-        });
-
-        previous = (Button) view.findViewById(R.id.previous);
-        previous.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ((TripPlannerActivity)getContext()).goBackToMenu();
-            }
-        });
-
-        tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
-        if (!trip.getName().equals("Unnamed Trip")){
-            tripNameEdit.setHint(trip.getName());
-        }
-        startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
-        endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
-
-        //startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
-        //endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
-
-        startTimeLabel = (TextView) view.findViewById(R.id.start_time);
-        if (trip.getStartTime() != 0){
-            startTimeLabel.setText(timeToString(trip.getStartTime()));
-        }
-        endTimeLabel = (TextView) view.findViewById(R.id.end_time);
-        if (trip.getEndTime() != 0){
-            endTimeLabel.setText(timeToString(trip.getEndTime()));
-        }
-        startDateLabel = (TextView) view.findViewById(R.id.start_date);
-        //if (!trip.){
-        //    startDateLabel.setText(trip.);
-        //}
-        endDateLabel = (TextView) view.findViewById(R.id.end_date);
-        //if (trip.getEndDate() != 0){
-        //    endDateLabel.setText(trip.);
-        //}
     }
 
     private void setupRecyclerViews(View view){
@@ -311,7 +325,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(getContext(),TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -332,7 +346,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         endTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timePicker = new TimePickerDialog(getContext(), TimePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new TimePickerDialog.OnTimeSetListener() {
+                timePicker = new TimePickerDialog(getContext(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                         Time textTime = new Time(hourOfDay,minute,0);
@@ -353,7 +367,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         startDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                datePicker = new DatePickerDialog(getContext() new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Date tourDate = new Date(year,month,dayOfMonth);
@@ -372,7 +386,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         endDateLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                datePicker = new DatePickerDialog(getContext(), DatePickerDialog.THEME_DEVICE_DEFAULT_LIGHT, new DatePickerDialog.OnDateSetListener() {
+                datePicker = new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         Date tourDate = new Date(year,month,dayOfMonth);
