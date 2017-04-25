@@ -146,12 +146,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 getTourDate(holder, position);
             }
         });
-        holder.dateContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getTourDate(holder, position);
-            }
-        });
+
 
         // Gather tour time
         holder.startTime.setOnClickListener(new View.OnClickListener() {
@@ -326,9 +321,6 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         @Bind(R.id.signup_container)
         RelativeLayout signupContainer;
 
-        @Nullable
-        @Bind(R.id.date_container)
-        RelativeLayout dateContainer;
         @Nullable
         @Bind(R.id.tour_date)
         TextView date;
