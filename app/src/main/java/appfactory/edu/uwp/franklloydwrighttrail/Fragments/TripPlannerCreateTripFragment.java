@@ -508,7 +508,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
             int start = RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime();
             int end = RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime();
             if (start != 0 && end != 0) {
-                if (start > end) {
+                if (start >= end) {
                     return false;
                 } else {
                     return true;

@@ -89,7 +89,8 @@ public class TripPlannerTourTimesFragment extends Fragment {
         RealmList<TripOrder> trips = trip.getTrips();
         for(int i = 1; i < trips.size(); i++){
             TripOrder location = trips.get(i);
-            if(location.getStartTourTime()== -1 || location.getEndTourTime() == -1 || location.getLocation().getDay() == null){
+            if(location.getStartTourTime()== -1 || location.getEndTourTime() == -1 || location.getLocation().getDay() == null
+                    || location.getStartTourTime() == location.getEndTourTime()){
                 complete = false;
             }
         }

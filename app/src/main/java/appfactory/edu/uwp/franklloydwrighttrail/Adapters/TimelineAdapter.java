@@ -206,18 +206,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                     if(isFinal) {
                         hour = (int) trip.getStartTourTime() / 60;
                         min = (int) trip.getStartTourTime() % 60;
-                    }
-                    else
-                    {
+                    } else {
                         tLine = 60 + temp + tLine;
                         hour = tLine/60;
                         min = tLine%60;
                         temp = trip.getTimeValue();
                     }
-                }
-                if(hour > 23)
-                {
-                    hour = hour - 23;
                 }
                 if (trip.getLocation().getImage() != -1){
                     holder.name.setText(trip.getLocation().getName());
@@ -225,29 +219,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                     holder.name.setText(trip.getLocation().getGenericName());
                 }
 
-                if(hour < 12 && min < 10)
-                {
-                    holder.time.setText(hour + ":" + "0" + min + " AM");
-                }
-                else if (hour == 12 && min < 10) {
-                    holder.time.setText(hour + ":" + "0" +min + " PM");
-                }
-                else if (hour == 12) {
-                    int tempHour = hour - 12;
-                    holder.time.setText(hour + ":" + min + " PM");
-                }
-                else if (hour > 12 && min < 10) {
-                    int tempHour = hour - 12;
-                    holder.time.setText(tempHour + ":" + "0" +min + " PM");
-                }
-                else if (hour > 12) {
-                    int tempHour = hour - 12;
-                    holder.time.setText(tempHour + ":" + min + " PM");
-                }
-                else
-                {
-                    holder.time.setText(hour + ":" + min + " AM");
-                }
+                holder.time.setText(timeToString(hour,min));
 
                 if(isFinal && position !=0 && position < getItemCount()-2 && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay()))
                 {
@@ -316,4 +288,28 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             timelineView.initLine(viewType);
         }
     }
+
+    private String timeToString(int hourOfDay, int minute){
+        String hourDay = "";
+        String minuteDay = "";
+
+        if(minute < 10) {
+            minuteDay = "0" + minute;
+        } else {
+            minuteDay = minute + "";
+        }
+        if(hourOfDay > 12) {
+            hourOfDay -= 12;
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " PM";
+        } else {
+            if (hourOfDay == 0){
+                hourOfDay = 12;
+            }
+            hourDay = hourOfDay +"";
+            minuteDay = minuteDay + " AM";
+        }
+        return hourDay + ":" + minuteDay;
+    }
+
 }

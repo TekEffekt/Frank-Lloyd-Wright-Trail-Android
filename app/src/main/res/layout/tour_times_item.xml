@@ -102,12 +102,15 @@
                         android:layout_marginRight="15dp"/>
                     <TextView
                         android:id="@+id/tour_website"
-                        android:layout_width="wrap_content"
+                        android:layout_width="230dp"
+                        android:textAlignment="textEnd"
+                        android:gravity="end"
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/right_arrow_signup"
                         android:layout_marginRight="20dp"
-                        android:textSize="16dp"
-                        android:layout_centerVertical="true"
+                        android:textSize="14dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="10dp"
                         android:textColor="@color/red"
                         android:text="www.website.com"/>
                 </RelativeLayout>
