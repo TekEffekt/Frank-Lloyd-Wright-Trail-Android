@@ -129,12 +129,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         }
 
         if (position != 0) {
+            final String STRING_NAME = context.getString(trip.getLocation().getName());
+            final String LOCATION_URI = "google.navigation:q=" + trip.getLocation().getLatlong();
             holder.infoButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    String sName = context.getString(trip.getLocation().getName());
                     Intent intent = new Intent(context, DescriptonActivity.class);
-                    intent.putExtra("Title", sName);
+                    intent.putExtra("Title", STRING_NAME);
                     context.startActivity(intent);
                 }
             });
@@ -143,7 +144,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 @Override
                 public void onClick(View v) {
                     //Grab Location
-                    Uri gmmIntentUri = Uri.parse("google.navigation:q=" + trip.getLocation().getLatlong());
+                    Uri gmmIntentUri = Uri.parse(LOCATION_URI);
                     Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
                     mapIntent.setPackage("com.google.android.apps.maps");
                     context.startActivity(mapIntent);
