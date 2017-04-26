@@ -36,6 +36,7 @@ public class ImageThreeFragment extends Fragment {
         {
             case "SC Johnson Administration Building and Research Tower":
                 imageThree.setImageResource(R.drawable.scj3);
+                credits.setText("Photo: SC Johnson");
 
                 break;
             case "Wingspread":

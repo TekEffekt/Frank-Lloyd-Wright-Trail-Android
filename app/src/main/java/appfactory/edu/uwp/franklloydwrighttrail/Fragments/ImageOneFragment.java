@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.R;
@@ -13,6 +14,8 @@ import appfactory.edu.uwp.franklloydwrighttrail.R;
 
 public class ImageOneFragment extends Fragment {
     public static ImageView imageOne;
+    public static TextView credits;
+
     public ImageOneFragment() {
         // Required empty public constructor
     }
@@ -29,10 +32,13 @@ public class ImageOneFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_image_one, container, false);
         imageOne = (ImageView) view.findViewById(R.id.imageOne);
+        credits = (TextView) view.findViewById(R.id.credits);
+
         switch(DescriptonActivity.value)
         {
             case "SC Johnson Administration Building and Research Tower":
                 imageOne.setImageResource(R.drawable.scj1);
+                credits.setText("Photo: SC Johnson");
 
                 break;
             case "Wingspread":

@@ -128,12 +128,14 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
 
     private void checkSelection(int selection) {
         boolean existed = false;
-        if (RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().size() != 0) {
-            for (int i = 0; i < RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().size(); i++) {
-                if (RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().get(i).getLocation() == locations.get(selection)) {
+        RealmList<TripOrder> trips = RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips();
+        if (trips.size() != 0) {
+            for (int i = 0; i < trips.size(); i++) {
+                if (trips.get(i).getLocation().getName() == locations.get(selection).getName()) {
                     realm.beginTransaction();
-                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().remove(i);
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().deleteFromRealm(i);
                     realm.commitTransaction();
+
                     existed = true;
                     showSelection(selection,existed);
                 }
@@ -152,8 +154,8 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         }
     }
 
-    private void showSelection(int selection, boolean isSelected) {
-        if (isSelected) {
+    private void showSelection(int selection, boolean wasSelected) {
+        if (wasSelected) {
             destinationCard.setCardBackgroundColor(Color.WHITE);
         } else {
             destinationCard.setCardBackgroundColor(Color.LTGRAY);
