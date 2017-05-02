@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_toLeftOf="@id/right_arrow_signup"
                         android:layout_marginRight="20dp"
-                        android:textSize="14dp"
+                        android:textSize="15dp"
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="10dp"
                         android:textColor="@color/red"
