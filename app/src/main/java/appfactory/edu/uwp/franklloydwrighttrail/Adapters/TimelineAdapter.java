@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -216,6 +217,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
                 if (trip.getLocation().getImage() != -1){
                     holder.name.setText(trip.getLocation().getName());
+                    if (trip.getLocation().getName() == R.string.scjohnson){
+                        holder.name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                    }
                 } else {
                     holder.name.setText(trip.getLocation().getGenericName());
                 }
