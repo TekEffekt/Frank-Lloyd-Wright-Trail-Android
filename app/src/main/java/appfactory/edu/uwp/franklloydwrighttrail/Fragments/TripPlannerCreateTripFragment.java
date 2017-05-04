@@ -143,9 +143,6 @@ public class TripPlannerCreateTripFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkTimeValid()){
-                    realm.beginTransaction();
-                    RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
-                    realm.commitTransaction();
                     ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
                 } else {
                     Toast.makeText(getContext(), "Trip setup is not complete.", Toast.LENGTH_SHORT).show();
@@ -165,12 +162,12 @@ public class TripPlannerCreateTripFragment extends Fragment {
         if (!trip.getName().equals("Unnamed Trip")){
             tripNameEdit.setHint(trip.getName());
         }
-        startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
-        endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
+        //startTimeLayout = (RelativeLayout) view.findViewById(R.id.start_time_container);
+        //endTimeLayout = (RelativeLayout) view.findViewById(R.id.end_time_container);
 
         //startDateLayout = (RelativeLayout) view.findViewById(R.id.start_date_container);
         //endDateLayout = (RelativeLayout) view.findViewById(R.id.end_date_container);
-
+        /*
         startTimeLabel = (TextView) view.findViewById(R.id.start_time);
         if (trip.getStartTime() != 0){
             startTimeLabel.setText(timeToString(trip.getStartTime()));
@@ -187,6 +184,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         //if (trip.getEndDate() != 0){
         //    endDateLabel.setText(trip.);
         //}
+        */
     }
 
     private void addStopAction(){
@@ -278,12 +276,14 @@ public class TripPlannerCreateTripFragment extends Fragment {
     }
 
     private void setupTourTimeInput(){
+        /*
         currentTime = Calendar.getInstance();
         hour = currentTime.get(Calendar.HOUR_OF_DAY);
         minute = currentTime.get(Calendar.MINUTE);
         year = currentTime.get(Calendar.YEAR);
         month = currentTime.get(Calendar.MONTH);
         day = currentTime.get(Calendar.DAY_OF_MONTH);
+        */
 
         // Name
         /*
@@ -322,6 +322,13 @@ public class TripPlannerCreateTripFragment extends Fragment {
             }
         });
 
+        // Makes it so we override them chosing start or end time
+        realm.beginTransaction();
+        RealmController.getInstance().getTripResults(tripPosition).get(0).setStartTime(0001);
+        RealmController.getInstance().getTripResults(tripPosition).get(0).setEndTime(2230);
+        realm.commitTransaction();
+
+        /*
         startTimeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -362,6 +369,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
 
             }
         });
+        */
 
         /*
         startDateLayout.setOnClickListener(new View.OnClickListener() {
@@ -407,8 +415,8 @@ public class TripPlannerCreateTripFragment extends Fragment {
     private void setupHints(View view){
         nameHint = (ImageView) view.findViewById(R.id.name_hint);
         stopsHint = (ImageView) view.findViewById(R.id.stops_hint);
-        startHint = (ImageView) view.findViewById(R.id.start_hint);
-        endHint = (ImageView) view.findViewById(R.id.end_hint);
+        //startHint = (ImageView) view.findViewById(R.id.start_hint);
+        //endHint = (ImageView) view.findViewById(R.id.end_hint);
 
         nameHint.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -455,7 +463,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 dialog.show();
             }
         });
-
+/*
         startHint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -500,7 +508,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
                 AlertDialog dialog = builder.create();
                 dialog.show();
             }
-        });
+        }); */
     }
 
     private boolean checkTimeValid(){

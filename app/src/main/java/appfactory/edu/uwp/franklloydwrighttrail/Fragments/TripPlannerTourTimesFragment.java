@@ -65,6 +65,9 @@ public class TripPlannerTourTimesFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkIfFilledOut()) {
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).setFinal(true);
+                    realm.commitTransaction();
                     ((TripPlannerActivity) getContext()).showTimeline(true, tripPosition);
                 } else {
                     Toast.makeText(getContext(), "Tour times are not filled out completely.", Toast.LENGTH_SHORT).show();

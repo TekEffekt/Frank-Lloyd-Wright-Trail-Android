@@ -145,66 +145,67 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@color/light_gray"/>
+            <!--
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="10dp"
+                            android:layout_marginTop="10dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp">
+                            <TextView
+                                android:id="@+id/trip_start_container"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="20dp"
+                                android:text="@string/trip_start"
+                                android:textSize="16dp" />
+                            <ImageView
+                                android:id="@+id/start_hint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="25dp"
+                                android:src="@drawable/ic_hint"
+                                android:layout_marginRight="20dp"
+                                android:layout_alignParentRight="true"/>
+                        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/trip_start_container"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:text="@string/trip_start"
-                    android:textSize="16dp" />
-                <ImageView
-                    android:id="@+id/start_hint"
-                    android:layout_width="wrap_content"
-                    android:layout_height="25dp"
-                    android:src="@drawable/ic_hint"
-                    android:layout_marginRight="20dp"
-                    android:layout_alignParentRight="true"/>
-            </RelativeLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/light_gray"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_gray"/>
+                        <RelativeLayout
+                            android:id="@+id/start_time_container"
+                            android:layout_width="match_parent"
+                            android:layout_height="40dp"
+                            android:background="@color/white">
 
-            <RelativeLayout
-                android:id="@+id/start_time_container"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@color/white">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerVertical="true"
+                                android:layout_marginLeft="20dp"
+                                android:text="@string/trip_start_time"
+                                android:textColor="@color/gray"
+                                android:textSize="16dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="20dp"
-                    android:text="@string/trip_start_time"
-                    android:textColor="@color/gray"
-                    android:textSize="16dp" />
+                            <TextView
+                                android:id="@+id/start_time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:layout_centerVertical="true"
+                                android:layout_marginRight="20dp"
+                                android:text="@string/time_entry"
+                                android:textColor="@color/red"
+                                android:textSize="16dp" />
+                        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/start_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:text="@string/time_entry"
-                    android:textColor="@color/red"
-                    android:textSize="16dp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/light_gray"/>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/light_gray"/>
+            -->
 
             <!--
                         <RelativeLayout
@@ -242,6 +243,7 @@
                         </RelativeLayout>
                         -->
 
+            <!--
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -264,6 +266,7 @@
                     android:layout_marginRight="20dp"
                     android:layout_alignParentRight="true"/>
             </RelativeLayout>
+-->
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -274,34 +277,34 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <!--
+                                <RelativeLayout
+                                    android:id="@+id/end_time_container"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="40dp"
+                                    android:background="@color/white">
 
-                <RelativeLayout
-                    android:id="@+id/end_time_container"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@color/white">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginLeft="20dp"
+                                        android:text="@string/trip_end_time"
+                                        android:textColor="@color/gray"
+                                        android:textSize="16dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
-                        android:text="@string/trip_end_time"
-                        android:textColor="@color/gray"
-                        android:textSize="16dp" />
-
-                    <TextView
-                        android:id="@+id/end_time"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="20dp"
-                        android:text="@string/time_entry"
-                        android:textColor="@color/red"
-                        android:textSize="16dp" />
-                </RelativeLayout>
-
+                                    <TextView
+                                        android:id="@+id/end_time"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_alignParentRight="true"
+                                        android:layout_centerVertical="true"
+                                        android:layout_marginRight="20dp"
+                                        android:text="@string/time_entry"
+                                        android:textColor="@color/red"
+                                        android:textSize="16dp" />
+                                </RelativeLayout>
+                -->
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="1dp"

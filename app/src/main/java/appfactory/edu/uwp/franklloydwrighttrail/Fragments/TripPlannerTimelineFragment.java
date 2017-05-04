@@ -85,16 +85,13 @@ public class TripPlannerTimelineFragment extends Fragment {
         //if (RealmController.getInstance().hasTrip()){
 
         if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
-            if(isFinal)
-            {
+            if(isFinal) {
                 createFinalTripPlan();
-            }
-            else
-            {
+            } else {
                 initiateDataCalculation();
             }
-                // Creates Timeline if there is a trip
-                timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
+            // Creates Timeline if there is a trip
+            timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
 
             setupTimeline();
         }

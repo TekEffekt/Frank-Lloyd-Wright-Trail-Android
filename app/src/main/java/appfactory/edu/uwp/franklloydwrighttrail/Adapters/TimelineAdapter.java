@@ -110,6 +110,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
             }
 
+        } else {
+            holder.time.setVisibility(View.GONE);
         }
         //hides if last
         if (trips.getTrips().size() - 1 == position){
@@ -123,7 +125,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         {
             trip = aTrip.get(position);
         }
-
 
         if (trip.getLocation().getImage() != -1) {
             holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
