@@ -62,11 +62,9 @@ public class TripObject extends RealmObject{
 
     public void setTrips(RealmList<TripOrder> trips) {
         this.trips = new RealmList<>();
-        for(int i = 0;i<trips.size();i++)
-        {
-            this.trips.add(trips.get(i));
+        for (TripOrder trip: trips) {
+            this.trips.add(trip);
         }
-
     }
 
     public String getKey() {return key;}
@@ -127,5 +125,20 @@ public class TripObject extends RealmObject{
 
     public void setFinal(boolean aFinal) {
         isFinal = aFinal;
+    }
+
+    @Override
+    public String toString() {
+        return "TripObject{" +
+                "trips=" + trips +
+                ", key='" + key + '\'' +
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", name='" + name + '\'' +
+                ", dinnerTime=" + dinnerTime +
+                ", lunchTime=" + lunchTime +
+                ", breakfastTime=" + breakfastTime +
+                ", isFinal=" + isFinal +
+                '}';
     }
 }

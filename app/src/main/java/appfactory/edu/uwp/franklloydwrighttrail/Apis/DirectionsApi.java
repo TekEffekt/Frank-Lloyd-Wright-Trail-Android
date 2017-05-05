@@ -15,12 +15,13 @@ import retrofit2.http.Query;
 
 public interface DirectionsApi {
     public final String BASE_URL = "https://maps.googleapis.com/maps/api/directions/";
-    //json?origin=42.715237,-87.790697&destination=43.33472,-90.384367&waypoints=optimize:true|43.143901,-90.059523|42.784472,-87.771599
+    //json?origin=42.715237,-87.790697&destination=43.33472,-90.384367&waypoints=43.143901,-90.059523|42.784472,-87.771599
     @GET("https://maps.googleapis.com/maps/api/directions/json")
     Call<DirectionsModel> directions(
             @Query("origin") String startLatLong,
             @Query("destination") String endLatLong,
-            @Query("waypoints") String middleLatLong
+            @Query("waypoints") String middleLatLong,
+            @Query("key") String key
     );
 
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

@@ -2,6 +2,7 @@ package appfactory.edu.uwp.franklloydwrighttrail.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -38,6 +39,9 @@ import butterknife.ButterKnife;
 import io.realm.Realm;
 import io.realm.RealmList;
 
+import static appfactory.edu.uwp.franklloydwrighttrail.R.color.gray;
+import static appfactory.edu.uwp.franklloydwrighttrail.R.color.light_gray;
+
 /**
  * Created by sterl on 11/3/2016.
  */
@@ -53,6 +57,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     RealmList<TripOrder> aTrip = new RealmList<>();
     private TripOrder trip;
     private boolean isFinal;
+
+    public void setTrip(RealmList<TripOrder> trip) {
+        this.aTrip = trip;
+    }
 
     public TimelineAdapter (Context context, String tripPosition, boolean isFinal){
         this.context = context;
@@ -92,6 +100,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
     @Override
     public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
+        holder.setIsRecyclable(false);
         if(isFinal)
         {
             Iterator<String> it = TripPlannerActivity.dates.iterator();
@@ -226,7 +235,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
 
                 holder.time.setText(timeToString(hour,min));
-
+                if(trip.getLocation().getIsNoTime())
+                {
+                    holder.tripLocationContainer.setBackgroundColor(Color.GRAY);
+                }
+                else
+                {
+                    holder.tripLocationContainer.setBackgroundColor(Color.WHITE);
+                }
                 if(isFinal && position !=0 && position < getItemCount()-2 && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay()))
                 {
                     holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
@@ -277,7 +293,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         LinearLayout tripLengthContainer;
         @Nullable @Bind(R.id.trip_length_time)
         TextView tripLength;
-
+        @Nullable @Bind(R.id.location_container)
+        RelativeLayout tripLocationContainer;
         @Nullable @Bind(R.id.info_button)
         ImageButton infoButton;
         @Nullable @Bind(R.id.location_button)

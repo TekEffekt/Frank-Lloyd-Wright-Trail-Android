@@ -238,6 +238,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     public void showTimeline(boolean isFinal, String position){
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+
         transaction.replace(R.id.content_frame, TripPlannerTimelineFragment.newInstance(isFinal, position)).commit();
 
         fragmentView.setVisibility(View.VISIBLE);

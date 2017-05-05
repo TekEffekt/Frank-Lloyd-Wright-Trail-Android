@@ -186,6 +186,18 @@ public class Leg {
         this.viaWaypoint = viaWaypoint;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Leg{" +
+                "distance=" + distance +
+                ", duration=" + duration +
+                ", endAddress='" + endAddress + '\'' +
+                ", endLocation=" + endLocation +
+                ", startAddress='" + startAddress + '\'' +
+                ", startLocation=" + startLocation +
+                ", steps=" + steps +
+                ", trafficSpeedEntry=" + trafficSpeedEntry +
+                ", viaWaypoint=" + viaWaypoint +
+                '}';
+    }
 }

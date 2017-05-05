@@ -86,6 +86,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
 
     @Override
     public void onBindViewHolder(@NonNull final TourTimesAdapter.ViewHolder holder, final int position) {
+        holder.setIsRecyclable(false);
         FLWLocation location = locations.getTrips().get(position).getLocation();
 
         if (location.getName() != -1 && location.getName() != R.string.user) {
@@ -213,6 +214,7 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
 
     // This method enables the user to input a new start tour time
     private void getTourStartTime(@NonNull final TourTimesAdapter.ViewHolder holder, final int position){
+        final RecyclerView.Adapter adapter = this;
         timePicker = new TimePickerDialog(context, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {

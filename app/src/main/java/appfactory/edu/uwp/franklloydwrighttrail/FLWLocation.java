@@ -19,6 +19,7 @@ public class FLWLocation extends RealmObject{
     private double latitude;
     private double longitude;
     private String address;
+    private boolean isNoTime;
     @StringRes private int website;
 
     private String day;
@@ -35,7 +36,7 @@ public class FLWLocation extends RealmObject{
         this.longitude = longitude;
         this.address = address;
         this.website = website;
-
+        this.isNoTime = false;
         this.day = day;
     }
 
@@ -50,6 +51,7 @@ public class FLWLocation extends RealmObject{
         this.address = null;
         this.day = null;
         this.website = -1;
+        this.isNoTime = false;
     }
 
     public FLWLocation(String genericName){
@@ -62,6 +64,7 @@ public class FLWLocation extends RealmObject{
         this.longitude = -1;
         this.address = null;
         this.day = null;
+        this.isNoTime = false;
     }
 
     public int getImage() { return image; }
@@ -115,6 +118,10 @@ public class FLWLocation extends RealmObject{
     public void setGenericName(String genericName) {
         this.genericName = genericName;
     }
+
+    public boolean getIsNoTime(){return isNoTime;}
+
+    public void setIsNoTime(boolean noTime){this.isNoTime = noTime;}
 
     @Override
     public boolean equals(Object location)

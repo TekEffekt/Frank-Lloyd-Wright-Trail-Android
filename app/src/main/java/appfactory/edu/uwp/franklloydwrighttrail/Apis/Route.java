@@ -24,6 +24,18 @@ public class Route {
     @SerializedName("waypoint_order")
     private List<Integer> waypointOrder = new ArrayList<Integer>();
 
+    @Override
+    public String toString() {
+        return "Route{" +
+                "bounds=" + bounds +
+                ", copyrights='" + copyrights + '\'' +
+                ", legs=" + legs +
+                ", overviewPolyline=" + overviewPolyline +
+                ", summary='" + summary + '\'' +
+                ", warnings=" + warnings +
+                ", waypointOrder=" + waypointOrder +
+                '}';
+    }
 
     /**
      *

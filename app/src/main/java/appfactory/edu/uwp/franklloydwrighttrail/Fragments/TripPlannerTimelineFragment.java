@@ -66,9 +66,9 @@ public class TripPlannerTimelineFragment extends Fragment {
     private RealmList<TripOrder> flwLocations;
     private Button contTimes;
     private Button previous;
-    public boolean redo;
     public HashMap<TripOrder, Integer> positionLookup;
     private String date;
+    final String key = "AIzaSyChk0Ay1ekZgMhIVYFE3sIhhAvBaQXHpN4";
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
@@ -81,6 +81,8 @@ public class TripPlannerTimelineFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.content_trip_timeline, container, false);
         realm = RealmController.with(this).getRealm();
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        Log.e("Trip", "" + trip.getTrips().get(0).getStartTourTime());
 
         //if (RealmController.getInstance().hasTrip()){
 
@@ -88,12 +90,22 @@ public class TripPlannerTimelineFragment extends Fragment {
             if(isFinal) {
                 createFinalTripPlan();
             } else {
-                initiateDataCalculation();
+                boolean init = true;
+                for (TripOrder tripOrder: trip.getTrips()) {
+                    if (tripOrder.getStartTourTime() != -1) {
+                        init = false;
+                    }
+                }
+                if (init) {
+                    initiateDataCalculation();
+                }
             }
             // Creates Timeline if there is a trip
             timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
 
             setupTimeline();
+        } else {
+
         }
 
         contTimes = (Button) view.findViewById(R.id.to_times_cont);
@@ -172,7 +184,6 @@ public class TripPlannerTimelineFragment extends Fragment {
         Iterator<String> it = TripPlannerActivity.dates.iterator();
         if(it.hasNext())
             it.next();
-        redo = false;
         while(it.hasNext())
         {
 
@@ -189,7 +200,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                     {
                         flwLocations.add(trip.getTrips().get(j));
                         aTemp.add(trip.getTrips().get(j));
-                        Log.d("debug", "locations: " + getString(trip.getTrips().get(j).getLocation().getName()));
                     }
                 }
                 else
@@ -198,26 +208,24 @@ public class TripPlannerTimelineFragment extends Fragment {
                     {
                         flwLocations.add(trip.getTrips().get(j));
                         aTemp.add(trip.getTrips().get(j));
-                        Log.d("debug", "locations: " + getString(trip.getTrips().get(j).getLocation().getName()));
                     }
 
                 }
             }
             TripOrder temp;
-
-            for(int i=0;i<flwLocations.size();i++)
+            Log.d("debug", "flwLocations before change: "+ flwLocations.toString());
+            for(int i=0;i<flwLocations.size()-1;i++)
             {
-                for(int j=i;j>0;j--)
-                {
-                    if(flwLocations.get(j).getStartTourTime() < flwLocations.get(j-1).getStartTourTime())
+                Log.d("debug", "order before: "+flwLocations.get(i).getStartTourTime());
+                    if(flwLocations.get(i+1).getStartTourTime() < flwLocations.get(i).getStartTourTime())
                     {
-                        temp = flwLocations.get(j);
-                        flwLocations.set(j,flwLocations.get(j-1));
-                        flwLocations.set(j-1,temp);
+                        temp = flwLocations.get(i);
+                        flwLocations.set(i,flwLocations.get(i+1));
+                        flwLocations.set(i+1,temp);
                     }
-                }
+                Log.d("debug","order after: "+ flwLocations.get(i).getStartTourTime());
             }
-
+            Log.d("debug", "flwLocations after change: "+ flwLocations.toString());
                 TripPlannerActivity.hm.put(date, flwLocations );
         }
 
@@ -240,7 +248,9 @@ public class TripPlannerTimelineFragment extends Fragment {
             it.next();
         while(it.hasNext()) {
             date = it.next();
+
             flwLocations = TripPlannerActivity.hm.get(date);
+            Log.d("debug", "flwLocations: "+flwLocations.toString());
                 if(flwLocations.size() > 2)
                 {
                     String[] middleLatLong = new String[flwLocations.size() - 2];
@@ -261,74 +271,60 @@ public class TripPlannerTimelineFragment extends Fragment {
                             midLatLong += middleLatLong[i];
                         }
                     }
-
+                    Log.e("Middle Locations", "midLatLong: "+ midLatLong );
                     // Call the Directions api to get the order and travel times for each site
                     DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-                    Call<DirectionsModel> call2 = directionsApi.directions(flwLocations.get(0).getLocation().getLatlong(), flwLocations.get(flwLocations.size()-1).getLocation().getLatlong(), midLatLong);
+
+                    Call<DirectionsModel> call2 = directionsApi.directions(flwLocations.get(0).getLocation().getLatlong(), flwLocations.get(flwLocations.size()-1).getLocation().getLatlong(), midLatLong,key);
 
                     call2.enqueue(new Callback<DirectionsModel>() {
                         @Override
                         public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                            Log.e("DirectionsModel", response.body().toString());
                             Toast toast;
                             if (response.isSuccessful()) {
                                 int j = 0;
                                 realm.beginTransaction();
                                 // Grab the order of the middle sites
-                                for (int i = 0; i < response.body().getRoutes().get(0).getLegs().size(); i++) {
-                                    // Get travel time for the start location
-                                    if (i == 0) {
-                                        flwLocations.get(0).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
-                                        flwLocations.get(0).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
-                                        Log.d("debug", "start times: "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
-                                    }
-                                    // Get travel time for the end location
-                                    else if (i == response.body().getRoutes().get(0).getLegs().size()-1) {
-                                        flwLocations.get(flwLocations.size()-1).setTimeText("");
-                                        flwLocations.get(flwLocations.size()-1).setTimeValue(0);
+                                if (response.body().getRoutes().size() != 0) {
+                                    for (int i = 0; i < response.body().getRoutes().get(0).getLegs().size(); i++) {
+                                        // Get travel time for the start location
+                                        if (i == 0) {
+                                            flwLocations.get(0).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
+                                            flwLocations.get(0).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
+                                        }
 
-                                    }
-                                    // Get the travel time for the middle locations
-                                    else {
-                                        flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
-                                        flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
-                                        Log.d("debug", "middle times: "+response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue()/60);
-                                        j++;
+                                        // Get the travel time for the middle locations
+                                        else {
+                                            Log.e("response", "index:" + i + " time:" + response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
+                                            Log.e("text", response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
+                                            flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
+                                            flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
+                                            j++;
+                                        }
                                     }
                                 }
                                 for(int i = 0;i<flwLocations.size()-1;i++)
                                 {
-                                    if(flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime()))
+                                    flwLocations.get(i+1).getLocation().setIsNoTime(false);
+
+                                    if(flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime())&& !flwLocations.get(i+1).getLocation().getIsNoTime())
                                     {
-                                        Log.d("debug", "times: "+ flwLocations.get(i+1).getStartTourTime()+"first time "+ flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime());
-                                        String name = getString(flwLocations.get(i+1).getLocation().getName());
-                                        //flwLocations.remove(i+1);
-                                        flwLocations.remove(i+1);
-                                        flwLocations.get(i).setTimeValue(0);
-                                        flwLocations.get(i).setTimeText("");
+                                        flwLocations.get(i+1).getLocation().setIsNoTime(true);
                                         TripPlannerActivity.hm.put(date, flwLocations);
-                                        toast = Toast.makeText(getContext(),"Removed " + name +" travel time to long.",Toast.LENGTH_LONG);
-                                        toast.show();
-                                        redo = true;
-
-
-                                        trip.getTrips().remove(i+1);
                                         realm.copyToRealmOrUpdate(trip);
 
-
-                                        i--;
                                     }
                                 }
+
                                 realm.commitTransaction();
-                                for(int i=0;i<flwLocations.size();i++)
-                                {
-                                    newTripOrder.add(flwLocations.get(i));
-                                }
+
+                                TripPlannerActivity.hm.put(date,flwLocations);
+                                Log.e("location","" + flwLocations.get(2).getTimeValue());
+                                adapter.setTrip(flwLocations);
                                 adapter.notifyDataSetChanged();
-                                Log.d("debug", "redo: "+ redo);
-                                if(redo)
-                                {
-                                    createFinalTripPlan();
-                                }
+
+
                             }
                         }
 
@@ -339,11 +335,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                     });
                 }
         }
-
-
-        //trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-
-
 
     }
 
@@ -508,7 +499,7 @@ public class TripPlannerTimelineFragment extends Fragment {
             mTripOrder = new RealmList<>();
             // Call the Directions api to get the order and travel times for each site
             DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-            Call<DirectionsModel> call2 = directionsApi.directions(startLatLong, endLatLong, midLatLong);
+            Call<DirectionsModel> call2 = directionsApi.directions(startLatLong, endLatLong, midLatLong,key);
 
             call2.enqueue(new Callback<DirectionsModel>() {
                 @Override

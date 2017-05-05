@@ -1,6 +1,7 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.Comparator;
 
@@ -23,24 +24,31 @@ public class TripOrder extends RealmObject implements Comparable<TripOrder>{
         this.timeText = timeText;
         this.timeValue = timeValue;
         this.location = location;
-        this.startTourTime = -1;
-        this.endTourTime = -1;
+        if(startTourTime == 0 || endTourTime == 0)
+        {
+            this.startTourTime = -1;
+            this.endTourTime = -1;
+        }
     }
 
     public TripOrder(FLWLocation location) {
         this.location = location;
         this.timeValue = -1;
         this.timeText = null;
-        this.startTourTime = -1;
-        this.endTourTime = -1;
+        if(startTourTime == 0 || endTourTime == 0) {
+            this.startTourTime = -1;
+            this.endTourTime = -1;
+        }
     }
 
     public TripOrder(){
         this.location = null;
         this.timeValue = -1;
         this.timeText = null;
-        this.startTourTime = -1;
-        this.endTourTime = -1;
+        if(startTourTime == 0 || endTourTime == 0) {
+            this.startTourTime = -1;
+            this.endTourTime = -1;
+        }
     }
 
     public String getTimeText() {
@@ -64,19 +72,27 @@ public class TripOrder extends RealmObject implements Comparable<TripOrder>{
     public void setLocation(FLWLocation location) {this.location = location;}
 
     public long getStartTourTime() {
+        Log.d("debug", "getStartTourTime: "+ endTourTime);
         return startTourTime;
+
     }
 
     public void setStartTourTime(long startTourTime) {
+        Log.d("debug", "before setStartTourTime: "+ startTourTime);
         this.startTourTime = startTourTime;
+        Log.d("debug", "after setStartTourTime: "+ startTourTime);
     }
 
     public long getEndTourTime() {
+        Log.d("debug", "getEndTourTime: "+ endTourTime);
         return endTourTime;
+
     }
 
     public void setEndTourTime(long endTourTime) {
+        Log.d("debug", "before setEndTourTime: "+ endTourTime);
         this.endTourTime = endTourTime;
+        Log.d("debug", "after setEndTourTime: "+ endTourTime);
     }
 
     @Override
@@ -96,4 +112,20 @@ public class TripOrder extends RealmObject implements Comparable<TripOrder>{
             return tripOrder.compareTo(t1);
         }
     };
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TripOrder tripOrder = (TripOrder) o;
+
+        return location.equals(tripOrder.location);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return location.hashCode();
+    }
 }
