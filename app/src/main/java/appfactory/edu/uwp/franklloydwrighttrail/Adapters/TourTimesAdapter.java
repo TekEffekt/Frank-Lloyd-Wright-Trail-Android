@@ -241,8 +241,10 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         } else {
             minuteDay = minute + "";
         }
-        if(hourOfDay > 12) {
-            hourOfDay -= 12;
+        if(hourOfDay >= 12) {
+            if (hourOfDay > 12) {
+                hourOfDay -= 12;
+            }
             hourDay = hourOfDay +"";
             minuteDay = minuteDay + " PM";
         } else {
@@ -275,8 +277,10 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
                 } else {
                     minuteDay = minute + "";
                 }
-                if(hourOfDay > 12) {
-                    hourOfDay -= 12;
+                if(hourOfDay >= 12) {
+                    if (hourOfDay > 12) {
+                        hourOfDay -= 12;
+                    }
                     hourDay = hourOfDay +"";
                     minuteDay = minuteDay + " PM";
                 } else {

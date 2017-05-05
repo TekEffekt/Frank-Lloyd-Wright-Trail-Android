@@ -143,6 +143,9 @@ public class TripPlannerTimesFragment extends Fragment {
                             hourOfDay -= 12;
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " PM";
+                        } else if(hourOfDay == 12) {
+                            hourDay = hourOfDay +"";
+                            minuteDay = minuteDay + " PM";
                         } else {
                             if (hourOfDay == 0){
                                 hourOfDay = 12;
@@ -181,6 +184,9 @@ public class TripPlannerTimesFragment extends Fragment {
 
                         if(hourOfDay > 12) {
                             hourOfDay -= 12;
+                            hourDay = hourOfDay +"";
+                            minuteDay = minuteDay + " PM";
+                        } else if(hourOfDay == 12) {
                             hourDay = hourOfDay +"";
                             minuteDay = minuteDay + " PM";
                         } else {

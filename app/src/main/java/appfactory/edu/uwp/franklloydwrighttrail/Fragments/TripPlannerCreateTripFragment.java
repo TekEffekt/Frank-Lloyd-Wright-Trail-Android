@@ -306,6 +306,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
             }
         });
         */
+        Log.e("trip listener set", tripNameEdit.toString());
         tripNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int i, KeyEvent keyEvent) {

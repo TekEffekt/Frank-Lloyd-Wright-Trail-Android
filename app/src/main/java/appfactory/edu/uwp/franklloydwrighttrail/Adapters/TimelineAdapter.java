@@ -328,8 +328,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         } else {
             minuteDay = minute + "";
         }
-        if(hourOfDay > 12) {
-            hourOfDay -= 12;
+        if(hourOfDay >= 12) {
+            if (hourOfDay > 12) {
+                hourOfDay -= 12;
+            }
             hourDay = hourOfDay +"";
             minuteDay = minuteDay + " PM";
         } else {
