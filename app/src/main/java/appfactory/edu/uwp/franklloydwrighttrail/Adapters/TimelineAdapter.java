@@ -56,6 +56,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     int counter =0;
     RealmList<TripOrder> aTrip = new RealmList<>();
     private TripOrder trip;
+    private TripOrder trip2;
     private boolean isFinal;
 
     public void setTrip(RealmList<TripOrder> trip) {
@@ -133,6 +134,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         else
         {
             trip = aTrip.get(position);
+            trip2 = aTrip.get(1);
         }
 
         if (trip.getLocation().getImage() != -1) {
@@ -193,8 +195,13 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                         counter = 0;
                         tLine = 0;
                     }
-                    hour = trips.getStartTime()/60;
-                    min = trips.getStartTime()%60;
+                    if(isFinal)
+                    {
+                        int total =(int) trip2.getStartTourTime()-trip.getTimeValue();
+                        hour = total /60;
+                        min = total %60;
+                    }
+
                     temp = trip.getTimeValue();
                     counter++;
                 }
