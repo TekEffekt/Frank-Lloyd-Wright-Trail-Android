@@ -90,7 +90,6 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         recycler.setVisibility(View.VISIBLE);
         fragmentView.setVisibility(View.GONE);
         toolbar.setTitle("Trip Planner");
-        setSupportActionBar(toolbar);
         viewingFragment = false;
     }
     @Override
@@ -164,7 +163,6 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
         toolbar.setTitle("Trip Creation");
-        setSupportActionBar(toolbar);
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
