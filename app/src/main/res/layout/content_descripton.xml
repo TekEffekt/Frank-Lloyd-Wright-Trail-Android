@@ -181,19 +181,37 @@
                     android:layout_marginLeft="10dp"/>
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/location_button"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:text="@string/launch"
-                android:background="@color/colorPrimary"
-                android:textColor="@color/white"
-                android:textSize="14dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_marginLeft="95dp"
-                android:layout_marginRight="95dp"/>
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <Button
+                    android:id="@+id/location_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="@string/launch"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:textSize="14dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"/>
+                <Button
+                    android:id="@+id/schedule_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:text="@string/schedule"
+                    android:background="@color/colorPrimary"
+                    android:textColor="@color/white"
+                    android:textSize="14dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1"/>
+            </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 
