@@ -55,7 +55,6 @@ protected View view;
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         value = intent.getStringExtra("Title");
-        Log.e("Title", " "+value);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_descripton);
         textView = findViewById(R.id.bottom_sheet);

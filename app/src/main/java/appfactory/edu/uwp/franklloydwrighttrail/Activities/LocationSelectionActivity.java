@@ -223,7 +223,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         mMap = map;
 
         SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969))
-                .title("SC Johnson Headquarters")
+                .title("SC Johnson Administration Building and Research Tower")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588))
@@ -235,15 +235,15 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         MeetingHouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.0757361, -89.43533680000002))
-                .title("Meeting House")
+                .title("First Unitarian Society Meeting House")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         FLWVisitorCenter = mMap.addMarker(new MarkerOptions().position(new LatLng(43.14390059999999, -90.05952260000004))
-                .title("FLW Visitor Center")
+                .title("Taliesin and FLW Visitor Center")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         GermanWarehouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
-                .title("German Warehouse")
+                .title("A.D. German Warehouse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.119255, -90.114908))
@@ -432,7 +432,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         switch (position) {
             case 0:
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "SC Johnson Headquarters");
+                    intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
                     LocationSelectionActivity.this.startActivity(intent);
                 break;
             case 1:
@@ -459,13 +459,13 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 4:
 
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "Meeting House");
+                    intent.putExtra("Title", "First Unitarian Society Meeting House");
                     LocationSelectionActivity.this.startActivity(intent);
 
                 break;
             case 5:
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "FLW Visitor Center");
+                    intent.putExtra("Title", "Taliesin and FLW Visitor Center");
                     LocationSelectionActivity.this.startActivity(intent);
 
                 break;
@@ -477,7 +477,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 break;
             case 7:
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "German Warehouse");
+                    intent.putExtra("Title", "A.D. German Warehouse");
                     LocationSelectionActivity.this.startActivity(intent);
 
                 break;

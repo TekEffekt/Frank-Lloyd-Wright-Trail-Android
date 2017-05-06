@@ -48,15 +48,15 @@ public class ImageTwoFragment extends Fragment {
                 imageTwo.setImageResource(R.drawable.mt2);
 
                 break;
-            case "Meeting House":
+            case "First Unitarian Society Meeting House":
                 imageTwo.setImageResource(R.drawable.meetinghouse2);
 
                 break;
-            case "FLW Visitor Center":
+            case "Taliesin and FLW Visitor Center":
                 imageTwo.setImageResource(R.drawable.vc2);
 
                 break;
-            case "German Warehouse":
+            case "A.D. German Warehouse":
                 imageTwo.setImageResource(R.drawable.gw2);
 
                 break;

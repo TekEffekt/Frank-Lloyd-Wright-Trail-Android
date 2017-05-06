@@ -48,15 +48,15 @@ public class ImageThreeFragment extends Fragment {
                 credits.setText("Photo: Sarah Wykhuis");
 
                 break;
-            case "Meeting House":
+            case "First Unitarian Society Meeting House":
                 imageThree.setImageResource(R.drawable.meetinghouse3);
 
                 break;
-            case "FLW Visitor Center":
+            case "Taliesin and FLW Visitor Center":
                 imageThree.setImageResource(R.drawable.vc3);
 
                 break;
-            case "German Warehouse":
+            case "A.D. German Warehouse":
                 imageThree.setImageResource(R.drawable.gw3);
 
                 break;

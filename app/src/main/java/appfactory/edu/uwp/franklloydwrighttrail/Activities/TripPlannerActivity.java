@@ -81,10 +81,9 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
     @Override
     public void onBackPressed() {
-        //if (drawer.isDrawerOpen(GravityCompat.START)) {
-        //    drawer.closeDrawer(GravityCompat.START);
-        //} else
-        if (viewingFragment) {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else if (viewingFragment) {
             goBackToMenu();
         } else {
             super.onBackPressed();
@@ -131,7 +130,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         toolbar.setTitle("Trip Planner");
         setSupportActionBar(toolbar);
 
-        /*
+
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.setDrawerListener(toggle);
@@ -139,7 +138,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        */
+
     }
 
     private void setupRecycler(){

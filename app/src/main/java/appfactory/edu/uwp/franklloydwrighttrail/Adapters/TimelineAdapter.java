@@ -20,6 +20,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.vipul.hp_hp.timelineview.TimelineView;
 
@@ -243,6 +244,8 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 holder.time.setText(timeToString(hour,min));
                 if(trip.getLocation().getIsNoTime())
                 {
+                    Toast.makeText(context, "There is not enough time to get to "+context.getString(trip.getLocation().getName()),
+                            Toast.LENGTH_SHORT).show();
                     holder.tripLocationContainer.setBackgroundColor(Color.GRAY);
                 }
                 else

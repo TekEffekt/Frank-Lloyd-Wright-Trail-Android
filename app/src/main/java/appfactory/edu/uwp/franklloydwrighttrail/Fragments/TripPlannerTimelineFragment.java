@@ -84,7 +84,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         View view = inflater.inflate(R.layout.content_trip_timeline, container, false);
         realm = RealmController.with(this).getRealm();
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-        Log.e("Trip", "" + trip.getTrips().get(0).getStartTourTime());
+
 
         //if (RealmController.getInstance().hasTrip()){
 
@@ -101,6 +101,10 @@ public class TripPlannerTimelineFragment extends Fragment {
                 }
                 if (init) {
                     initiateDataCalculation();
+                }
+                else
+                {
+                    createFinalTripPlan();
                 }
             }
             // Creates Timeline if there is a trip
@@ -222,16 +226,13 @@ public class TripPlannerTimelineFragment extends Fragment {
             Log.d("debug", "flwLocations before change: "+ flwLocations.toString());
             for(int i=0;i<flwLocations.size()-1;i++)
             {
-                Log.d("debug", "order before: "+flwLocations.get(i).getStartTourTime());
                     if(flwLocations.get(i+1).getStartTourTime() < flwLocations.get(i).getStartTourTime())
                     {
                         temp = flwLocations.get(i);
                         flwLocations.set(i,flwLocations.get(i+1));
                         flwLocations.set(i+1,temp);
                     }
-                Log.d("debug","order after: "+ flwLocations.get(i).getStartTourTime());
             }
-            Log.d("debug", "flwLocations after change: "+ flwLocations.toString());
                 TripPlannerActivity.hm.put(date, flwLocations );
         }
 
@@ -256,7 +257,6 @@ public class TripPlannerTimelineFragment extends Fragment {
             date = it.next();
 
             flwLocations = TripPlannerActivity.hm.get(date);
-            Log.d("debug", "flwLocations: "+flwLocations.toString());
                 if(flwLocations.size() > 2)
                 {
                     String[] middleLatLong = new String[flwLocations.size() - 2];
@@ -277,7 +277,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                             midLatLong += middleLatLong[i];
                         }
                     }
-                    Log.e("Middle Locations", "midLatLong: "+ midLatLong );
                     // Call the Directions api to get the order and travel times for each site
                     DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
 
@@ -286,7 +285,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                     call2.enqueue(new Callback<DirectionsModel>() {
                         @Override
                         public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                            Log.e("DirectionsModel", response.body().toString());
                             Toast toast;
                             if (response.isSuccessful()) {
                                 int j = 0;
@@ -302,8 +300,6 @@ public class TripPlannerTimelineFragment extends Fragment {
 
                                         // Get the travel time for the middle locations
                                         else {
-                                            Log.e("response", "index:" + i + " time:" + response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
-                                            Log.e("text", response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
                                             flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
                                             flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
                                             j++;
@@ -326,7 +322,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                                 realm.commitTransaction();
 
                                 TripPlannerActivity.hm.put(date,flwLocations);
-                                Log.e("location","" + flwLocations.get(2).getTimeValue());
                                 adapter.setTrip(flwLocations);
                                 adapter.notifyDataSetChanged();
 

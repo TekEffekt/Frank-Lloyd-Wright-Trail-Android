@@ -49,15 +49,15 @@ public class ImageOneFragment extends Fragment {
                 imageOne.setImageResource(R.drawable.mt1);
 
                 break;
-            case "Meeting House":
+            case "First Unitarian Society Meeting House":
                 imageOne.setImageResource(R.mipmap.meeting_house);
 
                 break;
-            case "FLW Visitor Center":
+            case "Taliesin and FLW Visitor Center":
                 imageOne.setImageResource(R.drawable.vc1);
 
                 break;
-            case "German Warehouse":
+            case "A.D. German Warehouse":
                 imageOne.setImageResource(R.drawable.gw1);
 
                 break;
