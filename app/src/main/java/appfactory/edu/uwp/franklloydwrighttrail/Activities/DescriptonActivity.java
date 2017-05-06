@@ -1,5 +1,8 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
@@ -10,6 +13,7 @@ import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +29,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageOneFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageThreeFragment;
@@ -380,6 +388,7 @@ protected View view;
     }
 
     private void setupScheduleButton(final int position){
+        final Activity activity = this;
         scheduleButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -404,12 +413,15 @@ protected View view;
                         url = getResources().getString(R.string.german_warehouse_tourD_website);
                         break;
                     case 6:
+                        String[] address = new String[]{"wyomingvalleyschool@gmail.com"};
                         Intent intent = new Intent(Intent.ACTION_SENDTO);
-                        intent.setType("text/plain");
-                        intent.putExtra(Intent.EXTRA_EMAIL, "wyomingvalleyschool@gmail.com");
-                        startActivity(Intent.createChooser(intent, "Send Email"));
-                        //url = getResources().getString(R.string.valley_school_tourD_website);
-                        break;
+                        intent.setData(Uri.parse("mailto:wyomingvalleyschool@gmail.com")); // only email apps should handle this
+                        intent.putExtra(Intent.EXTRA_EMAIL, address);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "Schedule Tour");
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                        return;
                     case 7:
                         url = getResources().getString(R.string.built_homes_tourD_website);
                         break;

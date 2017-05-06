@@ -45,7 +45,7 @@
             android:label="@string/title_activity_descripton"
             android:theme="@style/AppTheme.NoActionBar"
             android:parentActivityName=".Activities.LocationSelectionActivity">
-        </activity>
+    </activity>
     </application>
 
 </manifest>
