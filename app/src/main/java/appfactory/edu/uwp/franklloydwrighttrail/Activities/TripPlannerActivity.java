@@ -62,6 +62,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     private RelativeLayout create;
     private NavigationView navigationView;
     private FrameLayout fragmentView;
+    private Toolbar toolbar;
 
     private RecyclerView recycler;
     private TourMenuAdapter adapter;
@@ -80,9 +81,10 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
     @Override
     public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else if (viewingFragment) {
+        //if (drawer.isDrawerOpen(GravityCompat.START)) {
+        //    drawer.closeDrawer(GravityCompat.START);
+        //} else
+        if (viewingFragment) {
             goBackToMenu();
         } else {
             super.onBackPressed();
@@ -98,7 +100,6 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         recycler.setVisibility(View.VISIBLE);
         fragmentView.setVisibility(View.GONE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Trip Planner");
         setSupportActionBar(toolbar);
         viewingFragment = false;
@@ -126,10 +127,11 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     }
 
     private void setupNavMenu(){
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Trip Planner");
         setSupportActionBar(toolbar);
 
+        /*
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawer.setDrawerListener(toggle);
@@ -137,6 +139,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        */
     }
 
     private void setupRecycler(){
@@ -191,9 +194,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Trip Creation");
-        setSupportActionBar(toolbar);
+        setToolbarTitle("Create Trip");
     }
 
     @Override
@@ -228,11 +229,9 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Trip Creation");
-        setSupportActionBar(toolbar);
         viewingFragment = true;
+
+        setToolbarTitle("Edit Trip");
     }
 
     public void showTimeline(boolean isFinal, String position){
@@ -244,10 +243,13 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Trip Creation");
-        setSupportActionBar(toolbar);
         viewingFragment = true;
+
+        setToolbarTitle("Tour Timeline");
+    }
+
+    public void setToolbarTitle(String title){
+        toolbar.setTitle(title);
+        setSupportActionBar(toolbar);
     }
 }

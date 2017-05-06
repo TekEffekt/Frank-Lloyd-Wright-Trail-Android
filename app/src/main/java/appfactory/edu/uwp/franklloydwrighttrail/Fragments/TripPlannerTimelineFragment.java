@@ -129,10 +129,12 @@ public class TripPlannerTimelineFragment extends Fragment {
                     FragmentManager fragmentManager = ((TripPlannerActivity) getContext()).getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction.replace(R.id.content_frame, TripPlannerTourTimesFragment.newInstance(tripPosition)).commit();
+                    ((TripPlannerActivity)getContext()).setToolbarTitle("Edit Tour Times");
                 } else {
                     FragmentManager fragmentManager = ((TripPlannerActivity)getContext()).getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(tripPosition)).commit();
+                    ((TripPlannerActivity)getContext()).setToolbarTitle("Edit Trip");
                 }
             }
         });

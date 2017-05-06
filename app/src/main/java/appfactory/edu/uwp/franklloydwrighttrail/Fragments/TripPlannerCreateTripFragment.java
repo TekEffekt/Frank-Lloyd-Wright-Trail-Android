@@ -144,6 +144,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
             public void onClick(View v) {
                 if (checkTimeValid()){
                     ((TripPlannerActivity)getContext()).showTimeline(false,tripPosition);
+                    ((TripPlannerActivity)getContext()).setToolbarTitle("Suggested Timeline");
                 } else {
                     Toast.makeText(getContext(), "Trip setup is not complete.", Toast.LENGTH_SHORT).show();
                 }
