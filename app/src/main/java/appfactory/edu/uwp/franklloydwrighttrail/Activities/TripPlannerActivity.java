@@ -87,9 +87,9 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         fragmentManager.popBackStackImmediate();
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.remove(fragmentManager.getFragments().get(0)).commit();
+        setupRecycler();
         recycler.setVisibility(View.VISIBLE);
         fragmentView.setVisibility(View.GONE);
-        toolbar.setTitle("Trip Planner");
         viewingFragment = false;
     }
     @Override
