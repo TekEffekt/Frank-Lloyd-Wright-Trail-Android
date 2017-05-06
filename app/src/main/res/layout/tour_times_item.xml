@@ -113,7 +113,6 @@
                         android:layout_alignParentBottom="true"
                         android:layout_marginBottom="10dp"
                         android:textColor="@color/red"
-                        android:autoLink="all"
                         android:text="www.website.com"/>
                 </RelativeLayout>
 
