@@ -92,8 +92,55 @@ public class TourTimesAdapter extends RecyclerView.Adapter<TourTimesAdapter.View
         if (location.getName() != -1 && location.getName() != R.string.user) {
             holder.name.setText(location.getName());
             //holder.website.setText(location.getWebsite());
-            holder.website.setText(Html.fromHtml(context.getResources().getString(location.getWebsite())));
-            holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+            if(location.getName()==R.string.scjohnson)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.scj_tour_website)));
+
+            }
+            else if(location.getName()==R.string.wingspread)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.wingspread_tour_website)));
+
+            }
+            else if(location.getName()==R.string.monona_terrace)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.monona_tour_website)));
+
+            }
+            else if(location.getName()==R.string.visitor_center)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.visitor_center_tour_website)));
+
+            }
+            else if(location.getName()==R.string.meeting_house)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.meeting_house_tour_website)));
+
+            }
+            else if(location.getName()==R.string.german_warehouse)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.german_warehouse_tour_website)));
+
+            }
+            else if(location.getName()==R.string.built_homes)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.built_homes_tour_website)));
+
+            }
+            else if(location.getName()==R.string.valley_school)
+            {
+                holder.website.setMovementMethod(LinkMovementMethod.getInstance());
+                holder.website.setText(Html.fromHtml(context.getResources().getString(R.string.valley_school_tour_website)));
+
+            }
+
         } else if (location.getName() != R.string.user) {
             holder.name.setText(location.getGenericName());
             holder.signupContainer.setVisibility(View.GONE);

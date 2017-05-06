@@ -87,31 +87,31 @@
     <string name="valley_school_built">Designed by Frank Lloyd Wright and built in 1957\nfor the children of Wyoming Valley</string>
     <string name="valley_school_desc">Wyoming Valley School Cultural Arts Center is a nonprofit organization that promotes the arts and culture of the surrounding region by opening the dynamic architecture of Wyoming Valley School to provide incomparable spaces for workshops, performances, lectures, and exhibits for all ages. It also offers space for private functions such as weddings, banquets, business meetings, or other events. Its mission is to maintain and preserve this architectural gem for the continued benefit of and use by the community. Wyoming Valley School is listed on state and national registers of historic places and is located three miles from Wright\'s home, Taliesin, in rural Spring Green, Wisconsin.</string>
 
-    <string name="scj_website">&lt;a href="http://www.scjohnson.com/visit">www.scjohnson.com&lt;/a></string>
+    <string name="scj_website">&lt;a href="http://www.scjohnson.com">www.scjohnson.com&lt;/a></string>
     <string name="scj_phone">&lt;a href="tel:+12622602154">(262) 260&#8211;2154&lt;/a></string>
     <string name="wingspread_website">&lt;a href="http://www.johnsonfdn.org/">www.johnsonfdn.org&lt;/a></string>
     <string name="wingspread_phone">&lt;a href="tel:+12626393211">(262) 639&#8211;3211&lt;/a></string>
-    <string name="monona_website">&lt;a href="https://www.mononaterrace.com/experience-monona-terrace/tours_and_education">www.mononaterrace.com&lt;/a></string>
+    <string name="monona_website">&lt;a href="https://www.mononaterrace.com">www.mononaterrace.com&lt;/a></string>
     <string name="monona_phone">&lt;a href="tel:+16082614000">(608) 261&#8211;4000&lt;/a></string>
-    <string name="meeting_house_website">&lt;a href="https://fusmadison.org/welcome/meeting-house/tours/#1441873920568-18a8a48a-7614">www.fusmadison.org&lt;/a></string>
+    <string name="meeting_house_website">&lt;a href="https://fusmadison.org">www.fusmadison.org&lt;/a></string>
     <string name="meeting_house_phone">&lt;a href="tel:+16082339774">(608) 233&#8211;9774&lt;/a></string>
-    <string name="visitor_center_website">&lt;a href="http://www.taliesinpreservation.org/visit/tours-tickets">www.taliesinpreservation.org&lt;/a></string>
+    <string name="visitor_center_website">&lt;a href="http://www.taliesinpreservation.org">www.taliesinpreservation.org&lt;/a></string>
     <string name="visitor_center_phone">&lt;a href="tel:+18775887900">(877) 588&#8211;7900&lt;/a></string>
-    <string name="german_warehouse_website">&lt;a href="http://www.adgermanwarehouse.org/tours.html">www.adgermanwarehouse.com&lt;/a></string>
+    <string name="german_warehouse_website">&lt;a href="http://www.adgermanwarehouse.org">www.adgermanwarehouse.com&lt;/a></string>
     <string name="german_warehouse_phone">&lt;a href="tel:+16086045034">(608) 604&#8211;5034&lt;/a></string>
     <string name="valley_school_website">&lt;a href="http://wyomingvalleyschool.blogspot.com/">www.wyomingvalleyschool.com&lt;/a></string>
     <string name="valley_school_phone">&lt;a href="tel:+16085882544">(608) 588&#8211;2544&lt;/a></string>
     <string name="built_homes_website">&lt;a href="http://www.wrightinmilwaukee.com/">www.wrightinmilwaukee.com&lt;/a></string>
     <string name="built_homes_phone">&lt;a href="tel:+16082870339">(608) 287&#8211;0339&lt;/a></string>
 
-    <string name="scj_tour_website">http://www.scjohnson.com/visit</string>
-    <string name="wingspread_tour_website">http://www.johnsonfdn.org/</string>
-    <string name="monona_tour_website">https://www.mononaterrace.com/experience-monona-terrace/tours_and_education</string>
-    <string name="meeting_house_tour_website">https://fusmadison.org/welcome/meeting-house/tours/#1441873920568-18a8a48a-7614</string>
-    <string name="visitor_center_tour_website">http://www.taliesinpreservation.org/visit/tours-tickets</string>
-    <string name="german_warehouse_tour_website">http://www.adgermanwarehouse.org/tours.html</string>
-    <string name="valley_school_tour_website">http://wyomingvalleyschool.blogspot.com/</string>
-    <string name="built_homes_tour_website">http://www.wrightinmilwaukee.com/</string>
+    <string name="scj_tour_website">&lt;a href="http://www.scjohnson.com/visit">www.scjohnson.com&lt;/a></string>
+    <string name="wingspread_tour_website">&lt;a href="http://www.scjohnson.com/visit/">Wingspread&lt;/a></string>
+    <string name="monona_tour_website">&lt;a href="https://www.mononaterrace.com/experience-monona-terrace/tours_and_education">www.mononaterrace.com&lt;/a></string>
+    <string name="meeting_house_tour_website">&lt;a href="https://fusmadison.org/welcome/meeting-house/tours/#1441873920568-18a8a48a-7614">fusmadison.org&lt;/a></string>
+    <string name="visitor_center_tour_website">&lt;a href="http://www.taliesinpreservation.org/visit/tours-tickets">www.taliesinpreservation.org&lt;/a></string>
+    <string name="german_warehouse_tour_website">&lt;a href="http://www.adgermanwarehouse.org/tours.html">www.adgermanwarehouse.org&lt;/a></string>
+    <string name="valley_school_tour_website">&lt;a href="http://wyomingvalleyschool@gmail.com/">wyomingvalleyschool&lt;/a></string>
+    <string name="built_homes_tour_website">&lt;a href="http://www.wrightinmilwaukee.com/">www.wrightinmilwaukee.com&lt;/a></string>
 
     <string name="name_hint">This is used to identify which trip is currently being scheduled. Name trip accordingly to scheduled plans.</string>
     <string name="stops_hint">This is where current stops are viewed. Click the "Add Stop" button to view stop options.</string>
