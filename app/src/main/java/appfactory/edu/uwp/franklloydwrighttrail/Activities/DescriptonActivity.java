@@ -404,7 +404,11 @@ protected View view;
                         url = getResources().getString(R.string.german_warehouse_tourD_website);
                         break;
                     case 6:
-                        url = getResources().getString(R.string.valley_school_tourD_website);
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setType("text/plain");
+                        intent.putExtra(Intent.EXTRA_EMAIL, "wyomingvalleyschool@gmail.com");
+                        startActivity(Intent.createChooser(intent, "Send Email"));
+                        //url = getResources().getString(R.string.valley_school_tourD_website);
                         break;
                     case 7:
                         url = getResources().getString(R.string.built_homes_tourD_website);
