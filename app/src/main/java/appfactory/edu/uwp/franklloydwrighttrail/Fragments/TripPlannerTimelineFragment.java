@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     RealmList<TripOrder> newTripOrder = new RealmList<>();
     private Realm realm;
     public int locationIndex;
+    private ProgressBar spinner;
     private RecyclerView timelineView;
     private static boolean isFinal;
     private static String tripPosition;
@@ -86,6 +88,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
         //if (RealmController.getInstance().hasTrip()){
 
+        spinner = (ProgressBar) view.findViewById(R.id.spinner);
         if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
             if(isFinal) {
                 createFinalTripPlan();
@@ -134,7 +137,7 @@ public class TripPlannerTimelineFragment extends Fragment {
                     FragmentManager fragmentManager = ((TripPlannerActivity)getContext()).getSupportFragmentManager();
                     FragmentTransaction transaction = fragmentManager.beginTransaction();
                     transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(tripPosition)).commit();
-                    ((TripPlannerActivity)getContext()).setToolbarTitle("Edit Trip");
+                    ((TripPlannerActivity)getContext()).setToolbarTitle("Create Trip");
                 }
             }
         });
@@ -337,6 +340,7 @@ public class TripPlannerTimelineFragment extends Fragment {
                     });
                 }
         }
+        spinner.setVisibility(View.GONE);
 
     }
 
@@ -553,6 +557,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
                 }
             });
+            spinner.setVisibility(View.GONE);
         }
     }
     public void createTripPlan(RealmList<TripOrder> tripOrder)
