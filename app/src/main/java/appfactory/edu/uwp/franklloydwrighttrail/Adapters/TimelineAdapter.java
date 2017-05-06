@@ -171,7 +171,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             holder.picture.setVisibility(View.GONE);
             holder.homeIcon.setVisibility(View.VISIBLE);
         }
-        Log.d("debug", "Time text: " + trip.getTimeText());
             if (trip.getTimeText() == null){
                 if(trip.getLocation().getGenericName() != null)
                 {

@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,6 +55,7 @@ protected View view;
     protected void onCreate(Bundle savedInstanceState) {
         Intent intent = getIntent();
         value = intent.getStringExtra("Title");
+        Log.e("Title", " "+value);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.content_descripton);
         textView = findViewById(R.id.bottom_sheet);
@@ -81,7 +83,7 @@ protected View view;
 
         switch(value)
         {
-            case "SC Johnson Headquarters":
+            case "SC Johnson Administration Building and Research Tower":
                 name.setText(R.string.scjohnson);
                 built.setText(R.string.scj_built);
                 description.setText(R.string.scj_desc);
@@ -145,7 +147,7 @@ protected View view;
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
                 phone.setText(Html.fromHtml(this.getResources().getString(R.string.monona_phone)));
                 break;
-            case "Meeting House":
+            case "First Unitarian Society Meeting House":
 
                 name.setText(R.string.meeting_house);
                 built.setText(R.string.meeting_house_built);
@@ -167,7 +169,7 @@ protected View view;
                 phone.setText(Html.fromHtml(this.getResources().getString(R.string.meeting_house_phone)));
 
                 break;
-            case "FLW Visitor Center":
+            case "Taliesin and FLW Visitor Center":
 
                 name.setText(R.string.visitor_center);
                 built.setText(R.string.visitor_center_sub);
@@ -189,7 +191,7 @@ protected View view;
                 phone.setText(Html.fromHtml(this.getResources().getString(R.string.visitor_center_phone)));
 
                 break;
-            case "German Warehouse":
+            case "A.D. German Warehouse":
 
                 name.setText(R.string.german_warehouse);
                 built.setText(R.string.german_warehouse_built);
