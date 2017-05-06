@@ -386,28 +386,28 @@ protected View view;
                 String url = "";
                 switch (position){
                     case 0:
-                        url = getResources().getString(R.string.scj_tour_website);
+                        url = getResources().getString(R.string.scj_tourD_website);
                         break;
                     case 1:
-                        url = getResources().getString(R.string.wingspread_tour_website);
+                        url = getResources().getString(R.string.wingspread_tourD_website);
                         break;
                     case 2:
-                        url = getResources().getString(R.string.monona_tour_website);
+                        url = getResources().getString(R.string.monona_tourD_website);
                         break;
                     case 3:
-                        url = getResources().getString(R.string.meeting_house_tour_website);
+                        url = getResources().getString(R.string.meeting_house_tourD_website);
                         break;
                     case 4:
-                        url = getResources().getString(R.string.visitor_center_tour_website);
+                        url = getResources().getString(R.string.visitor_center_tourD_website);
                         break;
                     case 5:
-                        url = getResources().getString(R.string.german_warehouse_tour_website);
+                        url = getResources().getString(R.string.german_warehouse_tourD_website);
                         break;
                     case 6:
-                        url = getResources().getString(R.string.valley_school_tour_website);
+                        url = getResources().getString(R.string.valley_school_tourD_website);
                         break;
                     case 7:
-                        url = getResources().getString(R.string.built_homes_tour_website);
+                        url = getResources().getString(R.string.built_homes_tourD_website);
                         break;
                     default:
                         break;

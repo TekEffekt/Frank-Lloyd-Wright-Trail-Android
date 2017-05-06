@@ -113,6 +113,15 @@
     <string name="valley_school_tour_website">&lt;a href="http://wyomingvalleyschool@gmail.com/">wyomingvalleyschool&lt;/a></string>
     <string name="built_homes_tour_website">&lt;a href="http://www.wrightinmilwaukee.com/">www.wrightinmilwaukee.com&lt;/a></string>
 
+    <string name="scj_tourD_website">http://www.scjohnson.com/visit</string>
+    <string name="wingspread_tourD_website">http://www.scjohnson.com/visit/</string>
+    <string name="monona_tourD_website">https://www.mononaterrace.com/experience-monona-terrace/tours_and_education</string>
+    <string name="meeting_house_tourD_website">https://fusmadison.org/welcome/meeting-house/tours/#1441873920568-18a8a48a-7614</string>
+    <string name="visitor_center_tourD_website">http://www.taliesinpreservation.org/visit/tours-tickets</string>
+    <string name="german_warehouse_tourD_website">http://www.adgermanwarehouse.org/tours.html</string>
+    <string name="valley_school_tourD_website">http://wyomingvalleyschool@gmail.com/</string>
+    <string name="built_homes_tourD_website">http://www.wrightinmilwaukee.com/</string>
+
     <string name="name_hint">This is used to identify which trip is currently being scheduled. Name trip accordingly to scheduled plans.</string>
     <string name="stops_hint">This is where current stops are viewed. Click the "Add Stop" button to view stop options.</string>
     <string name="start_hint">This is when the trip typically starts. Set this to when the trip should start for a guideline.</string>
