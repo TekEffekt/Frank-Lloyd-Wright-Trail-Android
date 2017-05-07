@@ -286,15 +286,16 @@ public class TripPlannerTimelineFragment extends Fragment {
                             midLatLong += middleLatLong[i];
                         }
                     }
+                    Log.d("MidLatLon", midLatLong);
                     // Call the Directions api to get the order and travel times for each site
                     DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
 
                     Call<DirectionsModel> call2 = directionsApi.directions(flwLocations.get(0).getLocation().getLatlong(), flwLocations.get(flwLocations.size()-1).getLocation().getLatlong(), midLatLong,key);
-
+                    final String finalDate = date;
                     call2.enqueue(new Callback<DirectionsModel>() {
                         @Override
                         public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                            Toast toast;
+                            RealmList<TripOrder> flwLocations = TripPlannerActivity.hm.get(finalDate);
                             if (response.isSuccessful()) {
                                 int j = 0;
                                 realm.beginTransaction();
@@ -308,10 +309,14 @@ public class TripPlannerTimelineFragment extends Fragment {
                                         }
 
                                         // Get the travel time for the middle locations
-                                        else {
+                                        // Added if to stop crash on multiday trips
+                                        else if (flwLocations.size() - 1 >=i)
+                                        {
                                             flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
                                             flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
                                             j++;
+                                        } else {
+                                            Log.e("Timeline", "direction request and number of locations for day do not match");
                                         }
                                     }
                                 }
@@ -322,7 +327,7 @@ public class TripPlannerTimelineFragment extends Fragment {
                                     if(flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime())&& !flwLocations.get(i+1).getLocation().getIsNoTime())
                                     {
                                         flwLocations.get(i+1).getLocation().setIsNoTime(true);
-                                        TripPlannerActivity.hm.put(date, flwLocations);
+                                        TripPlannerActivity.hm.put(finalDate, flwLocations);
                                         realm.copyToRealmOrUpdate(trip);
 
                                     }
@@ -330,7 +335,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
                                 realm.commitTransaction();
 
-                                TripPlannerActivity.hm.put(date,flwLocations);
+                                TripPlannerActivity.hm.put(finalDate,flwLocations);
                                 adapter.setTrip(flwLocations);
                                 adapter.notifyDataSetChanged();
 

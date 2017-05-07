@@ -252,13 +252,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 {
                     holder.tripLocationContainer.setBackgroundColor(Color.WHITE);
                 }
-                if(isFinal && position !=0 && position < getItemCount()-2 && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay()))
+                if(isFinal && position !=0 && aTrip.size() - 2 >= position && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay()))
                 {
                     holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
                     holder.carIcon.setVisibility(View.GONE);
                 }
                 else
                 {
+                    Log.d(trip.getLocation().getGenericName(), "time text length: " + trip.getTimeText().length());
                     holder.carIcon.setVisibility(View.VISIBLE);
                     holder.tripLength.setText(trip.getTimeText());
                 }
