@@ -704,7 +704,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
     // stop location updates
     protected void stopLocationUpdates() {
-        if (mClient != null && !mClient.isConnecting()) {
+        if (mClient != null && mClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mClient, this);
 
