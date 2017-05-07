@@ -227,4 +227,10 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     public void setToolbarTitle(String title){
         toolbar.setTitle(title);
     }
+
+    @Override
+    protected void onDestroy() {
+        RealmController.getInstance().close();
+        super.onDestroy();
+    }
 }

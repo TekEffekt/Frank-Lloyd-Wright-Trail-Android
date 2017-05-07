@@ -18,7 +18,7 @@ public class RealmController {
     private static RealmController instance;
     private final Realm realm;
 
-    public RealmController() {
+    private RealmController() {
         realm = Realm.getDefaultInstance();
     }
 
@@ -80,6 +80,10 @@ public class RealmController {
     public boolean hasUserLocation() {return !realm.where(UserLocation.class).findAll().isEmpty();}
     public boolean hasTrip() {
         return !realm.where(TripObject.class).findAll().isEmpty();
+    }
+
+    public void close(){
+        instance = null;
     }
 
 }

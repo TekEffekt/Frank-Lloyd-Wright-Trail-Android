@@ -160,6 +160,7 @@ public class TripPlannerCreateTripFragment extends Fragment {
         });
 
         tripNameEdit = (EditText) view.findViewById(R.id.trip_name);
+        tripNameEdit.setMaxEms(10);
         if (!trip.getName().equals("Unnamed Trip")){
             tripNameEdit.setHint(trip.getName());
         }

@@ -200,7 +200,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 break;
             case R.id.nav_trip_planner:
                 realm.beginTransaction();
-                UserLocation ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
+                UserLocation ul = null;
+                if (myLocation != null) {
+                    ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
+                } else {
+                    ul = new UserLocation(43.0717445, -89.38040180000002);
+                }
                 realm.copyToRealmOrUpdate(ul);
                 realm.commitTransaction();
                 Intent intent = TripPlannerActivity.newIntent(this);
@@ -343,7 +348,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://appfactory.edu.uwp.franklloydwrighttrail/http/host/path")
         );
-        AppIndex.AppIndexApi.start(mClient, viewAction);
+        if (mClient != null) {
+            AppIndex.AppIndexApi.start(mClient, viewAction);
+        }
     }
 
     private void onClick(int position) {
@@ -502,7 +509,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://appfactory.edu.uwp.franklloydwrighttrail/http/host/path")
         );
-        AppIndex.AppIndexApi.end(mClient, viewAction);
+        if (mClient != null) {
+            AppIndex.AppIndexApi.end(mClient, viewAction);
+        }
 
         // disconnect from google api
         if (mClient != null) {
@@ -725,6 +734,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         // stop location updates
         stopLocationUpdates();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        RealmController.getInstance().close();
+        super.onDestroy();
     }
 
     @Override

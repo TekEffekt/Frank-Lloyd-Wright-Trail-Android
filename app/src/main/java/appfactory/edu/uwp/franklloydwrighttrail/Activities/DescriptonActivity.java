@@ -514,6 +514,4 @@ protected View view;
         _btn2 = (ImageView) findViewById(R.id.btn2);
         _btn3 = (ImageView) findViewById(R.id.btn3);
     }
-
-
 }
