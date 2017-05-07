@@ -129,4 +129,5 @@
 
     <string name="new_trip_intro">Click the new trip button or tap the screen to start</string>
     <string name="recycler_view_instruction">Click on a marker above or double tap a location below to learn more</string>
+    <string name="google_api_key">AIzaSyChk0Ay1ekZgMhIVYFE3sIhhAvBaQXHpN4</string>
 </resources>

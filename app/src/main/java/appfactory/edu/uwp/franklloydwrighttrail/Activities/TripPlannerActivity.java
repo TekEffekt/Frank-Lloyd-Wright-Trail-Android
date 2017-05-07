@@ -88,6 +88,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.remove(fragmentManager.getFragments().get(0)).commit();
         setupRecycler();
+        create.setVisibility(View.VISIBLE);
         recycler.setVisibility(View.VISIBLE);
         fragmentView.setVisibility(View.GONE);
         viewingFragment = false;

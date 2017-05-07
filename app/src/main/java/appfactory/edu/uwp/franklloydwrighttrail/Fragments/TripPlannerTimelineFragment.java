@@ -70,7 +70,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     private Button previous;
     public HashMap<TripOrder, Integer> positionLookup;
     private String date;
-    final String key = "AIzaSyChk0Ay1ekZgMhIVYFE3sIhhAvBaQXHpN4";
+    private String key;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
@@ -84,6 +84,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         View view = inflater.inflate(R.layout.content_trip_timeline, container, false);
         realm = RealmController.with(this).getRealm();
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        key = getString(R.string.google_api_key);
 
 
         //if (RealmController.getInstance().hasTrip()){
