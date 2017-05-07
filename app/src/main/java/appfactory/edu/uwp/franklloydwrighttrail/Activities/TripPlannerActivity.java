@@ -89,6 +89,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.remove(fragmentManager.getFragments().get(0)).commit();
         setupRecycler();
+        newTripPosition = UUID.randomUUID().toString();
         addTrip.setVisible(true);
         recycler.setVisibility(View.VISIBLE);
         fragmentView.setVisibility(View.GONE);
