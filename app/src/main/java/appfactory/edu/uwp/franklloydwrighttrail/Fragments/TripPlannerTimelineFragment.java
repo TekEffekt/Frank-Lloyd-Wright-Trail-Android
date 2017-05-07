@@ -95,11 +95,18 @@ public class TripPlannerTimelineFragment extends Fragment {
             } else {
                 boolean init = false;
                 int i = 0;
-                for (TripOrder tripOrder: trip.getTrips()) {
-                    if (tripOrder.getStartTourTime() == -1&& i !=0) {
-                        init = true;
+                if(trip.getTrips().size() == 1)
+                {
+                    init = true;
+                }
+                else
+                {
+                    for (TripOrder tripOrder: trip.getTrips()) {
+                        if (tripOrder.getStartTourTime() == -1&& i !=0) {
+                            init = true;
+                        }
+                        i++;
                     }
-                    i++;
                 }
                 if (init) {
                     initiateDataCalculation();
