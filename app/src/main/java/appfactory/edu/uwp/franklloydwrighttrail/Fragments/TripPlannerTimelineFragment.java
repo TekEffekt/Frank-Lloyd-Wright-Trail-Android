@@ -93,11 +93,13 @@ public class TripPlannerTimelineFragment extends Fragment {
             if(isFinal) {
                 createFinalTripPlan();
             } else {
-                boolean init = true;
+                boolean init = false;
+                int i = 0;
                 for (TripOrder tripOrder: trip.getTrips()) {
-                    if (tripOrder.getStartTourTime() != -1) {
-                        init = false;
+                    if (tripOrder.getStartTourTime() == -1&& i !=0) {
+                        init = true;
                     }
+                    i++;
                 }
                 if (init) {
                     initiateDataCalculation();
@@ -223,7 +225,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                 }
             }
             TripOrder temp;
-            Log.d("debug", "flwLocations before change: "+ flwLocations.toString());
             for(int i=0;i<flwLocations.size()-1;i++)
             {
                     if(flwLocations.get(i+1).getStartTourTime() < flwLocations.get(i).getStartTourTime())
@@ -424,8 +425,14 @@ public class TripPlannerTimelineFragment extends Fragment {
                             index = findLocation(R.string.monona_terrace, locations);
                             if (index == -1) {
                                 index = findLocation(R.string.visitor_center, locations);
-                                if (index == -1)
+                                if (index == -1){
                                     index = findLocation(R.string.valley_school, locations);
+                                    if(index == -1)
+                                    {
+                                        index = findLocation(R.string.german_warehouse,locations);
+                                    }
+                                }
+
 
                             }
                         }
@@ -455,32 +462,46 @@ public class TripPlannerTimelineFragment extends Fragment {
                     }
                 }
             }
+            if(locations.size() != 2)
+            {
+                bLatLong = locations.get(index);
+                bLoc = index;
 
-            bLatLong = locations.get(index);
-            bLoc = index;
+                Location locationA = new Location("point A");
+                locationA.setLatitude(aLatLong.getLatitude());
+                locationA.setLongitude(aLatLong.getLongitude());
+                Location locationB = new Location("point B");
+                locationB.setLatitude(bLatLong.getLatitude());
+                locationB.setLongitude(bLatLong.getLongitude());
+                // Check which end point is closer to the user location
+                if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
 
-            Location locationA = new Location("point A");
-            locationA.setLatitude(aLatLong.getLatitude());
-            locationA.setLongitude(aLatLong.getLongitude());
-            Location locationB = new Location("point B");
-            locationB.setLatitude(bLatLong.getLatitude());
-            locationB.setLongitude(bLatLong.getLongitude());
-            // Check which end point is closer to the user location
-            if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
+                    endLocation = bLatLong;
+                    endLatLong = bLatLong.getLatlong();
+                    endLoc = bLoc;
+                } else {
 
-                endLocation = bLatLong;
-                endLatLong = bLatLong.getLatlong();
-                endLoc = bLoc;
-            } else {
+                    endLocation = aLatLong;
+                    endLatLong = aLatLong.getLatlong();
+                    endLoc = aLoc;
+                }
+                locations.remove(endLoc);
+                locations.add(endLocation);
 
+                endLoc = findLocation(endLocation.getName(), locations);
+            }
+            else
+            {
                 endLocation = aLatLong;
                 endLatLong = aLatLong.getLatlong();
                 endLoc = aLoc;
-            }
-            locations.remove(endLoc);
-            locations.add(endLocation);
+                locations.remove(endLoc);
+                locations.add(endLocation);
 
-            endLoc = findLocation(endLocation.getName(), locations);
+                endLoc = findLocation(endLocation.getName(), locations);
+            }
+
+
             String[] middleLatLong = new String[locations.size() - 2];
             int j = 0;
             // Put the middle locations in an array
@@ -501,7 +522,7 @@ public class TripPlannerTimelineFragment extends Fragment {
             mTripOrder = new RealmList<>();
             // Call the Directions api to get the order and travel times for each site
             DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-            Call<DirectionsModel> call2 = directionsApi.directions(startLatLong, endLatLong, midLatLong,key);
+            Call<DirectionsModel> call2 = directionsApi.directions(startLatLong, endLatLong, midLatLong.length() == 0? "":midLatLong,key);
 
             call2.enqueue(new Callback<DirectionsModel>() {
                 @Override
