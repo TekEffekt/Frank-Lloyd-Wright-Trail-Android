@@ -27,6 +27,7 @@
                 android:id="@+id/tour_time_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginRight="45dp"
                 android:layout_marginLeft="20dp"
                 android:textSize="16dp"
                 android:text="@string/scjohnson"
