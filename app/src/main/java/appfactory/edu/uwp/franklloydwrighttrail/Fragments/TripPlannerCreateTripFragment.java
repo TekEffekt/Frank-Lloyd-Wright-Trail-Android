@@ -308,19 +308,19 @@ public class TripPlannerCreateTripFragment extends Fragment {
         });
         */
         Log.e("trip listener set", tripNameEdit.toString());
-        tripNameEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int i, KeyEvent keyEvent) {
-                if(i == EditorInfo.IME_ACTION_DONE){
 
+        tripNameEdit.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
                     InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(getContext().INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-                    realm.beginTransaction();
-                    RealmController.getInstance().getTripResults(tripPosition).get(0).setName(tripNameEdit.getText().toString());
-                    realm.commitTransaction();
-                    return true;
+                    if (tripNameEdit.getText().length() != 0) {
+                        realm.beginTransaction();
+                        RealmController.getInstance().getTripResults(tripPosition).get(0).setName(tripNameEdit.getText().toString());
+                        realm.commitTransaction();
+                    }
                 }
-                return false;
             }
         });
 

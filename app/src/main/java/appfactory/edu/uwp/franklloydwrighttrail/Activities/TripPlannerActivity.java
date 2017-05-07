@@ -1,6 +1,7 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -167,6 +168,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         recycler.setVisibility(View.GONE);
         toolbar.setTitle("Trip Creation");
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         return false;
@@ -204,6 +206,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(position)).commit();
+        addTrip.setVisible(false);
         fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
@@ -214,6 +217,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.content_frame, TripPlannerTimelineFragment.newInstance(isFinal, position)).commit();
+        addTrip.setVisible(false);
         fragmentView.setVisibility(View.VISIBLE);
         create.setVisibility(View.GONE);
         recycler.setVisibility(View.GONE);
