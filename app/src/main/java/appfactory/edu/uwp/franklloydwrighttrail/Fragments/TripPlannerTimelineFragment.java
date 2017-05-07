@@ -340,7 +340,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
                         @Override
                         public void onFailure(Call<DirectionsModel> call, Throwable t) {
-
+                            Toast.makeText(getContext(), "Please connect to the internet for most recent trip times",Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -579,7 +579,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<DirectionsModel> call, Throwable t) {
-
+                    Toast.makeText(getContext(), "Please connect to the internet for most recent times",Toast.LENGTH_LONG).show();
                 }
             });
             spinner.setVisibility(View.GONE);
