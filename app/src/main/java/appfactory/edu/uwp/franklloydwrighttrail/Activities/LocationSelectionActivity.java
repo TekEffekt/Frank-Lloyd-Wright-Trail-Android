@@ -693,9 +693,11 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             adapter.disableDistance();
             return;
         }
-        if (LocationServices.FusedLocationApi != null) {
+        try {
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mClient, mLocationRequest, this);
+        } catch (NullPointerException e) {
+            Log.e("Google API", e.getMessage());
         }
     }
 

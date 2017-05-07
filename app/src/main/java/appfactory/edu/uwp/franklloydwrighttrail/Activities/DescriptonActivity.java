@@ -376,15 +376,16 @@ protected View view;
             return true;
         }else{
             super.onBackPressed();
-        }
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            this.finish();
             return true;
         }
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.home) {
+//            this.finish();
+//            return true;
+//        }
 
 
-        return super.onOptionsItemSelected(item);
+        //return super.onOptionsItemSelected(item);
     }
 
     private void setupScheduleButton(final int position){
