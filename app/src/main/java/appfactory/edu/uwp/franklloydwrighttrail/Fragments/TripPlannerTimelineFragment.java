@@ -19,6 +19,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -232,17 +233,15 @@ public class TripPlannerTimelineFragment extends Fragment {
 
                 }
             }
-            TripOrder temp;
-            for(int i=0;i<flwLocations.size()-1;i++)
-            {
-                    if(flwLocations.get(i+1).getStartTourTime() < flwLocations.get(i).getStartTourTime())
-                    {
-                        temp = flwLocations.get(i);
-                        flwLocations.set(i,flwLocations.get(i+1));
-                        flwLocations.set(i+1,temp);
-                    }
-            }
-                TripPlannerActivity.hm.put(date, flwLocations );
+
+            Collections.sort(flwLocations, new Comparator<TripOrder>() {
+                @Override
+                public int compare(TripOrder o1, TripOrder o2) {
+                    return Long.valueOf(o1.getStartTourTime()).compareTo(o2.getStartTourTime());
+                }
+            });
+
+            TripPlannerActivity.hm.put(date, flwLocations );
         }
 
         realm.beginTransaction();
@@ -266,7 +265,7 @@ public class TripPlannerTimelineFragment extends Fragment {
             date = it.next();
 
             flwLocations = TripPlannerActivity.hm.get(date);
-                if(flwLocations.size() > 2)
+                if(flwLocations.size() >= 2)
                 {
                     String[] middleLatLong = new String[flwLocations.size() - 2];
                     String midLatLong = "";
@@ -324,15 +323,15 @@ public class TripPlannerTimelineFragment extends Fragment {
                                 {
                                     flwLocations.get(i+1).getLocation().setIsNoTime(false);
 
-                                    if(flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime())&& !flwLocations.get(i+1).getLocation().getIsNoTime())
+                                    if(flwLocations.size() > 2 && flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime()) && flwLocations.get(i+1).getLocation().getDay().equals(flwLocations.get(i).getLocation().getDay()))
                                     {
                                         flwLocations.get(i+1).getLocation().setIsNoTime(true);
-                                        TripPlannerActivity.hm.put(finalDate, flwLocations);
-                                        realm.copyToRealmOrUpdate(trip);
-
                                     }
                                 }
-
+                                for (TripOrder location: flwLocations) {
+                                    Log.d("location day", location.getLocation().getDay() == null ? "no date" : location.getLocation().getDay());
+                                }
+                                realm.copyToRealmOrUpdate(trip);
                                 realm.commitTransaction();
 
                                 TripPlannerActivity.hm.put(finalDate,flwLocations);
@@ -348,6 +347,16 @@ public class TripPlannerTimelineFragment extends Fragment {
                             Toast.makeText(getContext(), "Please connect to the internet for most recent trip times",Toast.LENGTH_LONG).show();
                         }
                     });
+                } else {
+                    realm.beginTransaction();
+                    for (TripOrder tripOrder: flwLocations) {
+                        Log.d("location day", tripOrder.getLocation().getDay() == null ? "no date" : tripOrder.getLocation().getDay());
+                        tripOrder.getLocation().setIsNoTime(false);
+                    }
+                    TripPlannerActivity.hm.put(date,flwLocations);
+
+                    realm.copyToRealmOrUpdate(trip);
+                    realm.commitTransaction();
                 }
         }
         spinner.setVisibility(View.GONE);
