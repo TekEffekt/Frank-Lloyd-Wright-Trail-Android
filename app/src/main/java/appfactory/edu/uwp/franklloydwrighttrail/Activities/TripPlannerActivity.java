@@ -56,6 +56,7 @@ import io.realm.RealmResults;
 public class TripPlannerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
     private DrawerLayout drawer;
     private RelativeLayout create;
+    private MenuItem addTrip;
     private NavigationView navigationView;
     private ActionBarDrawerToggle toggle;
     private Toolbar toolbar;
@@ -88,7 +89,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         //FragmentTransaction transaction = fragmentManager.beginTransaction();
         //transaction.remove(fragmentManager.getFragments().get(0)).commit();
         setupRecycler();
-        create.setVisibility(View.VISIBLE);
+        addTrip.setVisible(true);
         recycler.setVisibility(View.VISIBLE);
         fragmentView.setVisibility(View.GONE);
         viewingFragment = false;
@@ -145,7 +146,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.trip_planner_timeline, menu);
-        final MenuItem addTrip = menu.findItem(R.id.menu_item_add_trip);
+        addTrip = menu.findItem(R.id.menu_item_add_trip);
         addTrip.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
