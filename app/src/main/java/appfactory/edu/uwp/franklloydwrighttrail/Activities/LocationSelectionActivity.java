@@ -205,6 +205,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                     ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
                 } else {
                     ul = new UserLocation(43.0717445, -89.38040180000002);
+                    Toast.makeText(this, "Please enable GPS for accurate location information", Toast.LENGTH_LONG).show();
                 }
                 realm.copyToRealmOrUpdate(ul);
                 realm.commitTransaction();
