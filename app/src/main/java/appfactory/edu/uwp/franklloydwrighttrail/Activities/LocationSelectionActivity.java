@@ -695,8 +695,10 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             return;
         }
         try {
-            LocationServices.FusedLocationApi.requestLocationUpdates(
-                    mClient, mLocationRequest, this);
+            if (mClient.isConnected()) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                        mClient, mLocationRequest, this);
+            }
         } catch (NullPointerException e) {
             Log.e("Google API", e.getMessage());
         }

@@ -24,8 +24,17 @@ import android.widget.Toast;
 
 import com.vipul.hp_hp.timelineview.TimelineView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.DescriptonActivity;
 import appfactory.edu.uwp.franklloydwrighttrail.Activities.LocationSelectionActivity;
@@ -105,15 +114,47 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         holder.setIsRecyclable(false);
         if(isFinal)
         {
+            ArrayList<String> dates = new ArrayList<>(TripPlannerActivity.dates);
+
+            Collections.sort(dates, new Comparator<String>() {
+                @Override
+                public int compare(String o1, String o2) {
+                    SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
+                    if( o1 == o2 )
+                        return 0;
+                    if( o1 == null )
+                        return -1;
+                    if( o2 == null )
+                        return 1;
+                    try {
+                        Date date1 = format.parse(o1);
+                        Date date2 = format.parse(o2);
+                        return date1.compareTo(date2);
+                    } catch (ParseException e) {
+                        Log.e("Parse Error", e.getMessage());
+                        return o1.compareTo( o2 );
+                    }
+
+                }
+            });
+
+            for (String date: dates) {
+                Log.d("date", date == null ? "null" : date);
+            }
+
             Iterator<String> it = TripPlannerActivity.dates.iterator();
 
             RealmList<TripOrder> temp;
-            if(it.hasNext())
-            it.next();
+            if(it.hasNext()) {
+                String key = it.next();
+                Log.d("itdate",key == null ? "null" : key);
+            }
             aTrip = new RealmList<>();
             while(it.hasNext())
             {
-                temp = TripPlannerActivity.hm.get(it.next());
+                String key = it.next();
+                Log.d("itdate",key);
+                temp = TripPlannerActivity.hm.get(key);
                 for(int i = 0;i<temp.size();i++)
                 {
                     aTrip.add(temp.get(i));
