@@ -84,30 +84,27 @@ public class TripPlannerTimelineFragment extends Fragment {
         realm = RealmController.with(this).getRealm();
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
         key = getString(R.string.google_api_key);
-
         spinner = (ProgressBar) view.findViewById(R.id.spinner);
-        if (RealmController.getInstance().getTripResults(tripPosition).get(0).getStartTime() != RealmController.getInstance().getTripResults(tripPosition).get(0).getEndTime()) {
-            boolean init = false;
-            int i = 0;
-            if(trip.getTrips().size() == 1) {
-                init = true;
-            } else {
-                for (TripOrder tripOrder: trip.getTrips()) {
-                    if (tripOrder.getStartTourTime() == -1&& i !=0) {
-                        init = true;
-                    }
-                    i++;
-                }
-            }
-            if (init) {
-                initiateDataCalculation();
-            } else {
-                createFinalTripPlan();
-            }
-            timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
-            setupTimeline();
+
+        setupButtons(view);
+
+        if (isFinal) {
+            createFinalTripPlan();
+            contTimes.setVisibility(View.GONE);
+        } else {
+            initiateDataCalculation();
         }
 
+        timelineView = (RecyclerView) view.findViewById(R.id.trip_timeline);
+        setupTimeline();
+
+        //Grab Trip Object
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        return view;
+    }
+
+    //Sets up buttons
+    private void setupButtons(View view){
         contTimes = (Button) view.findViewById(R.id.to_times_cont);
         contTimes.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,15 +136,9 @@ public class TripPlannerTimelineFragment extends Fragment {
                 }
             }
         });
-
-        if (isFinal){
-            contTimes.setVisibility(View.GONE);
-        }
-        //Grab Trip Object
-        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-        return view;
     }
 
+    // Connects timeline to adapter
     private void setupTimeline(){
         layoutManager = new LinearLayoutManager(getActivity());
         layoutManager.generateDefaultLayoutParams();
@@ -159,159 +150,178 @@ public class TripPlannerTimelineFragment extends Fragment {
         timelineView.setAdapter(adapter);
     }
 
-    public int findLocation(int location,RealmList<FLWLocation> locations) {
-        for(int i=0;i<locations.size();i++){
+    // Given a location name, using the list of locations, find and return it's position
+    public int findLocation(int location, RealmList<FLWLocation> locations) {
+        for(int i=0; i < locations.size(); i++){
             if(locations.get(i).getName() == location) {
                 return i;
             }
         }
-        return -1;
+        return -1; // Out of index return
     }
+
+    // Creates the final trip plan
     public void createFinalTripPlan() {
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
 
         ArrayList<TripOrder> aTemp = new ArrayList<>();
 
-         positionLookup = new HashMap<>();
-        TripPlannerActivity.dates = new LinkedHashSet<>();
-        TripPlannerActivity.hm = new HashMap<>();
-        for(int j = 0;j<trip.getTrips().size();j++) {
+        // Contains the TripOrder and a Position #Note to self, What is the point of this
+        positionLookup = new HashMap<>();
+        TripPlannerActivity.dates = new LinkedHashSet<>(); // Contains the dates of each location
+        TripPlannerActivity.hm = new HashMap<>(); // Contains days with sorted trips
+
+        // Scan through each trip
+        for(int j = 0; j < trip.getTrips().size(); j++) {
+            // Place the date into it's linked hash set
             TripPlannerActivity.dates.add(trip.getTrips().get(j).getLocation().getDay());
+            // Put the trip and it's position into a HashMap
             positionLookup.put(trip.getTrips().get(j), j);
         }
-        Iterator<String> it = TripPlannerActivity.dates.iterator();
-        if(it.hasNext())
-            it.next();
-        while(it.hasNext()) {
-            date = it.next();
 
+        Iterator<String> it = TripPlannerActivity.dates.iterator();
+        if(it.hasNext()) {
+            it.next(); // Skips the first item if there are any dates
+        }
+
+        while(it.hasNext()) { // Scans through each day
+            date = it.next(); // Grabs current day
+
+            // Starts a new list of locations
             RealmList<TripOrder> flwLocations = new RealmList<>();
 
-            for(int j = 0;j<trip.getTrips().size();j++) {
+            // Scan through each trip
+            for(int j = 0; j < trip.getTrips().size(); j++) {
+                // As long as it's not "Home"
                 if(trip.getTrips().get(j).getLocation().getName() != R.string.user) {
+                    // If the day is equal to the current date
                     if(trip.getTrips().get(j).getLocation().getDay().equals(date)) {
-                        flwLocations.add(trip.getTrips().get(j));
-                        aTemp.add(trip.getTrips().get(j));
+                        flwLocations.add(trip.getTrips().get(j)); // Add location to current day trip
+                        aTemp.add(trip.getTrips().get(j)); // Add location to overall trip
                     }
-                } else {
+                } else { // If it is home #Note to self, not sure what the point of this is
+                    // as long as the overall trip doesn't contain the current location
                     if(!aTemp.contains(trip.getTrips().get(j))) {
-                        flwLocations.add(trip.getTrips().get(j));
-                        aTemp.add(trip.getTrips().get(j));
+                        flwLocations.add(trip.getTrips().get(j)); // Add location to current day
+                        aTemp.add(trip.getTrips().get(j)); // Add location to overall trip
                     }
                 }
             }
+            // Sort the locations in current day based on starting time
             Collections.sort(flwLocations, new Comparator<TripOrder>() {
                 @Override
                 public int compare(TripOrder o1, TripOrder o2) {
                     return Long.valueOf(o1.getStartTourTime()).compareTo(o2.getStartTourTime());
                 }
             });
-            TripPlannerActivity.hm.put(date, flwLocations );
+            // Put the date in the HashMap with the day's trip as the value
+            TripPlannerActivity.hm.put(date, flwLocations);
         }
 
         realm.beginTransaction();
-        for(int i=0;i<aTemp.size();i++) {
-            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().set(i,aTemp.get(i));
+        for(int i=0; i < aTemp.size(); i++) {
+            // Set current Position in Current Trip Plan to contain
+            // the location of the overall day's trip in order
+            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().set(i, aTemp.get(i));
         }
         realm.commitTransaction();
 
+        // Set current viewed trip to now have our updated trip list
         trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-        for(int i = 0;i<trip.getTrips().size();i++) {
-            positionLookup.put(trip.getTrips().get(i), i);
+        for(int i = 0; i < trip.getTrips().size(); i++) {
+            positionLookup.put(trip.getTrips().get(i), i); // Reset each trip to now have the current position
         }
-        it = TripPlannerActivity.dates.iterator();
-        if(it.hasNext()) {
+        it = TripPlannerActivity.dates.iterator(); // Reset iterator
+        if(it.hasNext()) { // Skip first date
             it.next();
         }
-        while(it.hasNext()) {
-            date = it.next();
+        while(it.hasNext()) { // Run through each date
+            date = it.next(); // Set current date
 
-            flwLocations = TripPlannerActivity.hm.get(date);
-                if(flwLocations.size() >= 2) {
-                    String[] middleLatLong = new String[flwLocations.size() - 2];
-                    String midLatLong = "";
-                    int j = 0;
-                    // Put the middle locations in an array
-                    for (int i = 0; i < flwLocations.size(); i++) {
-                        if ( i != 0 && i != flwLocations.size()-1 && flwLocations.get(i).getLocation().getLatlong() != null) {
-                            middleLatLong[j] = flwLocations.get(i).getLocation().getLatlong();
-                            j++;
-                        }
+            flwLocations = TripPlannerActivity.hm.get(date); // Get ordered list for current day
+            if(flwLocations.size() >= 2) { // As long as the trip list contains 2 or more locations
+                // Create an array to contain the middle locations
+                String[] middleLatLong = new String[flwLocations.size() - 2];
+                String midLatLong = ""; // instantiate variable
+                int arrayPos = 0; // Current position of middleLatLong array
+                for (int i = 1; i < flwLocations.size(); i++) {
+                    // as long as the location is not the last one and
+                    // the location has a latlong
+                    if (i != flwLocations.size() - 1 && flwLocations.get(i).getLocation().getLatlong() != null) {
+                        // Add the latlong to the array
+                        middleLatLong[arrayPos] = flwLocations.get(i).getLocation().getLatlong();
+                        arrayPos++;
                     }
-                    // Create the middle locations string for the api
-                    for (int i = 0; i < middleLatLong.length; i++) {
-                        if (i != middleLatLong.length - 1) {
-                            midLatLong += middleLatLong[i] + "|";
-                        } else {
-                            midLatLong += middleLatLong[i];
-                        }
-                    }
-                    Log.d("MidLatLon", midLatLong);
-                    // Call the Directions api to get the order and travel times for each site
-                    DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-
-                    Call<DirectionsModel> call2 = directionsApi.directions(flwLocations.get(0).getLocation().getLatlong(), flwLocations.get(flwLocations.size()-1).getLocation().getLatlong(), midLatLong,key);
-                    final String finalDate = date;
-                    call2.enqueue(new Callback<DirectionsModel>() {
-                        @Override
-                        public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                            RealmList<TripOrder> flwLocations = TripPlannerActivity.hm.get(finalDate);
-                            if (response.isSuccessful()) {
-                                int j = 0;
-                                realm.beginTransaction();
-                                // Grab the order of the middle sites
-                                if (response.body().getRoutes().size() != 0) {
-                                    for (int i = 0; i < response.body().getRoutes().get(0).getLegs().size(); i++) {
-                                        // Get travel time for the start location
-                                        if (i == 0) {
-                                            flwLocations.get(0).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
-                                            flwLocations.get(0).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
-                                        }
-                                        // Get the travel time for the middle locations
-                                        // Added if to stop crash on multiday trips
-                                        else if (flwLocations.size() - 1 >=i) {
-                                            flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
-                                            flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
-                                            j++;
-                                        } else {
-                                            Log.e("Timeline", "direction request and number of locations for day do not match");
-                                        }
-                                    }
-                                }
-                                for(int i = 0;i<flwLocations.size()-1;i++) {
-                                    flwLocations.get(i+1).getLocation().setIsNoTime(false);
-
-                                    if(flwLocations.size() > 2 && flwLocations.get(i+1).getStartTourTime() < (flwLocations.get(i).getTimeValue()+flwLocations.get(i).getEndTourTime()) && flwLocations.get(i+1).getLocation().getDay().equals(flwLocations.get(i).getLocation().getDay())) {
-                                        flwLocations.get(i+1).getLocation().setIsNoTime(true);
-                                    }
-                                }
-                                for (TripOrder location: flwLocations) {
-                                    Log.d("location day", location.getLocation().getDay() == null ? "no date" : location.getLocation().getDay());
-                                }
-                                realm.copyToRealmOrUpdate(trip);
-                                realm.commitTransaction();
-
-                                TripPlannerActivity.hm.put(finalDate,flwLocations);
-                                adapter.setTrip(flwLocations);
-                                adapter.notifyDataSetChanged();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<DirectionsModel> call, Throwable t) {
-                            Toast.makeText(getContext(), "Please connect to the internet for most recent trip times",Toast.LENGTH_LONG).show();
-                        }
-                    });
-                } else {
-                    realm.beginTransaction();
-                    for (TripOrder tripOrder: flwLocations) {
-                        Log.d("location day", tripOrder.getLocation().getDay() == null ? "no date" : tripOrder.getLocation().getDay());
-                        tripOrder.getLocation().setIsNoTime(false);
-                    }
-                    TripPlannerActivity.hm.put(date,flwLocations);
-
-                    realm.copyToRealmOrUpdate(trip);
-                    realm.commitTransaction();
                 }
+                // Create the middle locations string for the api
+                for (int i = 0; i < middleLatLong.length; i++) {
+                    // This is for formatting, it's basic concatenation
+                    if (i != middleLatLong.length - 1) {
+                        midLatLong += middleLatLong[i] + "|";
+                    } else {
+                        midLatLong += middleLatLong[i];
+                    }
+                }
+                // Call the Directions api to get the order and travel times for each site
+                DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+                Call<DirectionsModel> call2 = directionsApi.directions(flwLocations.get(0).getLocation().getLatlong(),
+                        flwLocations.get(flwLocations.size()-1).getLocation().getLatlong(), midLatLong, key);
+                // place date into a final string variable for inner method use
+                final String finalDate = date;
+                call2.enqueue(new Callback<DirectionsModel>() {
+                    @Override
+                    public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                        // Grab list of trips based on date
+                        RealmList<TripOrder> flwLocations = TripPlannerActivity.hm.get(finalDate);
+                        if (response.isSuccessful()) {
+                            realm.beginTransaction();
+                            // Grab the order of the middle sites
+                            if (response.body().getRoutes().size() != 0) {
+                                for (int i = 0; i < response.body().getRoutes().get(0).getLegs().size(); i++) {
+                                    // Get travel time for the locations
+                                    if (i < flwLocations.size() - 1) {
+                                        flwLocations.get(i).setTimeText(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText());
+                                        flwLocations.get(i).setTimeValue(response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue() / 60);
+
+                                        if(flwLocations.size() > 2 && flwLocations.get(i+1).getStartTourTime() <
+                                                (flwLocations.get(i).getTimeValue() + flwLocations.get(i).getEndTourTime()) &&
+                                                flwLocations.get(i+1).getLocation().getDay().equals(flwLocations.get(i).getLocation().getDay())) {
+                                            flwLocations.get(i+1).getLocation().setIsNoTime(true);
+                                        } else {
+                                            flwLocations.get(i+1).getLocation().setIsNoTime(false);
+                                        }
+                                    } else {
+                                        Log.e("Timeline", "direction request and number of locations for day do not match");
+                                    }
+                                }
+                            }
+                            /*for (TripOrder location: flwLocations) {
+                                Log.d("location day", location.getLocation().getDay() == null ? "no date" : location.getLocation().getDay());
+                            }*/
+                            realm.copyToRealmOrUpdate(trip);
+                            realm.commitTransaction();
+
+                            TripPlannerActivity.hm.put(finalDate, flwLocations);
+                            adapter.setTrip(flwLocations);
+                            adapter.notifyDataSetChanged();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<DirectionsModel> call, Throwable t) {
+                        Toast.makeText(getContext(), "Please connect to the internet for most recent trip times",Toast.LENGTH_LONG).show();
+                    }
+                });
+            } else { // Whenever trips are one location
+                realm.beginTransaction();
+                for (TripOrder tripOrder: flwLocations) {
+                    Log.d("location day", tripOrder.getLocation().getDay() == null ? "no date" : tripOrder.getLocation().getDay());
+                    tripOrder.getLocation().setIsNoTime(false);
+                }
+                TripPlannerActivity.hm.put(date,flwLocations);
+
+                realm.copyToRealmOrUpdate(trip);
+                realm.commitTransaction();
+            }
         }
         spinner.setVisibility(View.GONE);
     }
