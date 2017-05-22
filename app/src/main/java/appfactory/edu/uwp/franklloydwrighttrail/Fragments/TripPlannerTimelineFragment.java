@@ -56,9 +56,8 @@ public class TripPlannerTimelineFragment extends Fragment {
     private TripObject trip;
     private TimelineAdapter adapter;
     private LinearLayoutManager layoutManager;
-    public Location location;
     public RealmList<FLWLocation> locations = LocationModel.getLocations();
-    RealmList<TripOrder> mTripOrder = new RealmList<>();
+    RealmList<TripOrder> tripsOrder = new RealmList<>();
     private Realm realm;
     private ProgressBar spinner;
     private RecyclerView timelineView;
@@ -333,7 +332,6 @@ public class TripPlannerTimelineFragment extends Fragment {
         FLWLocation endLocation; // Contains last location (if there's more than 2)
         String homeLatLong; // Contains LatLong of user location
         String endLatLong; // Contains LatLong of last location
-        int homeLoc; // Position of Home
         int endLoc; // Position of final location
 
         // These are relative and can swap positions, they are basically endpoints
@@ -352,7 +350,6 @@ public class TripPlannerTimelineFragment extends Fragment {
         
         // Create Home Point
         final FLWLocation homeLocation = locations.get(0);
-        homeLoc = findLocation(R.string.user, locations);
         homeLatLong = homeLocation.getLatlong();
 
         // Find start point
@@ -366,13 +363,8 @@ public class TripPlannerTimelineFragment extends Fragment {
             endLocation = locations.get(index);
             endIndex = index;
 
-            // Translates FLWLocation to Location
-            Location locationA = new Location("point A");
-            locationA.setLatitude(startLocation.getLatitude());
-            locationA.setLongitude(startLocation.getLongitude());
-            Location locationB = new Location("point B");
-            locationB.setLatitude(endLocation.getLatitude());
-            locationB.setLongitude(endLocation.getLongitude());
+            Location locationA = toLocation(startLocation);
+            Location locationB = toLocation(endLocation);
 
             // Check which end point is closer to the user location
             if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
@@ -392,26 +384,17 @@ public class TripPlannerTimelineFragment extends Fragment {
 
         locations.remove(endLoc); // Delete old location.
         locations.add(finalLocation); // Add the same location as last stop
-        endLoc = findLocation(finalLocation.getName(), locations); // find position of your last stop
 
-        String[] middleLatLong = new String[locations.size() - 2];
-        int j = 0;
-        // Put the middle locations in an array
-        for (int i = 0; i < locations.size(); i++) {
-            if (homeLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
-                middleLatLong[j] = locations.get(i).getLatlong();
-                j++;
-            }
-        }
-        // Create the middle locations string for the api
-        for (int i = 0; i < middleLatLong.length; i++) {
-            if (i != middleLatLong.length - 1) {
-                midLatLong += middleLatLong[i] + "|";
+        // Concatenate our middle locations into an api formatted string
+        for (int i = 1; i < locations.size() - 1; i++) {
+            if (i != locations.size() - 2) {
+                midLatLong += locations.get(i).getLatlong() + "|";
             } else {
-                midLatLong += middleLatLong[i];
+                midLatLong += locations.get(i).getLatlong();
             }
         }
-        mTripOrder = new RealmList<>();
+
+        tripsOrder = new RealmList<>();
         // Call the Directions api to get the order and travel times for each site
         DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
         Call<DirectionsModel> call2 = directionsApi.directions(homeLatLong, endLatLong, midLatLong.length() == 0? "":midLatLong,key);
@@ -420,37 +403,34 @@ public class TripPlannerTimelineFragment extends Fragment {
             @Override
             public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
                 if (response.isSuccessful()) {
-                    int j = 0;
-                    ArrayList<Integer> waypointOrder = new ArrayList<>();
+                    ArrayList<Integer> wayPointOrder = new ArrayList<>();
                     // Grab the order of the middle sites
-                    for (int k = 0; k < response.body().getRoutes().get(0).getWaypointOrder().size(); k++) {
-                        waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k) + 1);
+                    for (int i = 0; i < response.body().getRoutes().get(0).getWaypointOrder().size(); i++) {
+                        wayPointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(i) + 1);
                     }
                     for (int i = 0; i <= response.body().getRoutes().get(0).getLegs().size(); i++) {
                         // Get travel time for the start location
                         if (i == 0) {
-                            TripOrder trip = new TripOrder(homeLocation, response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                            trip.setTimeValue(trip.getTimeValue() / 60);
-                            if (!mTripOrder.contains(trip))
-                                mTripOrder.add(trip);
+                            TripOrder location = new TripOrder(homeLocation,
+                                    response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),
+                                    response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            location.setTimeValue(location.getTimeValue() / 60);
+                            tripsOrder.add(location);
                         } // Get travel time for the end location
                         else if (i == response.body().getRoutes().get(0).getLegs().size()) {
-                            TripOrder trip = new TripOrder(finalLocation, "", 0);
-                            trip.setTimeValue(trip.getTimeValue() / 60);
-                            if (!mTripOrder.contains(trip)) {
-                                mTripOrder.add(trip);
-                            }
+                            TripOrder location = new TripOrder(finalLocation, "", 0);
+                            location.setTimeValue(location.getTimeValue() / 60);
+                            tripsOrder.add(location);
                         } else { // Get the travel time for the middle locations
-                            TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                            trip.setTimeValue(trip.getTimeValue() / 60);
-                            if (!mTripOrder.contains(trip)) {
-                                mTripOrder.add(trip);
-                            }
-                            j++;
+                            TripOrder location = new TripOrder(locations.get(wayPointOrder.get(i - 1)),
+                                    response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(),
+                                    response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            location.setTimeValue(location.getTimeValue() / 60);
+                            tripsOrder.add(location);
                         }
                     }
                     realm.beginTransaction();
-                    trip.setTrips(mTripOrder);
+                    trip.setTrips(tripsOrder);
                     realm.copyToRealmOrUpdate(trip);
                     realm.commitTransaction();
                     trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
@@ -467,6 +447,8 @@ public class TripPlannerTimelineFragment extends Fragment {
         spinner.setVisibility(View.GONE);
     }
 
+    // Creates a FLWLocation object based on user's current position
+    // Returns list of locations including "Home" as first object
     private RealmList<FLWLocation> createHome(RealmList<FLWLocation> locations){
         FLWLocation homeLocation = new FLWLocation();
 
@@ -535,5 +517,13 @@ public class TripPlannerTimelineFragment extends Fragment {
             }
         }
         return index;
+    }
+
+    // Translates FLWLocation to Location
+    private Location toLocation (FLWLocation flwLocation){
+        Location location = new Location("From FLWLocation");
+        location.setLatitude(flwLocation.getLatitude());
+        location.setLongitude(flwLocation.getLongitude());
+        return location;
     }
 }
