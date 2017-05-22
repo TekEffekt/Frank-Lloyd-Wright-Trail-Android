@@ -376,20 +376,23 @@ public class TripPlannerTimelineFragment extends Fragment {
 
             // Check which end point is closer to the user location
             if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
-                finalLocation = endLocation;
+                finalLocation = endLocation; // The "farthest" location is the closest
                 endLatLong = endLocation.getLatlong();
+                endLoc = endIndex; // Set index to be deleted later
             } else {
-                finalLocation = startLocation;
+                finalLocation = startLocation; // The "closest" location is the closest
                 endLatLong = startLocation.getLatlong();
+                endLoc = startIndex; // Set index to be deleted later
             }
         } else {
-            finalLocation = startLocation;
+            finalLocation = startLocation; // The "closest" location is the closest
             endLatLong = startLocation.getLatlong();
+            endLoc = startIndex; // Set index to be deleted later
         }
 
-        endLoc = findLocation(finalLocation.getName(), locations);
-        locations.remove(endLoc);
-        locations.add(finalLocation);
+        locations.remove(endLoc); // Delete old location.
+        locations.add(finalLocation); // Add the same location as last stop
+        endLoc = findLocation(finalLocation.getName(), locations); // find position of your last stop
 
         String[] middleLatLong = new String[locations.size() - 2];
         int j = 0;
