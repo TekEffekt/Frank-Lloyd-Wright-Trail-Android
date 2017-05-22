@@ -70,6 +70,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     public HashMap<TripOrder, Integer> positionLookup;
     private String date;
     private String key;
+    private Location myLocation;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
         TripPlannerTimelineFragment tripPlannerTimelineFragment = new TripPlannerTimelineFragment();
@@ -327,215 +328,209 @@ public class TripPlannerTimelineFragment extends Fragment {
     }
 
     private void initiateDataCalculation(){
-        if(!isFinal) {
-            FLWLocation aLatLong;
-            FLWLocation bLatLong;
-            final FLWLocation startLocation = new FLWLocation();
-            final FLWLocation endLocation;
-            String startLatLong;
-            String endLatLong;
-            int startLoc;
-            int endLoc;
-            int index;
-            int aLoc;
-            int bLoc;
-            String midLatLong = "optimize:true|";
-            trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-            locations = new RealmList<>();
+        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+        FLWLocation startLocation; // Contains first non Home Location
+        FLWLocation endLocation; // Contains last location (if there's more than 2)
+        String homeLatLong; // Contains LatLong of user location
+        String endLatLong; // Contains LatLong of last location
+        int homeLoc; // Position of Home
+        int endLoc; // Position of final location
 
-            for (TripOrder tp : trip.getTrips()) {
-                if (!locations.contains(tp.getLocation())) {
-                    locations.add(tp.getLocation());
-                }
-            }
-            // Get the users location from realm
-            UserLocation ul = RealmController.getInstance().getUserLocation();
-            Location myLocation = new Location("user");
-            myLocation.setLatitude(ul.getLatitude());
-            myLocation.setLongitude(ul.getLongitude());
-            startLocation.setLatitude(ul.getLatitude());
-            startLocation.setLongitude(ul.getLongitude());
-            startLocation.setLatlong(ul.getLatitude() + "," + ul.getLongitude());
-            startLocation.setName(R.string.user);
-            startLocation.setImage(android.R.color.transparent);
-            if (findLocation(R.string.user, locations) != -1) {
-                locations.remove(findLocation(R.string.user, locations));
-                locations.add(0, startLocation);
-            } else {
-                locations.add(0, startLocation);
-            }
-            if (findLocation(R.string.user, locations) == -1) {
-                if (location == null) {
-                    location = new Location("default");
-                    location.setLatitude(42.7152375);
-                    location.setLongitude(-87.7906969);
-                }
-                myLocation = location;
-                // Sets start location to the users location
-                startLocation.setLatitude(myLocation.getLatitude());
-                startLocation.setLongitude(myLocation.getLongitude());
-                startLocation.setLatlong(myLocation.getLatitude() + "," + myLocation.getLongitude());
-                startLocation.setName(R.string.user);
-                startLocation.setImage(android.R.color.transparent);
-                locations.add(0, startLocation);
-            }
-            startLoc = findLocation(R.string.user, locations);
-            startLocation.setLatitude(locations.get(startLoc).getLatitude());
-            startLocation.setLongitude(locations.get(startLoc).getLongitude());
-            startLocation.setLatlong(startLocation.getLatitude() + "," + startLocation.getLongitude());
-            startLocation.setName(locations.get(startLoc).getName());
-            startLocation.setImage(locations.get(startLoc).getImage());
-            startLatLong = startLocation.getLatlong();
-            // Find one end point
-            index = findLocation(R.string.scjohnson, locations);
-            if (index == -1) {
-                index = findLocation(R.string.wingspread, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.built_homes, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.meeting_house, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.monona_terrace, locations);
-                            if (index == -1) {
-                                index = findLocation(R.string.visitor_center, locations);
-                                if (index == -1){
-                                    index = findLocation(R.string.valley_school, locations);
-                                    if(index == -1) {
-                                        index = findLocation(R.string.german_warehouse,locations);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            aLatLong = locations.get(index);
-            aLoc = index;
-            index = findLocation(R.string.german_warehouse, locations);
-            // Find the second end point
-            if (index == -1) {
-                index = findLocation(R.string.valley_school, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.visitor_center, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.meeting_house, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.monona_terrace, locations);
-                            if (index == -1) {
-                                index = findLocation(R.string.built_homes, locations);
-                                if (index == -1) {
-                                    index = findLocation(R.string.wingspread, locations);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-            if(locations.size() != 2) {
-                bLatLong = locations.get(index);
-                bLoc = index;
+        // These are relative and can swap positions, they are basically endpoints
+        int startIndex; // Position of first trip location
+        int endIndex; // Position of last trip location
+        String midLatLong = "optimize:true|";
 
-                Location locationA = new Location("point A");
-                locationA.setLatitude(aLatLong.getLatitude());
-                locationA.setLongitude(aLatLong.getLongitude());
-                Location locationB = new Location("point B");
-                locationB.setLatitude(bLatLong.getLatitude());
-                locationB.setLongitude(bLatLong.getLongitude());
-                // Check which end point is closer to the user location
-                if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
-                    endLocation = bLatLong;
-                    endLatLong = bLatLong.getLatlong();
-                    endLoc = bLoc;
-                } else {
-                    endLocation = aLatLong;
-                    endLatLong = aLatLong.getLatlong();
-                    endLoc = aLoc;
-                }
-                locations.remove(endLoc);
-                locations.add(endLocation);
-
-                endLoc = findLocation(endLocation.getName(), locations);
-            } else {
-                endLocation = aLatLong;
-                endLatLong = aLatLong.getLatlong();
-                endLoc = aLoc;
-                locations.remove(endLoc);
-                locations.add(endLocation);
-
-                endLoc = findLocation(endLocation.getName(), locations);
+        locations = new RealmList<>();
+        locations = createHome(locations);
+        for (TripOrder tp : trip.getTrips()) {
+            // Adds locations to location list while checking for duplicates
+            if (!locations.contains(tp.getLocation())) {
+                locations.add(tp.getLocation());
             }
-
-            String[] middleLatLong = new String[locations.size() - 2];
-            int j = 0;
-            // Put the middle locations in an array
-            for (int i = 0; i < locations.size(); i++) {
-                if (startLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
-                    middleLatLong[j] = locations.get(i).getLatlong();
-                    j++;
-                }
-            }
-            // Create the middle locations string for the api
-            for (int i = 0; i < middleLatLong.length; i++) {
-                if (i != middleLatLong.length - 1) {
-                    midLatLong += middleLatLong[i] + "|";
-                } else {
-                    midLatLong += middleLatLong[i];
-                }
-            }
-            mTripOrder = new RealmList<>();
-            // Call the Directions api to get the order and travel times for each site
-            DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
-            Call<DirectionsModel> call2 = directionsApi.directions(startLatLong, endLatLong, midLatLong.length() == 0? "":midLatLong,key);
-
-            call2.enqueue(new Callback<DirectionsModel>() {
-                @Override
-                public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
-                    if (response.isSuccessful()) {
-                        int j = 0;
-                        ArrayList<Integer> waypointOrder = new ArrayList<>();
-                        // Grab the order of the middle sites
-                        for (int k = 0; k < response.body().getRoutes().get(0).getWaypointOrder().size(); k++) {
-                            waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k) + 1);
-                        }
-                        for (int i = 0; i <= response.body().getRoutes().get(0).getLegs().size(); i++) {
-                            // Get travel time for the start location
-                            if (i == 0) {
-                                TripOrder trip = new TripOrder(startLocation, response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                                trip.setTimeValue(trip.getTimeValue() / 60);
-                                if (!mTripOrder.contains(trip))
-                                    mTripOrder.add(trip);
-                            } // Get travel time for the end location
-                            else if (i == response.body().getRoutes().get(0).getLegs().size()) {
-                                TripOrder trip = new TripOrder(endLocation, "", 0);
-                                trip.setTimeValue(trip.getTimeValue() / 60);
-                                if (!mTripOrder.contains(trip)) {
-                                    mTripOrder.add(trip);
-                                }
-                            } else { // Get the travel time for the middle locations
-                                TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
-                                trip.setTimeValue(trip.getTimeValue() / 60);
-                                if (!mTripOrder.contains(trip)) {
-                                    mTripOrder.add(trip);
-                                }
-                                j++;
-                            }
-                        }
-                        realm.beginTransaction();
-                        trip.setTrips(mTripOrder);
-                        realm.copyToRealmOrUpdate(trip);
-                        realm.commitTransaction();
-                        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<DirectionsModel> call, Throwable t) {
-                    Toast.makeText(getContext(), "Please connect to the internet for most recent times",Toast.LENGTH_LONG).show();
-                }
-            });
-            spinner.setVisibility(View.GONE);
         }
+        
+        // Create Home Point
+        final FLWLocation homeLocation = locations.get(0);
+        homeLoc = findLocation(R.string.user, locations);
+        homeLatLong = homeLocation.getLatlong();
+
+        // Find start point
+        int index = findStartPoint();
+        startLocation = locations.get(index);
+        startIndex = index;
+
+        final FLWLocation finalLocation; // Declared final to work in inner classes
+        if(locations.size() > 2) { // as long as there's more than 2 locations
+            index = findEndPoint(); // Find endpoint
+            endLocation = locations.get(index);
+            endIndex = index;
+
+            // Translates FLWLocation to Location
+            Location locationA = new Location("point A");
+            locationA.setLatitude(startLocation.getLatitude());
+            locationA.setLongitude(startLocation.getLongitude());
+            Location locationB = new Location("point B");
+            locationB.setLatitude(endLocation.getLatitude());
+            locationB.setLongitude(endLocation.getLongitude());
+
+            // Check which end point is closer to the user location
+            if (myLocation.distanceTo(locationA) < myLocation.distanceTo(locationB)) {
+                finalLocation = endLocation;
+                endLatLong = endLocation.getLatlong();
+            } else {
+                finalLocation = startLocation;
+                endLatLong = startLocation.getLatlong();
+            }
+        } else {
+            finalLocation = startLocation;
+            endLatLong = startLocation.getLatlong();
+        }
+
+        endLoc = findLocation(finalLocation.getName(), locations);
+        locations.remove(endLoc);
+        locations.add(finalLocation);
+
+        String[] middleLatLong = new String[locations.size() - 2];
+        int j = 0;
+        // Put the middle locations in an array
+        for (int i = 0; i < locations.size(); i++) {
+            if (homeLoc != i && endLoc != i && locations.get(i).getLatlong() != null) {
+                middleLatLong[j] = locations.get(i).getLatlong();
+                j++;
+            }
+        }
+        // Create the middle locations string for the api
+        for (int i = 0; i < middleLatLong.length; i++) {
+            if (i != middleLatLong.length - 1) {
+                midLatLong += middleLatLong[i] + "|";
+            } else {
+                midLatLong += middleLatLong[i];
+            }
+        }
+        mTripOrder = new RealmList<>();
+        // Call the Directions api to get the order and travel times for each site
+        DirectionsApi directionsApi = DirectionsApi.retrofit.create(DirectionsApi.class);
+        Call<DirectionsModel> call2 = directionsApi.directions(homeLatLong, endLatLong, midLatLong.length() == 0? "":midLatLong,key);
+
+        call2.enqueue(new Callback<DirectionsModel>() {
+            @Override
+            public void onResponse(Call<DirectionsModel> call, Response<DirectionsModel> response) {
+                if (response.isSuccessful()) {
+                    int j = 0;
+                    ArrayList<Integer> waypointOrder = new ArrayList<>();
+                    // Grab the order of the middle sites
+                    for (int k = 0; k < response.body().getRoutes().get(0).getWaypointOrder().size(); k++) {
+                        waypointOrder.add(response.body().getRoutes().get(0).getWaypointOrder().get(k) + 1);
+                    }
+                    for (int i = 0; i <= response.body().getRoutes().get(0).getLegs().size(); i++) {
+                        // Get travel time for the start location
+                        if (i == 0) {
+                            TripOrder trip = new TripOrder(homeLocation, response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            trip.setTimeValue(trip.getTimeValue() / 60);
+                            if (!mTripOrder.contains(trip))
+                                mTripOrder.add(trip);
+                        } // Get travel time for the end location
+                        else if (i == response.body().getRoutes().get(0).getLegs().size()) {
+                            TripOrder trip = new TripOrder(finalLocation, "", 0);
+                            trip.setTimeValue(trip.getTimeValue() / 60);
+                            if (!mTripOrder.contains(trip)) {
+                                mTripOrder.add(trip);
+                            }
+                        } else { // Get the travel time for the middle locations
+                            TripOrder trip = new TripOrder(locations.get(waypointOrder.get(j)), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getText(), response.body().getRoutes().get(0).getLegs().get(i).getDuration().getValue());
+                            trip.setTimeValue(trip.getTimeValue() / 60);
+                            if (!mTripOrder.contains(trip)) {
+                                mTripOrder.add(trip);
+                            }
+                            j++;
+                        }
+                    }
+                    realm.beginTransaction();
+                    trip.setTrips(mTripOrder);
+                    realm.copyToRealmOrUpdate(trip);
+                    realm.commitTransaction();
+                    trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
+
+                    adapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DirectionsModel> call, Throwable t) {
+                Toast.makeText(getContext(), "Please connect to the internet for most recent times",Toast.LENGTH_LONG).show();
+            }
+        });
+        spinner.setVisibility(View.GONE);
+    }
+
+    private RealmList<FLWLocation> createHome(RealmList<FLWLocation> locations){
+        FLWLocation homeLocation = new FLWLocation();
+
+        UserLocation ul = RealmController.getInstance().getUserLocation();
+        myLocation = new Location("user");
+        myLocation.setLatitude(ul.getLatitude());
+        myLocation.setLongitude(ul.getLongitude());
+        homeLocation.setLatitude(ul.getLatitude());
+        homeLocation.setLongitude(ul.getLongitude());
+        homeLocation.setLatlong(ul.getLatitude() + "," + ul.getLongitude());
+        homeLocation.setName(R.string.user);
+        homeLocation.setImage(android.R.color.transparent);
+        if (findLocation(R.string.user, locations) != -1) {
+            locations.remove(findLocation(R.string.user, locations));
+        }
+        locations.add(0, homeLocation);
+        return locations;
+    }
+
+    // Finds the first point (relative to trail)
+    private int findStartPoint(){
+        int index = findLocation(R.string.scjohnson, locations);
+        if (index == -1) {
+            index = findLocation(R.string.wingspread, locations);
+            if (index == -1) {
+                index = findLocation(R.string.built_homes, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.visitor_center, locations);
+                            if (index == -1){
+                                index = findLocation(R.string.valley_school, locations);
+                                if(index == -1) {
+                                    index = findLocation(R.string.german_warehouse,locations);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return index;
+    }
+
+    // Finds the last point (relative to trail)
+    private int findEndPoint(){
+        int index = findLocation(R.string.german_warehouse, locations);
+        if (index == -1) {
+            index = findLocation(R.string.valley_school, locations);
+            if (index == -1) {
+                index = findLocation(R.string.visitor_center, locations);
+                if (index == -1) {
+                    index = findLocation(R.string.meeting_house, locations);
+                    if (index == -1) {
+                        index = findLocation(R.string.monona_terrace, locations);
+                        if (index == -1) {
+                            index = findLocation(R.string.built_homes, locations);
+                            if (index == -1) {
+                                index = findLocation(R.string.wingspread, locations);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return index;
     }
 }
