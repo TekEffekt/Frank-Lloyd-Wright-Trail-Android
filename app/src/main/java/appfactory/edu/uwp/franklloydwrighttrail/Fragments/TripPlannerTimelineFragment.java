@@ -69,6 +69,7 @@ public class TripPlannerTimelineFragment extends Fragment {
     public HashMap<TripOrder, Integer> positionLookup;
     private String date;
     private String key;
+    private int[] sortedTrips;
     private Location myLocation;
 
     public static TripPlannerTimelineFragment newInstance(boolean finalTimeline, String position){
@@ -353,13 +354,23 @@ public class TripPlannerTimelineFragment extends Fragment {
         homeLatLong = homeLocation.getLatlong();
 
         // Find start point
-        int index = findStartPoint();
+        sortedTrips = sortLocations();
+        int index = -1;
+        for(int i = 0; i < sortedTrips.length; i++){
+            if (sortedTrips[i] != 0){
+                index = i;
+            }
+        }
         startLocation = locations.get(index);
         startIndex = index;
 
         final FLWLocation finalLocation; // Declared final to work in inner classes
         if(locations.size() > 2) { // as long as there's more than 2 locations
-            index = findEndPoint(); // Find endpoint
+            for(int i = 7; i != 0; i--){
+                if (sortedTrips[i] != 0){
+                    index = i;
+                }
+            }
             endLocation = locations.get(index);
             endIndex = index;
 
@@ -468,62 +479,44 @@ public class TripPlannerTimelineFragment extends Fragment {
         return locations;
     }
 
-    // Finds the first point (relative to trail)
-    private int findStartPoint(){
-        int index = findLocation(R.string.scjohnson, locations);
-        if (index == -1) {
-            index = findLocation(R.string.wingspread, locations);
-            if (index == -1) {
-                index = findLocation(R.string.built_homes, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.visitor_center, locations);
-                            if (index == -1){
-                                index = findLocation(R.string.valley_school, locations);
-                                if(index == -1) {
-                                    index = findLocation(R.string.german_warehouse,locations);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return index;
-    }
-
-    // Finds the last point (relative to trail)
-    private int findEndPoint(){
-        int index = findLocation(R.string.german_warehouse, locations);
-        if (index == -1) {
-            index = findLocation(R.string.valley_school, locations);
-            if (index == -1) {
-                index = findLocation(R.string.visitor_center, locations);
-                if (index == -1) {
-                    index = findLocation(R.string.meeting_house, locations);
-                    if (index == -1) {
-                        index = findLocation(R.string.monona_terrace, locations);
-                        if (index == -1) {
-                            index = findLocation(R.string.built_homes, locations);
-                            if (index == -1) {
-                                index = findLocation(R.string.wingspread, locations);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return index;
-    }
-
     // Translates FLWLocation to Location
     private Location toLocation (FLWLocation flwLocation){
         Location location = new Location("From FLWLocation");
         location.setLatitude(flwLocation.getLatitude());
         location.setLongitude(flwLocation.getLongitude());
+        return location;
+    }
+
+    private int[] sortLocations(){
+        int[] location = new int[8];
+        for (int i = 0; i < locations.size(); i++){
+            switch (locations.get(i).getName()){
+                case (R.string.scjohnson):
+                    location[0] = i;
+                    break;
+                case (R.string.wingspread):
+                    location[1] = i;
+                    break;
+                case (R.string.built_homes):
+                    location[2] = i;
+                    break;
+                case (R.string.meeting_house):
+                    location[3] = i;
+                    break;
+                case (R.string.monona_terrace):
+                    location[4] = i;
+                    break;
+                case (R.string.visitor_center):
+                    location[5] = i;
+                    break;
+                case (R.string.valley_school):
+                    location[6] = i;
+                    break;
+                case (R.string.german_warehouse):
+                    location[7] = i;
+                    break;
+            }
+        }
         return location;
     }
 }
