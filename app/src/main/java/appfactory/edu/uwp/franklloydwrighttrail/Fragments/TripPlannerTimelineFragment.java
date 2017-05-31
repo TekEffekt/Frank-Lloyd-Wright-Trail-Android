@@ -358,7 +358,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         int index = -1;
         for(int i = 0; i < sortedTrips.length; i++){
             if (sortedTrips[i] != 0){
-                index = i;
+                index = sortedTrips[i];
             }
         }
         startLocation = locations.get(index);
@@ -368,7 +368,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         if(locations.size() > 2) { // as long as there's more than 2 locations
             for(int i = 7; i != 0; i--){
                 if (sortedTrips[i] != 0){
-                    index = i;
+                    index = sortedTrips[i];
                 }
             }
             endLocation = locations.get(index);
