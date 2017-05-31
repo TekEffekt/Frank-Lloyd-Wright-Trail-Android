@@ -190,6 +190,7 @@ public class TripPlannerTimelineFragment extends Fragment {
 
             // Starts a new list of locations
             RealmList<TripOrder> flwLocations = new RealmList<>();
+            //flwLocations.add(new TripOrder(createHome())); // Adds home object to each date
 
             // Scan through each trip
             for(int j = 0; j < trip.getTrips().size(); j++) {
@@ -458,9 +459,18 @@ public class TripPlannerTimelineFragment extends Fragment {
         spinner.setVisibility(View.GONE);
     }
 
-    // Creates a FLWLocation object based on user's current position
     // Returns list of locations including "Home" as first object
     private RealmList<FLWLocation> createHome(RealmList<FLWLocation> locations){
+        FLWLocation homeLocation = createHome();
+        if (findLocation(R.string.user, locations) != -1) {
+            locations.remove(findLocation(R.string.user, locations));
+        }
+        locations.add(0, homeLocation);
+        return locations;
+    }
+
+    // Creates a FLWLocation object based on the user's current position
+    private FLWLocation createHome(){
         FLWLocation homeLocation = new FLWLocation();
 
         UserLocation ul = RealmController.getInstance().getUserLocation();
@@ -472,11 +482,7 @@ public class TripPlannerTimelineFragment extends Fragment {
         homeLocation.setLatlong(ul.getLatitude() + "," + ul.getLongitude());
         homeLocation.setName(R.string.user);
         homeLocation.setImage(android.R.color.transparent);
-        if (findLocation(R.string.user, locations) != -1) {
-            locations.remove(findLocation(R.string.user, locations));
-        }
-        locations.add(0, homeLocation);
-        return locations;
+        return homeLocation;
     }
 
     // Translates FLWLocation to Location

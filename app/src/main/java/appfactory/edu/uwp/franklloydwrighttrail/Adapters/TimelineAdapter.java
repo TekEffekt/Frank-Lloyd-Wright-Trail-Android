@@ -78,16 +78,14 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         this.views = new ArrayList<>();
         trips = RealmController.getInstance().getTripResults(tripPosition).get(0);
         this.isFinal = isFinal;
-        if(isFinal)
-        {
+        if(isFinal) {
             Iterator<String> it = TripPlannerActivity.dates.iterator();
 
             RealmList<TripOrder> temp;
-            if(it.hasNext())
-            it.next();
-
-            while(it.hasNext())
-            {
+            if(it.hasNext()) {
+                it.next();
+            }
+            while(it.hasNext()) {
                 temp = TripPlannerActivity.hm.get(it.next());
                 for(int i = 0;i<temp.size();i++)
                 {
@@ -95,9 +93,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
 
                 }
             }
-
         }
-
     }
 
     @NonNull
@@ -112,20 +108,22 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     @Override
     public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
         holder.setIsRecyclable(false);
-        if(isFinal)
-        {
+        if(isFinal) {
             ArrayList<String> dates = new ArrayList<>(TripPlannerActivity.dates);
 
             Collections.sort(dates, new Comparator<String>() {
                 @Override
                 public int compare(String o1, String o2) {
                     SimpleDateFormat format = new SimpleDateFormat("MMM d, yyyy", Locale.getDefault());
-                    if( o1 == o2 )
+                    if( o1 == o2 ) {
                         return 0;
-                    if( o1 == null )
+                    }
+                    if( o1 == null ) {
                         return -1;
-                    if( o2 == null )
+                    }
+                    if( o2 == null ) {
                         return 1;
+                    }
                     try {
                         Date date1 = format.parse(o1);
                         Date date2 = format.parse(o2);
@@ -134,7 +132,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                         Log.e("Parse Error", e.getMessage());
                         return o1.compareTo( o2 );
                     }
-
                 }
             });
 
@@ -150,15 +147,12 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 Log.d("itdate",key == null ? "null" : key);
             }
             aTrip = new RealmList<>();
-            while(it.hasNext())
-            {
+            while(it.hasNext()) {
                 String key = it.next();
                 Log.d("itdate",key);
                 temp = TripPlannerActivity.hm.get(key);
-                for(int i = 0;i<temp.size();i++)
-                {
+                for(int i = 0;i<temp.size();i++) {
                     aTrip.add(temp.get(i));
-
                 }
             }
 
@@ -169,12 +163,9 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
         if (trips.getTrips().size() - 1 == position){
             holder.tripLengthContainer.setVisibility(View.GONE);
         }
-        if(!isFinal)
-        {
+        if(!isFinal) {
             trip = trips.getTrips().get(position);
-        }
-        else
-        {
+        } else {
             trip = aTrip.get(position);
             trip2 = aTrip.get(1);
         }
@@ -205,108 +196,86 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                     context.startActivity(mapIntent);
                 }
             });
-
-
         } else {
             holder.infoButton.setVisibility(View.GONE);
             holder.locationButton.setVisibility(View.GONE);
             holder.picture.setVisibility(View.GONE);
             holder.homeIcon.setVisibility(View.VISIBLE);
         }
-            if (trip.getTimeText() == null){
-                if(trip.getLocation().getGenericName() != null)
-                {
-                    holder.name.setText(trip.getLocation().getGenericName());
-                }
-                else
-                {
-                    holder.name.setText(trip.getLocation().getName());
-                    holder.time.setText(trip.getTimeText());
-                    holder.tripLength.setText(trip.getTimeValue());
-                }
-
+        if (trip.getTimeText() == null){
+            if(trip.getLocation().getGenericName() != null) {
+                holder.name.setText(trip.getLocation().getGenericName());
             } else {
-                int hour =0;
-                int min =0;
-
-                if(position == 0)
-                {
-                    if(counter == 1)
-                    {
-                        counter = 0;
-                        tLine = 0;
-                    }
-                    if(isFinal)
-                    {
-                        int total =(int) trip2.getStartTourTime()-trip.getTimeValue();
-                        hour = total /60;
-                        min = total %60;
-                    }
-
-                    temp = trip.getTimeValue();
-                    counter++;
-                }
-                else if(position == 1)
-                {
-                    if(isFinal) {
-
-                        hour = (int) trip.getStartTourTime() / 60;
-                        min = (int) trip.getStartTourTime() % 60;
-                    }
-                    else
-                    {
-                        tLine = trips.getStartTime() + temp + tLine;
-                        hour = tLine/60;
-                        min = tLine%60;
-                        temp = trip.getTimeValue();
-                    }
-                }
-                else if(position > 1)
-                {
-                    if(isFinal) {
-                        hour = (int) trip.getStartTourTime() / 60;
-                        min = (int) trip.getStartTourTime() % 60;
-                    } else {
-                        tLine = 60 + temp + tLine;
-                        hour = tLine/60;
-                        min = tLine%60;
-                        temp = trip.getTimeValue();
-                    }
-                }
-                if (trip.getLocation().getImage() != -1){
-                    holder.name.setText(trip.getLocation().getName());
-                    if (trip.getLocation().getName() == R.string.scjohnson){
-                        holder.name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-                    }
-                } else {
-                    holder.name.setText(trip.getLocation().getGenericName());
-                }
-
-                holder.time.setText(timeToString(hour,min));
-                if(trip.getLocation().getIsNoTime())
-                {
-                    Toast.makeText(context, "There is not enough time to get to "+context.getString(trip.getLocation().getName()),
-                            Toast.LENGTH_SHORT).show();
-                    holder.tripLocationContainer.setBackgroundColor(Color.GRAY);
-                }
-                else
-                {
-                    holder.tripLocationContainer.setBackgroundColor(Color.WHITE);
-                }
-                if(isFinal && position !=0 && aTrip.size() - 2 >= position && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay()))
-                {
-                    holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
-                    holder.carIcon.setVisibility(View.GONE);
-                }
-                else
-                {
-                    Log.d(trip.getLocation().getGenericName(), "time text length: " + trip.getTimeText().length());
-                    holder.carIcon.setVisibility(View.VISIBLE);
-                    holder.tripLength.setText(trip.getTimeText());
-                }
-
+                holder.name.setText(trip.getLocation().getName());
+                holder.time.setText(trip.getTimeText());
+                holder.tripLength.setText(trip.getTimeValue());
             }
 
+        } else {
+            int hour =0;
+            int min =0;
+
+            if(position == 0) {
+                if(counter == 1) {
+                    counter = 0;
+                    tLine = 0;
+                }
+                if(isFinal) {
+                    int total =(int) trip2.getStartTourTime()-trip.getTimeValue();
+                    hour = total /60;
+                    min = total %60;
+                }
+
+                temp = trip.getTimeValue();
+                counter++;
+            } else if(position == 1) {
+                if(isFinal) {
+
+                    hour = (int) trip.getStartTourTime() / 60;
+                    min = (int) trip.getStartTourTime() % 60;
+                } else {
+                    tLine = trips.getStartTime() + temp + tLine;
+                    hour = tLine/60;
+                    min = tLine%60;
+                    temp = trip.getTimeValue();
+                }
+            } else if(position > 1) {
+                if(isFinal) {
+                    hour = (int) trip.getStartTourTime() / 60;
+                    min = (int) trip.getStartTourTime() % 60;
+                } else {
+                    tLine = 60 + temp + tLine;
+                    hour = tLine/60;
+                    min = tLine%60;
+                    temp = trip.getTimeValue();
+                }
+            }
+            if (trip.getLocation().getImage() != -1){
+                holder.name.setText(trip.getLocation().getName());
+                if (trip.getLocation().getName() == R.string.scjohnson){
+                    holder.name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+                }
+            } else {
+                holder.name.setText(trip.getLocation().getGenericName());
+            }
+
+            holder.time.setText(timeToString(hour,min));
+            if(trip.getLocation().getIsNoTime()) {
+                Toast.makeText(context, "There is not enough time to get to "+context.getString(trip.getLocation().getName()),
+                        Toast.LENGTH_SHORT).show();
+                holder.tripLocationContainer.setBackgroundColor(Color.GRAY);
+            } else {
+                holder.tripLocationContainer.setBackgroundColor(Color.WHITE);
+            }
+            if(isFinal && position !=0 && aTrip.size() - 2 >= position && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay())) {
+                holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
+                holder.carIcon.setVisibility(View.GONE);
+            } else {
+                Log.d(trip.getLocation().getGenericName(), "time text length: " + trip.getTimeText().length());
+                holder.carIcon.setVisibility(View.VISIBLE);
+                holder.tripLength.setText(trip.getTimeText());
+            }
+        }
     }
 
 
