@@ -123,6 +123,7 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
         toggle.syncState();
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().findItem(R.id.nav_trip_planner).setChecked(true);
     }
     private void setupRecycler(){
         recycler =(RecyclerView) findViewById(R.id.recycler);
