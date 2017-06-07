@@ -185,12 +185,18 @@ public class TripPlannerTimelineFragment extends Fragment {
             it.next(); // Skips the first item if there are any dates
         }
 
+        boolean afterFirst = false;
+
         while(it.hasNext()) { // Scans through each day
             date = it.next(); // Grabs current day
 
             // Starts a new list of locations
             RealmList<TripOrder> flwLocations = new RealmList<>();
-            //flwLocations.add(new TripOrder(createHome())); // Adds home object to each date
+            if (afterFirst) {
+                flwLocations.add(new TripOrder(createHome())); // Adds home object to each date
+            } else {
+                afterFirst = true;
+            }
 
             // Scan through each trip
             for(int j = 0; j < trip.getTrips().size(); j++) {
@@ -241,9 +247,9 @@ public class TripPlannerTimelineFragment extends Fragment {
             date = it.next(); // Set current date
 
             flwLocations = TripPlannerActivity.hm.get(date); // Get ordered list for current day
-            if(flwLocations.size() >= 2) { // As long as the trip list contains 2 or more locations
+            if(flwLocations.size() >= 3) { // As long as the trip list contains 2 or more locations
                 // Create an array to contain the middle locations
-                String[] middleLatLong = new String[flwLocations.size() - 2];
+                String[] middleLatLong = new String[flwLocations.size() - 3];
                 String midLatLong = ""; // instantiate variable
                 int arrayPos = 0; // Current position of middleLatLong array
                 for (int i = 1; i < flwLocations.size(); i++) {

@@ -108,6 +108,7 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     @Override
     public void onBindViewHolder(@NonNull TimelineViewHolder holder, int position) {
         holder.setIsRecyclable(false);
+        // Exclusively for Final Timeline
         if(isFinal) {
             ArrayList<String> dates = new ArrayList<>(TripPlannerActivity.dates);
 
@@ -135,10 +136,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
             });
 
-            for (String date: dates) {
-                Log.d("date", date == null ? "null" : date);
-            }
-
             Iterator<String> it = TripPlannerActivity.dates.iterator();
 
             RealmList<TripOrder> temp;
@@ -155,26 +152,32 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                     aTrip.add(temp.get(i));
                 }
             }
-
         } else {
             holder.time.setVisibility(View.GONE);
         }
-        //hides if last
+        //hides trip length if last
         if (trips.getTrips().size() - 1 == position){
             holder.tripLengthContainer.setVisibility(View.GONE);
         }
+
         if(!isFinal) {
+            // Set focused trip to trips
             trip = trips.getTrips().get(position);
         } else {
+            // Set focused trip to current position
             trip = aTrip.get(position);
-            trip2 = aTrip.get(1);
+            trip2 = aTrip.get(1); // not sure what this is yet
         }
 
+        // Deal with images for a location or the lack of
         if (trip.getLocation().getImage() != -1) {
             holder.picture.setBackground(ContextCompat.getDrawable(context, trip.getLocation().getImage()));
+        } else {
+            holder.picture.setVisibility(View.GONE);
         }
 
-        if (position != 0) {
+        // As long as it's not home
+        if (trip.getLocation().getName() != R.string.user) {
             final String STRING_NAME = context.getString(trip.getLocation().getName());
             final String LOCATION_URI = "google.navigation:q=" + trip.getLocation().getLatlong();
             holder.infoButton.setOnClickListener(new View.OnClickListener() {
@@ -197,20 +200,24 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
             });
         } else {
+            holder.name.setText(R.string.user);
             holder.infoButton.setVisibility(View.GONE);
             holder.locationButton.setVisibility(View.GONE);
             holder.picture.setVisibility(View.GONE);
             holder.homeIcon.setVisibility(View.VISIBLE);
         }
+
         if (trip.getTimeText() == null){
             if(trip.getLocation().getGenericName() != null) {
                 holder.name.setText(trip.getLocation().getGenericName());
+            } else if (trip.getLocation().getName() == R.string.user) {
+                //ignore for now
+                //this shouldn't happen, these need times attached to them
             } else {
                 holder.name.setText(trip.getLocation().getName());
                 holder.time.setText(trip.getTimeText());
                 holder.tripLength.setText(trip.getTimeValue());
             }
-
         } else {
             int hour =0;
             int min =0;
@@ -230,7 +237,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 counter++;
             } else if(position == 1) {
                 if(isFinal) {
-
                     hour = (int) trip.getStartTourTime() / 60;
                     min = (int) trip.getStartTourTime() % 60;
                 } else {
@@ -250,8 +256,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                     temp = trip.getTimeValue();
                 }
             }
+
             if (trip.getLocation().getImage() != -1){
                 holder.name.setText(trip.getLocation().getName());
+                // Because SCJ's title is way too long
                 if (trip.getLocation().getName() == R.string.scjohnson){
                     holder.name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
                 }
@@ -267,9 +275,11 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             } else {
                 holder.tripLocationContainer.setBackgroundColor(Color.WHITE);
             }
-            if(isFinal && position !=0 && aTrip.size() - 2 >= position && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay())) {
+            if(isFinal && trip.getLocation().getName() != R.string.user && aTrip.size() - 2 >= position && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay())) {
                 holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
                 holder.carIcon.setVisibility(View.GONE);
+            } else if (trip.getLocation().getName() == R.string.user) {
+                //ignore for now
             } else {
                 Log.d(trip.getLocation().getGenericName(), "time text length: " + trip.getTimeText().length());
                 holder.carIcon.setVisibility(View.VISIBLE);
