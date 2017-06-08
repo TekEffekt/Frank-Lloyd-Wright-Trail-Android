@@ -128,4 +128,15 @@ public class TripOrder extends RealmObject implements Comparable<TripOrder>{
     public int hashCode() {
         return location.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "TripOrder{" +
+                "timeText='" + timeText + '\'' +
+                ", timeValue=" + timeValue +
+                ", location=" + location +
+                ", startTourTime=" + startTourTime +
+                ", endTourTime=" + endTourTime +
+                '}';
+    }
 }

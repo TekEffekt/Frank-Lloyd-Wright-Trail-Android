@@ -174,29 +174,22 @@ public class TripPlannerTimelineFragment extends Fragment {
 
         // Scan through each trip
         for(int j = 0; j < trip.getTrips().size(); j++) {
-            // Place the date into it's linked hash set
-            TripPlannerActivity.dates.add(trip.getTrips().get(j).getLocation().getDay());
-            // Put the trip and it's position into a HashMap
-            positionLookup.put(trip.getTrips().get(j), j);
+            Log.d("trip " + j, trip.getTrips().get(j).toString());
+            // Place the date into it's linked hash set if date is not null
+            if (trip.getTrips().get(j).getLocation().getDay() != null) {
+                TripPlannerActivity.dates.add(trip.getTrips().get(j).getLocation().getDay());
+                // Put the trip and it's position into a HashMap
+                positionLookup.put(trip.getTrips().get(j), j);
+            }
         }
 
         Iterator<String> it = TripPlannerActivity.dates.iterator();
-        if(it.hasNext()) {
-            it.next(); // Skips the first item if there are any dates
-        }
-
-        boolean afterFirst = false;
 
         while(it.hasNext()) { // Scans through each day
             date = it.next(); // Grabs current day
 
             // Starts a new list of locations
             RealmList<TripOrder> flwLocations = new RealmList<>();
-            if (afterFirst) {
-                flwLocations.add(new TripOrder(createHome())); // Adds home object to each date
-            } else {
-                afterFirst = true;
-            }
 
             // Scan through each trip
             for(int j = 0; j < trip.getTrips().size(); j++) {
@@ -205,12 +198,6 @@ public class TripPlannerTimelineFragment extends Fragment {
                     // If the day is equal to the current date
                     if(trip.getTrips().get(j).getLocation().getDay().equals(date)) {
                         flwLocations.add(trip.getTrips().get(j)); // Add location to current day trip
-                        aTemp.add(trip.getTrips().get(j)); // Add location to overall trip
-                    }
-                } else { // If it is home #Note to self, not sure what the point of this is
-                    // as long as the overall trip doesn't contain the current location
-                    if(!aTemp.contains(trip.getTrips().get(j))) {
-                        flwLocations.add(trip.getTrips().get(j)); // Add location to current day
                         aTemp.add(trip.getTrips().get(j)); // Add location to overall trip
                     }
                 }
@@ -222,37 +209,23 @@ public class TripPlannerTimelineFragment extends Fragment {
                     return Long.valueOf(o1.getStartTourTime()).compareTo(o2.getStartTourTime());
                 }
             });
+            flwLocations.add(0, new TripOrder(createHome())); // Adds home location to each date in first position
             // Put the date in the HashMap with the day's trip as the value
             TripPlannerActivity.hm.put(date, flwLocations);
         }
 
-        realm.beginTransaction();
-        for(int i=0; i < aTemp.size(); i++) {
-            // Set current Position in Current Trip Plan to contain
-            // the location of the overall day's trip in order
-            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().set(i, aTemp.get(i));
-        }
-        realm.commitTransaction();
-
-        // Set current viewed trip to now have our updated trip list
-        trip = RealmController.getInstance().getTripResults(tripPosition).get(0);
-        for(int i = 0; i < trip.getTrips().size(); i++) {
-            positionLookup.put(trip.getTrips().get(i), i); // Reset each trip to now have the current position
-        }
         it = TripPlannerActivity.dates.iterator(); // Reset iterator
-        if(it.hasNext()) { // Skip first date
-            it.next();
-        }
+
         while(it.hasNext()) { // Run through each date
             date = it.next(); // Set current date
 
             flwLocations = TripPlannerActivity.hm.get(date); // Get ordered list for current day
-            if(flwLocations.size() >= 3) { // As long as the trip list contains 2 or more locations
+            if(flwLocations.size() >= 2) { // As long as the trip list contains 2 or more locations
                 // Create an array to contain the middle locations
-                String[] middleLatLong = new String[flwLocations.size() - 3];
+                String[] middleLatLong = new String[flwLocations.size() - 2];
                 String midLatLong = ""; // instantiate variable
                 int arrayPos = 0; // Current position of middleLatLong array
-                for (int i = 1; i < flwLocations.size(); i++) {
+                for (int i = 1; i < flwLocations.size() - 1; i++) {
                     // as long as the location is not the last one and
                     // the location has a latlong
                     if (i != flwLocations.size() - 1 && flwLocations.get(i).getLocation().getLatlong() != null) {

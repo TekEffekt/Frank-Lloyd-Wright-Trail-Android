@@ -1,8 +1,10 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
+import android.content.res.Resources;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.content.res.ResourcesCompat;
 
 import java.util.Date;
 
@@ -143,5 +145,22 @@ public class FLWLocation extends RealmObject{
 
     public void setWebsite(int website) {
         this.website = website;
+    }
+
+    @Override
+    public String toString() {
+        return "FLWLocation{" +
+                "name=" + name +
+                ", genericName='" + genericName + '\'' +
+                ", image=" + image +
+                ", markerColor=" + markerColor +
+                ", latlong='" + latlong + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", address='" + address + '\'' +
+                ", isNoTime=" + isNoTime +
+                ", website=" + website +
+                ", day='" + day + '\'' +
+                '}';
     }
 }

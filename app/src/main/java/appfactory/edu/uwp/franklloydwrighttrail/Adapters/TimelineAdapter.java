@@ -66,7 +66,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
     int counter =0;
     RealmList<TripOrder> aTrip = new RealmList<>();
     private TripOrder trip;
-    private TripOrder trip2;
     private boolean isFinal;
 
     public void setTrip(RealmList<TripOrder> trip) {
@@ -136,37 +135,39 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 }
             });
 
-            Iterator<String> it = TripPlannerActivity.dates.iterator();
+            Iterator<String> it = dates.iterator();
 
             RealmList<TripOrder> temp;
-            if(it.hasNext()) {
-                String key = it.next();
-                Log.d("itdate",key == null ? "null" : key);
-            }
+
             aTrip = new RealmList<>();
             while(it.hasNext()) {
                 String key = it.next();
-                Log.d("itdate",key);
                 temp = TripPlannerActivity.hm.get(key);
                 for(int i = 0;i<temp.size();i++) {
+                    Log.d(key, temp.get(i).toString());
                     aTrip.add(temp.get(i));
                 }
             }
         } else {
             holder.time.setVisibility(View.GONE);
         }
+
         //hides trip length if last
-        if (trips.getTrips().size() - 1 == position){
+        if (getItemCount() - 1 == position){
             holder.tripLengthContainer.setVisibility(View.GONE);
+        } else {
+            holder.tripLengthContainer.setVisibility(View.VISIBLE);
         }
 
         if(!isFinal) {
+
             // Set focused trip to trips
             trip = trips.getTrips().get(position);
+
         } else {
+
             // Set focused trip to current position
             trip = aTrip.get(position);
-            trip2 = aTrip.get(1); // not sure what this is yet
         }
 
         // Deal with images for a location or the lack of
@@ -222,34 +223,32 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             int hour =0;
             int min =0;
 
+            if (isFinal && trip.getLocation().getName() == R.string.user) {
+                int total =(int) aTrip.get(position + 1).getStartTourTime()-trip.getTimeValue();
+                hour = total /60;
+                min = total %60;
+            } else {
+                hour = (int) trip.getStartTourTime() / 60;
+                min = (int) trip.getStartTourTime() % 60;
+            }
+
             if(position == 0) {
                 if(counter == 1) {
                     counter = 0;
                     tLine = 0;
                 }
-                if(isFinal) {
-                    int total =(int) trip2.getStartTourTime()-trip.getTimeValue();
-                    hour = total /60;
-                    min = total %60;
-                }
 
                 temp = trip.getTimeValue();
                 counter++;
             } else if(position == 1) {
-                if(isFinal) {
-                    hour = (int) trip.getStartTourTime() / 60;
-                    min = (int) trip.getStartTourTime() % 60;
-                } else {
+                if(!isFinal) {
                     tLine = trips.getStartTime() + temp + tLine;
                     hour = tLine/60;
                     min = tLine%60;
                     temp = trip.getTimeValue();
                 }
             } else if(position > 1) {
-                if(isFinal) {
-                    hour = (int) trip.getStartTourTime() / 60;
-                    min = (int) trip.getStartTourTime() % 60;
-                } else {
+                if(!isFinal) {
                     tLine = 60 + temp + tLine;
                     hour = tLine/60;
                     min = tLine%60;
@@ -267,7 +266,16 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
                 holder.name.setText(trip.getLocation().getGenericName());
             }
 
-            holder.time.setText(timeToString(hour,min));
+            if (trip.getLocation().getName() == R.string.user) {
+                holder.picture.setVisibility(View.GONE);
+                if (isFinal) {
+                    holder.time.setText(aTrip.get(position + 1).getLocation().getDay() + "  " + timeToString(hour, min));
+                }
+            } else {
+                holder.picture.setVisibility(View.VISIBLE);
+                holder.time.setText(timeToString(hour, min));
+            }
+
             if(trip.getLocation().getIsNoTime()) {
                 Toast.makeText(context, "There is not enough time to get to "+context.getString(trip.getLocation().getName()),
                         Toast.LENGTH_SHORT).show();
@@ -275,10 +283,10 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             } else {
                 holder.tripLocationContainer.setBackgroundColor(Color.WHITE);
             }
-            if(isFinal && trip.getLocation().getName() != R.string.user && aTrip.size() - 2 >= position && !trip.getLocation().getDay().equals(aTrip.get(position+1).getLocation().getDay())) {
-                holder.tripLength.setText(aTrip.get(position+1).getLocation().getDay());
-                holder.carIcon.setVisibility(View.GONE);
-            } else if (trip.getLocation().getName() == R.string.user) {
+
+            if(isFinal && position + 1 < getItemCount() && aTrip.get(position +1).getLocation().getName() == R.string.user) {
+                holder.tripLengthContainer.setVisibility(View.GONE);
+//            } else if (trip.getLocation().getName() == R.string.user) {
                 //ignore for now
             } else {
                 Log.d(trip.getLocation().getGenericName(), "time text length: " + trip.getTimeText().length());
@@ -295,7 +303,6 @@ public class TimelineAdapter extends RecyclerView.Adapter<TimelineAdapter.Timeli
             return trips.getTrips().size();
         else {
             Iterator<String> it = TripPlannerActivity.dates.iterator();
-            it.next();
             int count = 0;
             while (it.hasNext())
             {
