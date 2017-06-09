@@ -177,11 +177,54 @@ public class TripPlannerActivity extends AppCompatActivity implements Navigation
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
+            // Actions
             case R.id.nav_locations:
                 finish();
                 break;
             case R.id.nav_trip_planner:
+                break;
+            // FLW Locations
+            case R.id.nav_scjohnson:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_wingspread:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wingspread");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_monona_terrace:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Monona Terrace");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_meeting_house:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "First Unitarian Society Meeting House");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_visitor_center:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Taliesin and FLW Visitor Center");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_german_warehouse:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "A.D. German Warehouse");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_valley_school:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wyoming Valley School");
+                TripPlannerActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_built_homes:
+                intent = new Intent(TripPlannerActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "American System-Built Homes");
+                TripPlannerActivity.this.startActivity(intent);
                 break;
             /*case R.id.nav_settings:
                 break;

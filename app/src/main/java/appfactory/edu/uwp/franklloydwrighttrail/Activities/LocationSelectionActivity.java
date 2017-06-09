@@ -124,8 +124,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
-
+        navigationView.getMenu().findItem(R.id.nav_locations).setChecked(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         adapter = new LocationSelectionAdapter(LocationModel.getLocations());
@@ -211,6 +210,47 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 realm.commitTransaction();
                 Intent intent = TripPlannerActivity.newIntent(this);
                 startActivity(intent);
+                break;
+            // FLW Locations
+            case R.id.nav_scjohnson:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_wingspread:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wingspread");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_monona_terrace:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Monona Terrace");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_meeting_house:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "First Unitarian Society Meeting House");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_visitor_center:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Taliesin and FLW Visitor Center");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_german_warehouse:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "A.D. German Warehouse");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_valley_school:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wyoming Valley School");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_built_homes:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "American System-Built Homes");
+                LocationSelectionActivity.this.startActivity(intent);
                 break;
             //case R.id.nav_scrapbook:
             //    break;
