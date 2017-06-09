@@ -23,32 +23,40 @@
     </item>
 
 
-    <item android:title="FLW Stops">
+    <item android:title="Location Details">
         <menu>
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/nav_scjohnson"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/scjohnson" />
                 <item
                     android:id="@+id/nav_wingspread"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/wingspread"/>
                 <item
                     android:id="@+id/nav_monona_terrace"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/monona_terrace"/>
                 <item
                     android:id="@+id/nav_meeting_house"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/meeting_house"/>
                 <item
                     android:id="@+id/nav_visitor_center"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/visitor_center"/>
                 <item
                     android:id="@+id/nav_german_warehouse"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/german_warehouse"/>
                 <item
                     android:id="@+id/nav_valley_school"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/valley_school"/>
                 <item
                     android:id="@+id/nav_built_homes"
+                    android:icon="@drawable/ic_location_detail"
                     android:title="@string/built_homes"/>
             </group>
         </menu>
