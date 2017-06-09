@@ -16,6 +16,13 @@
     <string name="built_homes">American System-Built Homes</string>
     <string name="user">Home</string>
 
+    <string name="scjohnson_short">SC Johnson</string>
+    <string name="visitor_center_short">Taliesin</string>
+    <string name="meeting_house_short">Meeting House</string>
+    <string name="valley_school_short">Valley School</string>
+    <string name="german_warehouse_short">German Warehouse</string>
+    <string name="built_homes_short">System-Built Homes</string>
+
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 

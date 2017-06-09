@@ -29,7 +29,7 @@
                 <item
                     android:id="@+id/nav_scjohnson"
                     android:icon="@drawable/ic_location_detail"
-                    android:title="@string/scjohnson" />
+                    android:title="@string/scjohnson_short" />
                 <item
                     android:id="@+id/nav_wingspread"
                     android:icon="@drawable/ic_location_detail"
@@ -41,23 +41,23 @@
                 <item
                     android:id="@+id/nav_meeting_house"
                     android:icon="@drawable/ic_location_detail"
-                    android:title="@string/meeting_house"/>
+                    android:title="@string/meeting_house_short"/>
                 <item
                     android:id="@+id/nav_visitor_center"
                     android:icon="@drawable/ic_location_detail"
-                    android:title="@string/visitor_center"/>
+                    android:title="@string/visitor_center_short"/>
                 <item
                     android:id="@+id/nav_german_warehouse"
                     android:icon="@drawable/ic_location_detail"
-                    android:title="@string/german_warehouse"/>
+                    android:title="@string/german_warehouse_short"/>
                 <item
                     android:id="@+id/nav_valley_school"
                     android:icon="@drawable/ic_location_detail"
-                    android:title="@string/valley_school"/>
+                    android:title="@string/valley_school_short"/>
                 <item
                     android:id="@+id/nav_built_homes"
                     android:icon="@drawable/ic_location_detail"
-                    android:title="@string/built_homes"/>
+                    android:title="@string/built_homes_short"/>
             </group>
         </menu>
     </item>
