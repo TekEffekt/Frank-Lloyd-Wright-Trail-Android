@@ -1,20 +1,27 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
+import android.app.Activity;
+import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ShareCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -22,8 +29,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
+
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageOneFragment;
 import appfactory.edu.uwp.franklloydwrighttrail.Fragments.ImageThreeFragment;
@@ -43,6 +54,7 @@ protected View view;
     public static String value;
 
     private Button locationButton;
+    private Button scheduleButton;
     private TextView phone;
     private TextView website;
 
@@ -72,12 +84,13 @@ protected View view;
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         locationButton = (Button) findViewById(R.id.location_button);
+        scheduleButton = (Button) findViewById(R.id.schedule_button);
         phone = (TextView) findViewById(R.id.phone);
         website = (TextView) findViewById(R.id.website);
 
         switch(value)
         {
-            case "SC Johnson Headquarters":
+            case "SC Johnson Administration Building and Research Tower":
                 name.setText(R.string.scjohnson);
                 built.setText(R.string.scj_built);
                 description.setText(R.string.scj_desc);
@@ -91,6 +104,7 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(0);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.scj_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
@@ -112,6 +126,7 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(1);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.wingspread_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
@@ -133,12 +148,13 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(2);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.monona_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
                 phone.setText(Html.fromHtml(this.getResources().getString(R.string.monona_phone)));
                 break;
-            case "Meeting House":
+            case "First Unitarian Society Meeting House":
 
                 name.setText(R.string.meeting_house);
                 built.setText(R.string.meeting_house_built);
@@ -153,13 +169,14 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(3);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.meeting_house_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
                 phone.setText(Html.fromHtml(this.getResources().getString(R.string.meeting_house_phone)));
 
                 break;
-            case "FLW Visitor Center":
+            case "Taliesin and FLW Visitor Center":
 
                 name.setText(R.string.visitor_center);
                 built.setText(R.string.visitor_center_sub);
@@ -174,13 +191,14 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(4);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.visitor_center_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
                 phone.setText(Html.fromHtml(this.getResources().getString(R.string.visitor_center_phone)));
 
                 break;
-            case "German Warehouse":
+            case "A.D. German Warehouse":
 
                 name.setText(R.string.german_warehouse);
                 built.setText(R.string.german_warehouse_built);
@@ -195,6 +213,7 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(5);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.german_warehouse_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
@@ -215,6 +234,7 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(6);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.valley_school_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
@@ -235,6 +255,7 @@ protected View view;
                         startActivity(mapIntent);
                     }
                 });
+                setupScheduleButton(7);
                 website.setMovementMethod(LinkMovementMethod.getInstance());
                 website.setText(Html.fromHtml(this.getResources().getString(R.string.built_homes_website)));
                 phone.setMovementMethod(LinkMovementMethod.getInstance());
@@ -244,6 +265,7 @@ protected View view;
             default:
                 description.setText("Other Place");
                 getSupportActionBar().setTitle("Other");
+                setupScheduleButton(0);
                 break;
 
         }
@@ -354,21 +376,65 @@ protected View view;
             return true;
         }else{
             super.onBackPressed();
-        }
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.home) {
-            this.finish();
             return true;
         }
+        //noinspection SimplifiableIfStatement
+//        if (id == R.id.home) {
+//            this.finish();
+//            return true;
+//        }
 
 
-        return super.onOptionsItemSelected(item);
+        //return super.onOptionsItemSelected(item);
     }
 
-
-
-
-
+    private void setupScheduleButton(final int position){
+        final Activity activity = this;
+        scheduleButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "";
+                switch (position){
+                    case 0:
+                        url = getResources().getString(R.string.scj_tourD_website);
+                        break;
+                    case 1:
+                        url = getResources().getString(R.string.wingspread_tourD_website);
+                        break;
+                    case 2:
+                        url = getResources().getString(R.string.monona_tourD_website);
+                        break;
+                    case 3:
+                        url = getResources().getString(R.string.meeting_house_tourD_website);
+                        break;
+                    case 4:
+                        url = getResources().getString(R.string.visitor_center_tourD_website);
+                        break;
+                    case 5:
+                        url = getResources().getString(R.string.german_warehouse_tourD_website);
+                        break;
+                    case 6:
+                        String[] address = new String[]{"wyomingvalleyschool@gmail.com"};
+                        Intent intent = new Intent(Intent.ACTION_SENDTO);
+                        intent.setData(Uri.parse("mailto:wyomingvalleyschool@gmail.com")); // only email apps should handle this
+                        intent.putExtra(Intent.EXTRA_EMAIL, address);
+                        intent.putExtra(Intent.EXTRA_SUBJECT, "Schedule Tour");
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                        return;
+                    case 7:
+                        url = getResources().getString(R.string.built_homes_tourD_website);
+                        break;
+                    default:
+                        break;
+                }
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+            }
+        });
+    }
 
     private void onCircleButtonClick()
     {
@@ -449,6 +515,4 @@ protected View view;
         _btn2 = (ImageView) findViewById(R.id.btn2);
         _btn3 = (ImageView) findViewById(R.id.btn3);
     }
-
-
 }

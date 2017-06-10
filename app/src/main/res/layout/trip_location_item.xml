@@ -27,7 +27,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:text="@string/built_homes"
+                android:text="@string/scjohnson"
                 android:textSize="13dp"
                 android:paddingTop="6dp"
                 android:paddingLeft="5dp"

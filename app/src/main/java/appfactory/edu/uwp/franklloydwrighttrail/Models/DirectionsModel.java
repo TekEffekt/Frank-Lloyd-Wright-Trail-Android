@@ -69,6 +69,12 @@ public class DirectionsModel {
         this.status = status;
     }
 
-
-
+    @Override
+    public String toString() {
+        return "DirectionsModel{" +
+                "geocodedWaypoints=" + geocodedWaypoints +
+                ", routes=" + routes +
+                ", status='" + status + '\'' +
+                '}';
+    }
 }

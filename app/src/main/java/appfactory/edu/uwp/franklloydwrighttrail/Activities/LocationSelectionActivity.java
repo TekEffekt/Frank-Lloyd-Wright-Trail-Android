@@ -1,8 +1,10 @@
 package appfactory.edu.uwp.franklloydwrighttrail.Activities;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,6 +45,16 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.LocationSelectionAdapter;
@@ -81,6 +93,8 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     private GridLayoutManager layoutManager;
     private NavigationView navigationView;
 
+    private RealmConfiguration realmConfiguration;
+
     private static final int PLAY_SERVICES_REQUEST_CODE = 1978;
     private LocationRequest mLocationRequest;
     public static Location myLocation;
@@ -110,8 +124,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        navigationView.getMenu().getItem(0).setChecked(true);
-
+        navigationView.getMenu().findItem(R.id.nav_locations).setChecked(true);
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler);
         adapter = new LocationSelectionAdapter(LocationModel.getLocations());
@@ -154,16 +167,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
     }
 
     private void initializeRealm() {
-
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this)
-                .name(Realm.DEFAULT_REALM_NAME)
-                .schemaVersion(0)
-                .deleteRealmIfMigrationNeeded()
-                .build();
-        //Realm.deleteRealm(realmConfiguration);
-        Realm.setDefaultConfiguration(realmConfiguration);
-
-        this.realm = RealmController.with(this).getRealm();
+        this.realm = Realm.getDefaultInstance();
     }
 
     @Override
@@ -195,18 +199,65 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 break;
             case R.id.nav_trip_planner:
                 realm.beginTransaction();
-                UserLocation ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
+                UserLocation ul = null;
+                if (myLocation != null) {
+                    ul = new UserLocation(myLocation.getLatitude(), myLocation.getLongitude());
+                } else {
+                    ul = new UserLocation(43.0717445, -89.38040180000002);
+                    Toast.makeText(this, "Please enable GPS for accurate location information", Toast.LENGTH_LONG).show();
+                }
                 realm.copyToRealmOrUpdate(ul);
                 realm.commitTransaction();
-                Intent intent = TripPlannerTimeline.newIntent(this);
+                Intent intent = TripPlannerActivity.newIntent(this);
                 startActivity(intent);
+                break;
+            // FLW Locations
+            case R.id.nav_scjohnson:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_wingspread:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wingspread");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_monona_terrace:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Monona Terrace");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_meeting_house:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "First Unitarian Society Meeting House");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_visitor_center:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Taliesin and FLW Visitor Center");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_german_warehouse:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "A.D. German Warehouse");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_valley_school:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "Wyoming Valley School");
+                LocationSelectionActivity.this.startActivity(intent);
+                break;
+            case R.id.nav_built_homes:
+                intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
+                intent.putExtra("Title", "American System-Built Homes");
+                LocationSelectionActivity.this.startActivity(intent);
                 break;
             //case R.id.nav_scrapbook:
             //    break;
-            case R.id.nav_settings:
-                break;
-            case R.id.nav_about:
-                break;
+            //case R.id.nav_settings:
+            //    break;
+            //case R.id.nav_about:
+            //    break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -218,7 +269,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         mMap = map;
 
         SCJohnson = mMap.addMarker(new MarkerOptions().position(new LatLng(42.7152375, -87.7906969))
-                .title("SC Johnson Headquarters")
+                .title("SC Johnson Administration Building and Research Tower")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         Wingspread = mMap.addMarker(new MarkerOptions().position(new LatLng(42.784562, -87.771588))
@@ -230,15 +281,15 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         MeetingHouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.0757361, -89.43533680000002))
-                .title("Meeting House")
+                .title("First Unitarian Society Meeting House")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         FLWVisitorCenter = mMap.addMarker(new MarkerOptions().position(new LatLng(43.14390059999999, -90.05952260000004))
-                .title("FLW Visitor Center")
+                .title("Taliesin and FLW Visitor Center")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         GermanWarehouse = mMap.addMarker(new MarkerOptions().position(new LatLng(43.3334718, -90.38436739999997))
-                .title("German Warehouse")
+                .title("A.D. German Warehouse")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_VIOLET)));
         //.icon(BitmapDescriptorFactory.fromResource(R.drawable.marker)));
         ValleySchool = mMap.addMarker(new MarkerOptions().position(new LatLng(43.119255, -90.114908))
@@ -253,8 +304,31 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             mMap.setMyLocationEnabled(true);
         }
 
+        List<LatLng> polyLineFromJson = getFromFile(this, "flw-polyline.json", new TypeToken<LatLng>(){});
+        mMap.addPolyline(new PolylineOptions().addAll(polyLineFromJson).color(Color.parseColor("#a6192e")).width(15));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(cameraPlace, 7));
         mMap.setOnMarkerClickListener(this);
+    }
+
+    private <T> ArrayList<T> getFromFile(Context context, String file, TypeToken<T> token) {
+        Gson gson = new GsonBuilder().create();
+        ArrayList<T> returnList = new ArrayList<>();
+        try {
+            JsonReader reader = new JsonReader(
+                    new InputStreamReader(context.getAssets().open(file), "UTF-8"));
+            reader.beginArray();
+            while (reader.hasNext()) {
+                T object = gson.fromJson(reader, token.getType());
+                returnList.add(object);
+            }
+            reader.endArray();
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("Map", "JSON read error: " + e.getMessage());
+        }
+        Log.d("Map Coordinates", returnList.toString());
+        return returnList;
     }
 
     @Override
@@ -315,7 +389,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://appfactory.edu.uwp.franklloydwrighttrail/http/host/path")
         );
-        AppIndex.AppIndexApi.start(mClient, viewAction);
+        if (mClient != null) {
+            AppIndex.AppIndexApi.start(mClient, viewAction);
+        }
     }
 
     private void onClick(int position) {
@@ -404,7 +480,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         switch (position) {
             case 0:
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "SC Johnson Headquarters");
+                    intent.putExtra("Title", "SC Johnson Administration Building and Research Tower");
                     LocationSelectionActivity.this.startActivity(intent);
                 break;
             case 1:
@@ -431,13 +507,13 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             case 4:
 
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "Meeting House");
+                    intent.putExtra("Title", "First Unitarian Society Meeting House");
                     LocationSelectionActivity.this.startActivity(intent);
 
                 break;
             case 5:
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "FLW Visitor Center");
+                    intent.putExtra("Title", "Taliesin and FLW Visitor Center");
                     LocationSelectionActivity.this.startActivity(intent);
 
                 break;
@@ -449,7 +525,7 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 break;
             case 7:
                     intent = new Intent(LocationSelectionActivity.this, DescriptonActivity.class);
-                    intent.putExtra("Title", "German Warehouse");
+                    intent.putExtra("Title", "A.D. German Warehouse");
                     LocationSelectionActivity.this.startActivity(intent);
 
                 break;
@@ -474,7 +550,9 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
                 // TODO: Make sure this auto-generated app URL is correct.
                 Uri.parse("android-app://appfactory.edu.uwp.franklloydwrighttrail/http/host/path")
         );
-        AppIndex.AppIndexApi.end(mClient, viewAction);
+        if (mClient != null) {
+            AppIndex.AppIndexApi.end(mClient, viewAction);
+        }
 
         // disconnect from google api
         if (mClient != null) {
@@ -656,13 +734,19 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
             adapter.disableDistance();
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(
-                mClient, mLocationRequest, this);
+        try {
+            if (mClient.isConnected()) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(
+                        mClient, mLocationRequest, this);
+            }
+        } catch (NullPointerException e) {
+            Log.e("Google API", e.getMessage());
+        }
     }
 
     // stop location updates
     protected void stopLocationUpdates() {
-        if (mClient != null && !mClient.isConnecting()) {
+        if (mClient != null && mClient.isConnected()) {
             LocationServices.FusedLocationApi.removeLocationUpdates(
                     mClient, this);
 
@@ -695,6 +779,12 @@ public class LocationSelectionActivity extends AppCompatActivity implements Goog
         // stop location updates
         stopLocationUpdates();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        RealmController.getInstance().close();
+        super.onDestroy();
     }
 
     @Override

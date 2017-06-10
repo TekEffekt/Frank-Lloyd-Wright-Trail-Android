@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,9 @@ public class TripSelectionAdapter extends RecyclerView.Adapter<TripSelectionAdap
         FLWLocation location = locations.get(position);
         holder.picture.setBackground(ContextCompat.getDrawable(context, location.getImage()));
         holder.name.setText(location.getName());
+        if (location.getName() == R.string.scjohnson){
+            holder.name.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 10);
+        }
     }
 
     public FLWLocation getItem(int position) {

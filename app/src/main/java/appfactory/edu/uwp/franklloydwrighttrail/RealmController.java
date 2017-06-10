@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.app.Application;
 import android.support.v4.app.Fragment;
 
+import java.util.UUID;
+
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
 
 /**
@@ -12,28 +15,31 @@ import io.realm.RealmResults;
  */
 
 public class RealmController {
-    private  static RealmController instance;
+    private static RealmController instance;
     private final Realm realm;
 
-    public RealmController(Application application) {
-        realm = Realm.getInstance(application.getApplicationContext());
+    private RealmController() {
+        realm = Realm.getDefaultInstance();
     }
 
     public static RealmController with(Fragment fragment){
         if (instance == null) {
-            instance = new RealmController(fragment.getActivity().getApplication());
+            instance = new RealmController();
         }
         return instance;
     }
 
     public static RealmController with(Activity activity) {
         if (instance == null) {
-            instance = new RealmController(activity.getApplication());
+            instance = new RealmController();
         }
         return instance;
     }
 
     public static RealmController getInstance() {
+        if (instance == null) {
+            instance = new RealmController();
+        }
         return instance;
     }
 
@@ -41,13 +47,9 @@ public class RealmController {
         return realm;
     }
 
-    public void refresh() {
-        realm.refresh();
-    }
-
     public void clearAll() {
         realm.beginTransaction();;
-        realm.clear(TripObject.class);
+        realm.deleteAll();
         realm.commitTransaction();
     }
 
@@ -69,12 +71,19 @@ public class RealmController {
             return null;
         }
     }
+    public RealmResults<TripObject> getTripResults(String key){
+        return realm.where(TripObject.class).equalTo("key", key).findAll();
+    }
     public RealmResults<TripObject> getTripResults(){
         return realm.where(TripObject.class).findAll();
     }
-    public boolean hasUserLocation() {return !realm.allObjects(UserLocation.class).isEmpty();}
+    public boolean hasUserLocation() {return !realm.where(UserLocation.class).findAll().isEmpty();}
     public boolean hasTrip() {
-        return !realm.allObjects(TripObject.class).isEmpty();
+        return !realm.where(TripObject.class).findAll().isEmpty();
+    }
+
+    public void close(){
+        instance = null;
     }
 
 }

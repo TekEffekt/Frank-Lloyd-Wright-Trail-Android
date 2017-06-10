@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GestureDetectorCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -17,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import java.util.Calendar;
 
 import appfactory.edu.uwp.franklloydwrighttrail.FLWLocation;
 import appfactory.edu.uwp.franklloydwrighttrail.Models.LocationModel;
@@ -27,28 +29,30 @@ import appfactory.edu.uwp.franklloydwrighttrail.TripOrder;
 import appfactory.edu.uwp.franklloydwrighttrail.Adapters.TripSelectionAdapter;
 import io.realm.Realm;
 import io.realm.RealmList;
-import io.realm.RealmResults;
-
 /**
  * Created by sterl on 10/28/2016.
  */
 
 public class TripPlannerSelectionFragment extends Fragment implements RecyclerView.OnItemTouchListener{
-    public TripObject trip;
+    private TripObject trip;
+    private RealmList<TripOrder> trips;
     private RealmList<FLWLocation> locations;
-    //private Button cont;
 
     private RecyclerView recyclerView;
     private TripSelectionAdapter adapter;
     private GridLayoutManager layoutManager;
     private GestureDetectorCompat gestureDetector;
 
+    private Button cont;
+
     private Realm realm;
+    private static String tripPosition;
 
     private CardView destinationCard;
 
-    public static TripPlannerSelectionFragment newInstance(){
+    public static TripPlannerSelectionFragment newInstance(String position){
         TripPlannerSelectionFragment selection = new TripPlannerSelectionFragment();
+        tripPosition = position;
         return selection;
     }
 
@@ -60,9 +64,15 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         adapter = new TripSelectionAdapter((LocationModel.getLocations()));
         recyclerView.setAdapter(adapter);
 
-        /* Toolbar toolbar = (Toolbar) view.findViewById(R.id.toolbar);
-        toolbar.setTitle(R.string.choose_destinations);
-        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar); */
+        cont = (Button) view.findViewById(R.id.cont);
+        cont.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+                transaction.replace(R.id.content_frame, TripPlannerCreateTripFragment.newInstance(tripPosition)).commit();
+            }
+        });
 
         layoutManager = new GridLayoutManager(getActivity(), 2);
         layoutManager.generateDefaultLayoutParams();
@@ -76,35 +86,7 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
         gestureDetector = new GestureDetectorCompat(getActivity(), new TripPlannerSelectionFragment.RecyclerViewGestureListener());
 
         realm = RealmController.getInstance().getRealm();
-        //resetTrip();
-        trip = new TripObject();
         locations = new LocationModel().getLocations();
-
-        //cont = (Button) view.findViewById(R.id.cont);
-
-        /*
-        cont.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (trip.getTrips().size() != 0) {
-                    realm.beginTransaction();
-                    RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
-                    results.clear();
-                    realm.copyToRealm(trip);
-                    realm.commitTransaction();
-
-                    Toolbar toolbar = (Toolbar) ((AppCompatActivity)getActivity()).findViewById(R.id.toolbar);
-                    toolbar.setTitle(R.string.choose_times);
-                    ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
-
-                    FragmentManager fragmentManager = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.add(TripPlannerTimesFragment.newInstance(), null).commit();
-                } else {
-                    //make toast yelling at user
-                }
-            }
-        }); */
 
         return view;
     }
@@ -146,45 +128,37 @@ public class TripPlannerSelectionFragment extends Fragment implements RecyclerVi
 
     private void checkSelection(int selection) {
         boolean existed = false;
-        if (trip.getTrips().size() != 0) {
-            for (int i = 0; i < trip.getTrips().size(); i++) {
-                if (trip.getTrips().get(i).getLocation() == locations.get(selection)) {
-                    trip.getTrips().remove(i);
+        RealmList<TripOrder> trips = RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips();
+        if (trips.size() != 0) {
+            for (int i = 0; i < trips.size(); i++) {
+                if (trips.get(i).getLocation().getName() == locations.get(selection).getName()) {
+                    realm.beginTransaction();
+                    RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().deleteFromRealm(i);
+                    realm.commitTransaction();
+
                     existed = true;
                     showSelection(selection,existed);
                 }
             }
             if (!existed) {
-                trip.getTrips().add(new TripOrder(locations.get(selection)));
+                realm.beginTransaction();
+                RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(locations.get(selection)));
+                realm.commitTransaction();
                 showSelection(selection,existed);
             }
         } else {
-            trip.getTrips().add(new TripOrder(locations.get(selection)));
+            realm.beginTransaction();
+            RealmController.getInstance().getTripResults(tripPosition).get(0).getTrips().add(new TripOrder(locations.get(selection)));
+            realm.commitTransaction();
             showSelection(selection,existed);
         }
-        realm.beginTransaction();
-        RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
-        results.clear();
-        realm.copyToRealm(trip);
-        realm.commitTransaction();
     }
 
-    private void showSelection(int selection, boolean isSelected) {
-        if (isSelected) {
+    private void showSelection(int selection, boolean wasSelected) {
+        if (wasSelected) {
             destinationCard.setCardBackgroundColor(Color.WHITE);
         } else {
             destinationCard.setCardBackgroundColor(Color.LTGRAY);
         }
     }
-
-    private void resetTrip(){
-        realm.executeTransaction(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                RealmResults<TripObject> results = realm.where(TripObject.class).findAll();
-                results.clear();
-            }
-        });
-    }
-
 }

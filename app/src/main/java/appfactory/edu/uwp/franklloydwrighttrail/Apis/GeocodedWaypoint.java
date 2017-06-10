@@ -71,5 +71,12 @@ public class GeocodedWaypoint {
     }
 
 
-
+    @Override
+    public String toString() {
+        return "GeocodedWaypoint{" +
+                "geocoderStatus='" + geocoderStatus + '\'' +
+                ", placeId='" + placeId + '\'' +
+                ", types=" + types +
+                '}';
+    }
 }

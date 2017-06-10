@@ -1,41 +1,72 @@
 package appfactory.edu.uwp.franklloydwrighttrail;
 
+import android.content.res.Resources;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
+import android.support.v4.content.res.ResourcesCompat;
+
+import java.util.Date;
 
 import io.realm.RealmObject;
 
-public class FLWLocation extends RealmObject {
+public class FLWLocation extends RealmObject{
     @StringRes private int name;
+    private String genericName;
+
+    // These are exclusive to FLW Stops
     @DrawableRes private int image;
     @DrawableRes private int markerColor;
     private String latlong;
     private double latitude;
     private double longitude;
     private String address;
-    private long startTourTime;
-    private long endTourTime;
+    private boolean isNoTime;
+    @StringRes private int website;
 
-    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, long startTourTime, long endTourTime) {
+    private String day;
+
+
+
+    public FLWLocation(@StringRes int name, @DrawableRes int image, @DrawableRes int markerColor, String latlong, double latitude,double longitude,String address, String day, @StringRes int website) {
         this.name = name;
+        this.genericName = "";
         this.image = image;
         this.markerColor = markerColor;
         this.latlong = latlong;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
-        this.startTourTime = startTourTime;
-        this.endTourTime = endTourTime;
+        this.website = website;
+        this.isNoTime = false;
+        this.day = day;
     }
 
     public FLWLocation(){
         this.name = -1;
+        this.genericName = null;
         this.image = -1;
         this.markerColor = -1;
         this.latlong = null;
         this.latitude = -1;
         this.longitude = -1;
         this.address = null;
+        this.day = null;
+        this.website = -1;
+        this.isNoTime = false;
+    }
+
+    public FLWLocation(String genericName){
+        this.name = -1;
+        this.genericName = genericName;
+        this.image = -1;
+        this.markerColor = -1;
+        this.latlong = null;
+        this.latitude = -1;
+        this.longitude = -1;
+        this.address = null;
+        this.day = null;
+        this.isNoTime = false;
     }
 
     public int getImage() { return image; }
@@ -74,19 +105,62 @@ public class FLWLocation extends RealmObject {
 
     public void setAddress(String address) { this.address = address;}
 
-    public long getStartTourTime() {
-        return startTourTime;
+    public String getDay() {
+        return day;
     }
 
-    public void setStartTourTime(long startTourTime) {
-        this.startTourTime = startTourTime;
+    public void setDay(String day) {
+        this.day = day;
     }
 
-    public long getEndTourTime() {
-        return endTourTime;
+    public String getGenericName() {
+        return genericName;
     }
 
-    public void setEndTourTime(long endTourTime) {
-        this.endTourTime = endTourTime;
+    public void setGenericName(String genericName) {
+        this.genericName = genericName;
+    }
+
+    public boolean getIsNoTime(){return isNoTime;}
+
+    public void setIsNoTime(boolean noTime){this.isNoTime = noTime;}
+
+    @Override
+    public boolean equals(Object location)
+    {
+        if(location instanceof FLWLocation)
+        {
+            if(this.getName() == ((FLWLocation) location).getName() && this.getGenericName() == ((FLWLocation)location).getGenericName())
+                return true;
+            return false;
+        }
+        return false;
+
+    }
+
+
+    public int getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(int website) {
+        this.website = website;
+    }
+
+    @Override
+    public String toString() {
+        return "FLWLocation{" +
+                "name=" + name +
+                ", genericName='" + genericName + '\'' +
+                ", image=" + image +
+                ", markerColor=" + markerColor +
+                ", latlong='" + latlong + '\'' +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                ", address='" + address + '\'' +
+                ", isNoTime=" + isNoTime +
+                ", website=" + website +
+                ", day='" + day + '\'' +
+                '}';
     }
 }
